@@ -197,12 +197,12 @@ def chat(
         "--max-seq-length",
         help = "Context length in tokens. 0 takes the checkpoint's trained window on GGUF "
         "and MLX, and 2048 on the transformers backend. A value that differs from a "
-        "running Unsloth server's reloads the model.",
+        "running LABZ server's reloads the model.",
     ),
     load_in_4bit: bool = typer.Option(
         True,
         "--load-in-4bit/--no-load-in-4bit",
-        help = "Load the model in 4-bit. Left unset, a running Unsloth server that already "
+        help = "Load the model in 4-bit. Left unset, a running LABZ server that already "
         "has this model loaded keeps its precision.",
     ),
     tensor_parallel: bool = typer.Option(
@@ -251,7 +251,7 @@ def chat(
     no_server: bool = typer.Option(
         False,
         "--no-server",
-        help = "Load the model in-process even if an Unsloth server is running.",
+        help = "Load the model in-process even if an LABZ server is running.",
     ),
 ):
     """Start an interactive chat with a model (loads once, stays warm)."""
@@ -311,7 +311,7 @@ def chat(
     if spec_draft_n_max is not None:
         load_opts["spec_draft_n_max"] = spec_draft_n_max
 
-    # Prefer a running Unsloth server: instant starts, model shared with the UI.
+    # Prefer a running LABZ server: instant starts, model shared with the UI.
     chat_backend = (
         None
         if (no_server or is_mlx_distributed)
@@ -320,7 +320,7 @@ def chat(
     server_mode = chat_backend is not None
     if server_mode and should_print:
         console.print(
-            "(Unsloth server connected — model stays warm after /exit)",
+            "(LABZ server connected — model stays warm after /exit)",
             style = "bright_black",
         )
     else:

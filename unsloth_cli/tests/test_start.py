@@ -143,7 +143,7 @@ def test_claude_flags_detected_when_version_not_first_token(monkeypatch):
 
 def test_claude_settings_overlay_pins_served_model():
     # The session overlay must pin availableModels to the served model: a user's allowlist
-    # in ~/.claude/settings.json otherwise rejects the Unsloth --model ("restricted by your
+    # in ~/.claude/settings.json otherwise rejects the LABZ --model ("restricted by your
     # organization's settings"), and no env var can bypass it. The override must be a
     # NON-EMPTY array to take effect (an empty [] is ignored and the user's list still
     # applies), so it lists exactly this model, for this session only.
@@ -449,7 +449,7 @@ def test_install_agent_missing_npm_names_node_requirement(monkeypatch, capsys):
 
     err = capsys.readouterr().err
     assert "npm is required" in err
-    assert "Unsloth-managed Node" in err
+    assert "LABZ-managed Node" in err
     assert "Install Node.js with npm" in err
 
 
@@ -514,7 +514,7 @@ def test_install_agent_warns_remote_installer_is_unverified_third_party(monkeypa
     assert "Security warning" in err
     assert "unverified third-party script" in err
     assert "https://hermes-agent.nousresearch.com/install.ps1" in err
-    assert "Unsloth does not pin or verify the downloaded content" in err
+    assert "LABZ does not pin or verify the downloaded content" in err
     assert "Continue only if you trust this source" in err
 
 
@@ -629,7 +629,7 @@ def test_refresh_windows_path_merges_registry_hives(monkeypatch):
 
 def test_augment_path_adds_existing_local_bin(monkeypatch, tmp_path):
     # Claude's installer drops its binary in ~/.local/bin but only *suggests* adding it to
-    # PATH, so Unsloth appends it in-process to resolve the freshly installed agent.
+    # PATH, so LABZ appends it in-process to resolve the freshly installed agent.
     local_bin = tmp_path / ".local" / "bin"
     local_bin.mkdir(parents = True)
     monkeypatch.setattr(start.Path, "home", lambda: tmp_path)
@@ -1540,7 +1540,7 @@ def fake_studio(tmp_path, monkeypatch):
     monkeypatch.setattr(start, "_studio_token", lambda: "jwt-token")
     monkeypatch.setattr(start, "_http_json", http_json)
     monkeypatch.setattr(start, "_key_cache_path", lambda: tmp_path / "agent_api_key.json")
-    # --no-launch session configs land under tmp instead of the real Unsloth dir.
+    # --no-launch session configs land under tmp instead of the real LABZ dir.
     monkeypatch.setattr(start, "_agents_config_root", lambda: tmp_path / "agents")
     monkeypatch.setattr(start, "_require_agent_for_launch", lambda *args: None)
     # Most existing assertions cover the stable V1 command; V2 has focused cases below.
@@ -1750,9 +1750,9 @@ def test_connect_claude_as_subagent_preserves_cloud_parent(fake_studio, tmp_path
     for name in start._CLAUDE_ENV_UNSET:
         assert settings["env"][name] == ""
     skill = (plugin / "skills" / "local-agent" / "SKILL.md").read_text()
-    assert "spawn an Unsloth agent or local agent" in skill
+    assert "spawn an LABZ agent or local agent" in skill
     assert "In plan mode" in skill
-    assert "Ask Claude to spawn an Unsloth or local agent." in result.output
+    assert "Ask Claude to spawn an LABZ or local agent." in result.output
 
 
 @pytest.mark.skipif(os.name == "nt", reason = "WSL scenario")
@@ -2412,7 +2412,7 @@ def test_connect_codex_as_subagent_preserves_cloud_parent(fake_studio, tmp_path,
     parent_instructions = (parent_home / "AGENTS.md").read_text()
     assert parent_instructions.startswith("Keep the user's guidance.\n")
     assert start._CODEX_SUBAGENT_ROUTING_INSTRUCTIONS in parent_instructions
-    assert "Ask Codex to spawn an Unsloth or local agent." in result.output
+    assert "Ask Codex to spawn an LABZ or local agent." in result.output
 
 
 def test_connect_codex_matches_requested_model_case_insensitively(fake_studio, tmp_path):
@@ -2649,7 +2649,7 @@ def test_resolve_model_without_request_rejects_unloaded_catalog(monkeypatch):
 
 
 def test_resolve_model_remote_studio_does_not_casefold_attach(monkeypatch):
-    # Against a remote Unsloth the local existence probe cannot see server-side paths,
+    # Against a remote LABZ the local existence probe cannot see server-side paths,
     # so a case-variant loaded id must NOT attach without a load: it could be a distinct
     # server-side path on a case-sensitive host. The load endpoint resolves the request.
     calls = []
@@ -2740,7 +2740,7 @@ def test_no_launch_output_is_parseable(fake_studio):
     result = CliRunner().invoke(start.start_app, ["codex", "--no-launch"])
     assert result.exit_code == 0, result.output
     lines = [ln for ln in result.output.splitlines() if ln.strip()]
-    skip = ("export ", "unset ", "Unsloth ", "Updated ", "Disabled ", "Warning", "Loading")
+    skip = ("export ", "unset ", "LABZ ", "Updated ", "Disabled ", "Warning", "Loading")
     body = [ln for ln in lines if not ln.startswith(skip)]
     assert "codex --oss --profile unsloth_api" in body[-1]
     assert any(ln.startswith("export CODEX_HOME=") for ln in lines)
@@ -2769,7 +2769,7 @@ def test_no_launch_last_line_is_self_contained(fake_studio, tmp_path):
 
 def test_no_launch_claude_last_line_blanks_conflicting_auth(fake_studio):
     # The unset vars must be neutralized inline too, or a partial copy would send the
-    # user's own ANTHROPIC_API_KEY to the Unsloth base.
+    # user's own ANTHROPIC_API_KEY to the LABZ base.
     result = CliRunner().invoke(start.start_app, ["claude", "--no-launch"])
     assert result.exit_code == 0, result.output
     last = [ln for ln in result.output.splitlines() if ln.strip()][-1]
@@ -2816,7 +2816,7 @@ def test_https_loopback_never_auto_serves(fake_studio, monkeypatch):
     )
     result = CliRunner().invoke(start.start_app, ["claude", "--model", "unsloth/Qwen3-1.7B-GGUF"])
     assert result.exit_code == 1
-    assert "No running Unsloth server" in result.output
+    assert "No running LABZ server" in result.output
     assert started["called"] is False
 
 
@@ -2932,7 +2932,7 @@ def test_connect_model_flag_loads_on_server(fake_studio):
         ("POST", f"{BASE}/api/inference/load", {"model_path": "unsloth/Qwen3.5-35B-A3B"})
     ]
     assert result.output.index(
-        f"Switching the Unsloth server from {MODEL['id']} to unsloth/Qwen3.5-35B-A3B.\n"
+        f"Switching the LABZ server from {MODEL['id']} to unsloth/Qwen3.5-35B-A3B.\n"
     ) < result.output.index("This unloads the current model for every attached session.\n")
     _assert_env_set(result.output, "ANTHROPIC_MODEL", "unsloth/Qwen3.5-35B-A3B")
 
@@ -3013,7 +3013,7 @@ def test_connect_model_path_other_name_switch_announced_before_load(fake_studio,
     requested = "/models/bar-Q4_K_M.gguf"
     result = CliRunner().invoke(start.start_app, ["claude", "--no-launch", "--model", requested])
     assert result.exit_code == 0, result.output
-    assert f"Switching the Unsloth server from foo-Q4_K_M to {requested}.\n" in result.output
+    assert f"Switching the LABZ server from foo-Q4_K_M to {requested}.\n" in result.output
     assert "in place of" not in result.output
 
 
@@ -3072,7 +3072,7 @@ def test_connect_model_flag_forwards_load_options(fake_studio):
 
 
 def test_connect_model_flag_matches_canonical_id(fake_studio, monkeypatch):
-    # Unsloth registers a loaded model under a canonical id (resolved identifier
+    # LABZ registers a loaded model under a canonical id (resolved identifier
     # / casing) that can differ from the path we passed. The agent must connect
     # to that model, not silently fall through to the first loaded one.
     requested = "Unsloth/Qwen3.5-35B-A3B"
@@ -3548,7 +3548,7 @@ def test_connect_model_bare_id_matches_loaded_without_reload(fake_studio):
 
 def test_connect_model_variant_suffix_defers_to_server_dedup(fake_studio):
     # `--model repo:QUANT` splits into a VALID load payload (bare repo + gguf_variant),
-    # never the `:`-suffixed repo id Unsloth rejects. The variant knob defers to
+    # never the `:`-suffixed repo id LABZ rejects. The variant knob defers to
     # /api/inference/load, whose already-loaded dedup answers without reloading when the
     # active variant+settings match -- so a second session running the same command
     # attaches without evicting the first, while a genuinely different quant reloads.
@@ -3694,7 +3694,7 @@ def test_connect_no_model_loaded_errors(fake_studio, monkeypatch):
 
 
 def test_connect_requested_model_not_loaded_fails(fake_studio, monkeypatch):
-    # Unsloth never surfaces the requested model; fail loudly rather than
+    # LABZ never surfaces the requested model; fail loudly rather than
     # silently connecting to whatever else happens to be loaded.
     inner = start._http_json
 
@@ -3769,7 +3769,7 @@ def test_connect_nonloopback_explicit_key_is_allowed(fake_studio, monkeypatch):
 
 
 def test_connect_nonloopback_replays_saved_key(fake_studio, tmp_path, monkeypatch):
-    # A key saved for a remote (non-loopback) Unsloth is replayed on keyless runs;
+    # A key saved for a remote (non-loopback) LABZ is replayed on keyless runs;
     # auto-minting stays blocked for non-loopback.
     remote = "http://studio.example:8888"
     monkeypatch.setattr(start, "find_studio_server", lambda: remote)
@@ -3783,7 +3783,7 @@ def test_connect_nonloopback_replays_saved_key(fake_studio, tmp_path, monkeypatc
 
 
 def test_connect_studio_server_errors_on_explicit_remote(monkeypatch):
-    # A user who pointed UNSLOTH_STUDIO_URL at a remote Unsloth should get an
+    # A user who pointed UNSLOTH_STUDIO_URL at a remote LABZ should get an
     # error, not a silent local model load (which they did not ask for).
     import typer
 
@@ -3824,7 +3824,7 @@ def test_connect_unverified_loopback_without_cached_key_refuses_to_mint(
 
 
 def test_connect_replays_saved_key_without_identity_check(fake_studio, tmp_path, monkeypatch):
-    # A "saved" key (e.g. for an SSH-tunnelled Unsloth the handshake can't match)
+    # A "saved" key (e.g. for an SSH-tunnelled LABZ the handshake can't match)
     # replays on keyless runs without the handshake, scoped to its own base.
     cache = tmp_path / "agent_api_key.json"
     cache.write_text(json.dumps({"servers": {BASE: {"saved": ["sk-unsloth-deadbeefdeadbeef"]}}}))
@@ -3942,7 +3942,7 @@ def _serve_redirect(target):
 
 
 def test_verify_studio_identity_rejects_redirect(tmp_path, monkeypatch):
-    # A squatter could 302 /api/auth/identity to the real Unsloth and relay its
+    # A squatter could 302 /api/auth/identity to the real LABZ and relay its
     # proof; redirects must be refused so the squatter's base isn't accepted.
     import unsloth_cli._inference as inference
 
@@ -3968,7 +3968,7 @@ def test_verify_studio_identity_rejects_redirect(tmp_path, monkeypatch):
 
 
 def test_verify_studio_identity_rejects_relayed_proof(tmp_path, monkeypatch):
-    # A squatter that proxies the nonce to the real Unsloth on another port gets a
+    # A squatter that proxies the nonce to the real LABZ on another port gets a
     # proof bound to *that* port; the client expects one bound to the port it
     # connected to, so the relayed proof is rejected.
     import unsloth_cli._inference as inference
@@ -4019,7 +4019,7 @@ def test_connect_no_studio_errors(fake_studio, monkeypatch):
     monkeypatch.setattr(start, "find_studio_server", lambda: None)
     result = CliRunner().invoke(start.start_app, ["claude", "--no-launch"])
     assert result.exit_code == 1
-    assert "No running Unsloth server" in result.output
+    assert "No running LABZ server" in result.output
 
 
 @pytest.fixture(autouse = True)
@@ -4085,9 +4085,9 @@ def test_start_studio_server_builds_command_and_waits(monkeypatch, capsys):
     assert captured["kwargs"].get("start_new_session") is True  # own process group
     assert server.pid == 4321
     output = capsys.readouterr().out
-    assert "Starting Unsloth server\n" in output
+    assert "Starting LABZ server\n" in output
     assert "Model: unsloth/Qwen3-1.7B-GGUF:UD-Q4_K_XL\n" in output
-    assert "No Unsloth server at" not in output
+    assert "No LABZ server at" not in output
     assert "server ready" not in output
 
 
@@ -4474,7 +4474,7 @@ def test_resolve_model_warns_on_same_repo_quant_switch(monkeypatch, capsys):
 
     out = capsys.readouterr().out
     assert (
-        "Switching the Unsloth server from owner/model-GGUF:Q4_K_M to owner/model-GGUF:Q8_0." in out
+        "Switching the LABZ server from owner/model-GGUF:Q4_K_M to owner/model-GGUF:Q8_0." in out
     )
     assert "every attached session" in out
 
@@ -4657,7 +4657,7 @@ def test_auto_served_session_uses_the_port_the_server_bound(fake_studio, monkeyp
     result = CliRunner().invoke(start.start_app, ["claude", "--model", "unsloth/Qwen3-1.7B-GGUF"])
 
     assert result.exit_code == 0, result.output
-    assert f"Unsloth ready at {bound} " in result.output
+    assert f"LABZ ready at {bound} " in result.output
     assert launched["ANTHROPIC_BASE_URL"] == bound
     assert fake_studio and all(
         url.startswith(f"{bound}/") for _method, url, _payload in fake_studio
@@ -4724,8 +4724,8 @@ def test_attached_server_prints_stop_hint_after_agent_exits(fake_studio, monkeyp
     result = CliRunner().invoke(start.start_app, ["claude"])
 
     assert result.exit_code == 0, result.output
-    assert f"Unsloth ready at {BASE} · model {MODEL['id']}\n" in result.output
-    assert f"Unsloth Studio is still running at {BASE}." in result.output
+    assert f"LABZ ready at {BASE} · model {MODEL['id']}\n" in result.output
+    assert f"LABZ Studio is still running at {BASE}." in result.output
     assert "Stop it with: unsloth studio stop\n" in result.output
 
 
@@ -4748,7 +4748,7 @@ def test_nonzero_agent_exit_notes_code_before_stop_hint(fake_studio, monkeypatch
 
     assert result.exit_code == 3
     assert "The agent exited with code 3." in result.output
-    assert f"Unsloth Studio is still running at {BASE}." in result.output
+    assert f"LABZ Studio is still running at {BASE}." in result.output
 
 
 def test_redacted_log_tail_strips_minted_keys(tmp_path):
@@ -4841,7 +4841,7 @@ def test_no_serve_preserves_error(fake_studio, monkeypatch):
         start.start_app, ["claude", "--model", "unsloth/Qwen3-1.7B-GGUF", "--no-serve"]
     )
     assert result.exit_code == 1
-    assert "No running Unsloth server" in result.output
+    assert "No running LABZ server" in result.output
     assert started["called"] is False
 
 
@@ -4855,7 +4855,7 @@ def test_no_launch_never_serves(fake_studio, monkeypatch):
         start.start_app, ["claude", "--model", "unsloth/Qwen3-1.7B-GGUF", "--no-launch"]
     )
     assert result.exit_code == 1
-    assert "No running Unsloth server" in result.output
+    assert "No running LABZ server" in result.output
     assert started["called"] is False
 
 
@@ -5333,7 +5333,7 @@ def _opencode_inline_config(output: str) -> dict:
 def test_opencode_inline_scopes_session_to_studio_provider(fake_studio):
     # opencode filters even config-defined providers through enabled/disabled_providers,
     # and a model pin does not bypass that gate. The inline overlay (session-only, highest
-    # layer, arrays replace) allowlists our provider and clears the denylist so the Unsloth
+    # layer, arrays replace) allowlists our provider and clears the denylist so the LABZ
     # model always loads regardless of the user's config, without reading or editing it.
     result = CliRunner().invoke(start.start_app, ["opencode", "--no-launch"])
     assert result.exit_code == 0, result.output
@@ -5475,7 +5475,7 @@ def test_connect_opencode_as_subagent_preserves_cloud_parent(fake_studio, tmp_pa
     assert "compaction" not in config
     agent = config["agent"]["unsloth"]
     assert agent["model"] == expected_model
-    assert "Unsloth is available as @unsloth and in /models." in result.output
+    assert "LABZ is available as @unsloth and in /models." in result.output
 
 
 def test_claude_subagent_allowed_tools_precede_forwarded_delimiter(fake_studio):
@@ -6191,7 +6191,7 @@ def test_connect_pi_as_subagent_preserves_cloud_parent(fake_studio, tmp_path, yo
         "maxTokens": 1024,
         "approve": yolo,
     }
-    assert "Ask Pi to spawn an Unsloth or local agent." in result.output
+    assert "Ask Pi to spawn an LABZ or local agent." in result.output
 
 
 def test_connect_pi_no_launch_windows_relocates_userprofile(fake_studio, tmp_path, monkeypatch):
@@ -7184,7 +7184,7 @@ def test_agent_api_key_auto_started_rejected_env_key_falls_back(fake_studio, tmp
 
 
 def test_agent_api_key_auto_started_accepted_key_is_honored(fake_studio, tmp_path):
-    # An explicit key the fresh server accepts (e.g. persisted in this Unsloth
+    # An explicit key the fresh server accepts (e.g. persisted in this LABZ
     # home's auth db across restarts) keeps working exactly as before.
     key = start._agent_api_key(BASE, "sk-unsloth-deadbeefdeadbeef", auto_started = True)
     assert key == "sk-unsloth-deadbeefdeadbeef"
@@ -7206,7 +7206,7 @@ def test_session_config_no_launch_preserves_existing_state(fake_studio, tmp_path
 
 # ── --persist: persist the agent session so it can be resumed ────────────────
 def test_session_config_persist_uses_stable_dir_and_survives(monkeypatch, tmp_path):
-    # --persist routes a launch to the stable Unsloth agents dir (the one --no-launch
+    # --persist routes a launch to the stable LABZ agents dir (the one --no-launch
     # already uses) instead of a throwaway temp dir, and never wipes it on exit.
     monkeypatch.setattr(start, "_agents_config_root", lambda: tmp_path / "agents")
     with start._session_config("codex", launch = True, persist = True) as home:
@@ -7370,7 +7370,7 @@ def test_augment_path_leaves_path_alone_when_nothing_to_add(monkeypatch):
 
 
 def test_probe_env_carries_install_dirs_and_restores_path(monkeypatch, tmp_path):
-    # A shim resolved via Unsloth's managed Node needs that node on PATH when it runs.
+    # A shim resolved via LABZ's managed Node needs that node on PATH when it runs.
     managed_bin = tmp_path / "node" / "bin"
     managed_bin.mkdir(parents = True)
     monkeypatch.setattr(
@@ -7388,7 +7388,7 @@ def test_probe_env_carries_install_dirs_and_restores_path(monkeypatch, tmp_path)
 
 
 def test_session_config_falls_back_when_studio_auth_root_is_unwritable(monkeypatch, tmp_path):
-    # Attaching to a remote Unsloth needs no local auth tree, so a read-only one must not stop it.
+    # Attaching to a remote LABZ needs no local auth tree, so a read-only one must not stop it.
     readonly = tmp_path / "readonly"
     readonly.mkdir(mode = 0o500)
     monkeypatch.setattr(start, "_agents_config_root", lambda: readonly / "agents")
@@ -7400,7 +7400,7 @@ def test_session_config_falls_back_when_studio_auth_root_is_unwritable(monkeypat
 
 
 def test_session_config_reclaims_abandoned_homes_for_non_codex_agents(monkeypatch, tmp_path):
-    # Nothing else prunes Unsloth's auth tree, so a killed wrapper's home must be reclaimed.
+    # Nothing else prunes LABZ's auth tree, so a killed wrapper's home must be reclaimed.
     agents_root = tmp_path / "agents"
     temp_root = agents_root / ".tmp"
     temp_root.mkdir(parents = True)
@@ -7690,14 +7690,14 @@ def test_hermes_resume_oneshot_rejects_usage_file(monkeypatch, usage_arg):
 def test_native_resume_flag_passes_through_unchanged(fake_studio, monkeypatch):
     # The persistence flag is --persist, NOT --resume, so an agent's own
     # `--resume <id>` (e.g. `unsloth start claude --resume <guid>`) still flows
-    # through to the agent verbatim and is not swallowed as an Unsloth option.
+    # through to the agent verbatim and is not swallowed as an LABZ option.
     monkeypatch.setattr(start.shutil, "which", lambda _: "/usr/local/bin/claude")
     monkeypatch.setattr(start, "_claude_flags", lambda *a, **k: [])
     captured = _capture_launch(monkeypatch, ["claude", "--resume", "some-session-guid"])
     resume = captured["command"].index("--resume")
     assert captured["command"][resume : resume + 2] == ["--resume", "some-session-guid"]
     assert captured["command"].index("--model") < resume
-    # Unsloth never auto-appends its own resume token when the user drives resume.
+    # LABZ never auto-appends its own resume token when the user drives resume.
     assert captured["command"].count("--resume") == 1
     assert "--continue" not in captured["command"]
 

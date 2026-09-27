@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Unsloth dependency checks shared by the CLI commands.
+"""LABZ dependency checks shared by the CLI commands.
 
 The wheel ships studio/ and studio.backend*, so train / export / chat /
 inference / studio all work after a plain `pip install unsloth` right up to the
@@ -649,13 +649,13 @@ def running_outside_managed_venv(extra_roots: Sequence[Path] = ()) -> bool:
     if not (Path(sys.prefix) / "pyvenv.cfg").is_file():
         # Not a venv at all. On Colab setup.sh deliberately installs the backend into the system Python,
         # whose distro-packaged RECORDs legitimately list files the distro never installed (PEP 627), so
-        # a file check here describes the distro rather than Unsloth.
+        # a file check here describes the distro rather than LABZ.
         return True
     return _managed_root(extra_roots) is not None
 
 
 def _missing_studio_packages() -> List[str]:
-    """Unsloth packages studio.txt asks for and the venv does not have."""
+    """LABZ packages studio.txt asks for and the venv does not have."""
     module = load_install_manifest_module()
     if module is None:
         return []
@@ -716,6 +716,6 @@ def studio_backend_imports(feature: str = "This command", *, studio_only: bool =
         if not from_studio:
             typer.echo(f"  Install it:      pip install {needed}", err = True)
         if from_studio or others:
-            typer.echo("  Unsloth install:  unsloth studio update", err = True)
+            typer.echo("  LABZ install:  unsloth studio update", err = True)
             typer.echo('  Plain pip:       pip install "unsloth[studio]"', err = True)
         raise typer.Exit(code = 1) from None

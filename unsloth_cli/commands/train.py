@@ -93,7 +93,7 @@ def train(
     ),
     config_overrides: dict = None,
 ):
-    """Launch training using the existing Unsloth training backend."""
+    """Launch training using the existing LABZ training backend."""
     try:
         cfg = load_config(config)
     except (FileNotFoundError, ConfigError) as e:

@@ -104,4 +104,4 @@ def test_nothing_resident_reads_the_same_whatever_the_server_lists(monkeypatch, 
     monkeypatch.setattr(start, "_http_json", http_json)
     with pytest.raises(typer.Exit):
         start._resolve_model(BASE, "key", None)
-    assert "No model is loaded in Unsloth." in capsys.readouterr().err
+    assert "No model is loaded in LABZ." in capsys.readouterr().err

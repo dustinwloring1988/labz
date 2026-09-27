@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""`unsloth start` — launch a coding agent against a running Unsloth server."""
+"""`unsloth start` — launch a coding agent against a running LABZ server."""
 
 import atexit
 import base64
@@ -48,7 +48,7 @@ from unsloth_cli._inference import (
 )
 
 start_app = typer.Typer(
-    help = "Start a coding agent against a running Unsloth server.",
+    help = "Start a coding agent against a running LABZ server.",
     no_args_is_help = True,
     context_settings = {"help_option_names": ["-h", "--help"]},
 )
@@ -59,7 +59,7 @@ _CODEX_ENV_KEY = "UNSLOTH_STUDIO_AUTH_TOKEN"
 _CODEX_STREAM_IDLE_TIMEOUT_MS = 1_200_000
 _HERMES_ENV_KEY = "UNSLOTH_API_KEY"
 _HERMES_PROVIDER = "unsloth"
-# Skip the installer's interactive setup wizard: `unsloth start hermes` runs this hint unattended and then writes its own session-scoped Hermes config, so the wizard's global API-key/model prompts would block the launch and point the user at a different provider than the one Unsloth just configured. Both installers expose a skip flag: `-SkipSetup` (PowerShell) and `--skip-setup` (POSIX, passed to the piped script via `bash -s --`). Pin both the fetched script and the repository checkout it performs to the same full commit so a later change to either upstream branch cannot silently replace code that Unsloth executes with the user's privileges.
+# Skip the installer's interactive setup wizard: `unsloth start hermes` runs this hint unattended and then writes its own session-scoped Hermes config, so the wizard's global API-key/model prompts would block the launch and point the user at a different provider than the one LABZ just configured. Both installers expose a skip flag: `-SkipSetup` (PowerShell) and `--skip-setup` (POSIX, passed to the piped script via `bash -s --`). Pin both the fetched script and the repository checkout it performs to the same full commit so a later change to either upstream branch cannot silently replace code that LABZ executes with the user's privileges.
 _HERMES_INSTALL_COMMIT = "f1af945f6c576eccb126fa955edc9be258b33020"
 _HERMES_INSTALL_BASE = (
     "https://raw.githubusercontent.com/NousResearch/hermes-agent/"
@@ -84,20 +84,20 @@ _DSH_YOLO_PERMISSION_MODE = "danger-full-access"
 _PI_PROVIDER = "unsloth"
 _SUBAGENT_NAME = "unsloth"
 _SUBAGENT_DESCRIPTION = (
-    "Local coding subagent powered by Unsloth for debugging, implementation, and codebase "
-    "research. Use when the user asks to spawn an Unsloth or local agent."
+    "Local coding subagent powered by LABZ for debugging, implementation, and codebase "
+    "research. Use when the user asks to spawn an LABZ or local agent."
 )
 _SUBAGENT_INSTRUCTIONS = (
-    "You are a local coding subagent powered by Unsloth. Complete the assigned task directly, "
+    "You are a local coding subagent powered by LABZ. Complete the assigned task directly, "
     "use the available tools when useful, verify your work, and return a concise result to the "
     "parent agent."
 )
 _SUBAGENT_PLAN_DESCRIPTION = (
-    "Read-only local coding subagent powered by Unsloth for planning and codebase research. "
+    "Read-only local coding subagent powered by LABZ for planning and codebase research. "
     "Use this local agent when Claude is in plan mode."
 )
 _SUBAGENT_PLAN_INSTRUCTIONS = (
-    "You are a read-only local coding subagent powered by Unsloth. Investigate the assigned "
+    "You are a read-only local coding subagent powered by LABZ. Investigate the assigned "
     "task with read-only tools, produce a concrete plan or answer, and return a concise result "
     "to the parent agent. Do not modify files."
 )
@@ -117,7 +117,7 @@ _CODEX_SUBAGENT_TOOL_DESCRIPTION = (
     "requests. Other subagent requests may use the built-in tools normally."
 )
 _CODEX_SUBAGENT_ROUTING_INSTRUCTIONS = (
-    "When the user asks to spawn an Unsloth agent or local agent, you must call the "
+    "When the user asks to spawn an LABZ agent or local agent, you must call the "
     "spawn_local_agent MCP tool once with the complete task. Do not answer, simulate the "
     "result, call wait, or use a built-in subagent before calling the tool. Use built-in "
     "subagents for other delegation requests."
@@ -183,7 +183,7 @@ _MODEL_OPTION = typer.Option(
     "-m",
     rich_help_panel = _PANEL_MODEL,
     help = "Model for the agent, or a bare `org/name(:variant)` positional. "
-    "Defaults to the one loaded in Unsloth.",
+    "Defaults to the one loaded in LABZ.",
 )
 _GGUF_VARIANT_OPTION = typer.Option(
     None,
@@ -217,7 +217,7 @@ _GPU_MEMORY_MODE_OPTION = typer.Option(
     rich_help_panel = _PANEL_MODEL,
     help = (
         "GPU memory strategy for GGUF models loaded by this command. Auto lets "
-        "Unsloth manage placement. Manual with default layers and context delegates "
+        "LABZ manage placement. Manual with default layers and context delegates "
         "placement and sizing to llama.cpp --fit. Omit when attaching to preserve "
         "the running model's mode."
     ),
@@ -228,7 +228,7 @@ _SERVE_OPTION = typer.Option(
     True,
     "--serve/--no-serve",
     rich_help_panel = _PANEL_SERVER,
-    help = "If no Unsloth server is running, auto-start one for --model and keep it "
+    help = "If no LABZ server is running, auto-start one for --model and keep it "
     "available after the agent exits. --no-serve errors out instead.",
 )
 _ENABLE_TOOLS_OPTION = typer.Option(
@@ -328,7 +328,7 @@ _KEY_OPTION = typer.Option(
     "--api-key",
     envvar = "UNSLOTH_API_KEY",
     rich_help_panel = _PANEL_SESSION,
-    help = "Unsloth API key. For a local Unsloth it is minted automatically and "
+    help = "LABZ API key. For a local LABZ it is minted automatically and "
     "remembered per server. For a remote server, pass one with --api-key "
     "(or UNSLOTH_API_KEY); it is remembered for next time.",
 )
@@ -353,10 +353,10 @@ _PERSIST_OPTION = typer.Option(
     "--persist/--no-persist",
     rich_help_panel = _PANEL_SESSION,
     help = (
-        "Keep this agent's Unsloth-managed session dir so you can resume it later. "
-        "codex/openclaw/hermes/pi/dsh have their whole home relocated into an Unsloth dir "
+        "Keep this agent's LABZ-managed session dir so you can resume it later. "
+        "codex/openclaw/hermes/pi/dsh have their whole home relocated into an LABZ dir "
         "that is a throwaway temp dir (wiped on exit) by default; with --persist it "
-        "lives under the Unsloth agents dir and survives, so their own resume can reopen "
+        "lives under the LABZ agents dir and survives, so their own resume can reopen "
         "it. claude and opencode keep sessions in your own stores (~/.claude, "
         "~/.local/share/opencode), so they already resume regardless. To reopen a "
         "session, pass the agent's own resume command through, e.g. "
@@ -368,7 +368,7 @@ _AS_SUBAGENT_OPTION = typer.Option(
     False,
     "--as-subagent",
     rich_help_panel = _PANEL_SESSION,
-    help = "Keep the coding agent's current model and add Unsloth as a local subagent.",
+    help = "Keep the coding agent's current model and add LABZ as a local subagent.",
 )
 
 # Per-agent CLI flag for "run tools without prompting". OpenCode (native --auto is command-scoped, handled below) and OpenClaw (config-only) are absent from this prefix map.
@@ -705,7 +705,7 @@ def _subagent_model_id(
     requested_model: Optional[str],
     requested_variant: Optional[str],
 ) -> str:
-    """Return an API model id that preserves the selected GGUF variant. Coding-agent model definitions outlive the initial load, so if Unsloth later unloads the model a bare repository id may resolve to a different cached quant; include the explicit or currently loaded variant so an automatic reload selects the same weights."""
+    """Return an API model id that preserves the selected GGUF variant. Coding-agent model definitions outlive the initial load, so if LABZ later unloads the model a bare repository id may resolve to a different cached quant; include the explicit or currently loaded variant so an automatic reload selects the same weights."""
     model_id = str(entry["id"])
     _, inline_variant = _split_repo_variant(requested_model or "")
     variant = requested_variant or inline_variant
@@ -740,7 +740,7 @@ def _fail(message: str) -> NoReturn:
 
 
 def _reject_as_subagent(agent: str, args: list) -> None:
-    # Reject early, or the flag reaches the agent binary after Unsloth loaded the model.
+    # Reject early, or the flag reaches the agent binary after LABZ loaded the model.
     if any(arg == "--as-subagent" or arg.startswith("--as-subagent=") for arg in args):
         _fail(f"--as-subagent is not supported for {agent}.")
 
@@ -1147,7 +1147,7 @@ def _shutdown_auto_served() -> None:
     global _auto_served_server
     server, _auto_served_server = _auto_served_server, None
     if server is not None and server.poll() is None:
-        typer.echo("Stopping the auto-started Unsloth server…")
+        typer.echo("Stopping the auto-started LABZ server…")
         _shutdown_server(server)
 
 
@@ -1200,7 +1200,7 @@ def _start_studio_server(
         command += ["--gpu-memory-mode", load.gpu_memory_mode]
 
     log_path = Path(tempfile.gettempdir()) / f"unsloth-start-server-{os.getpid()}.log"
-    typer.echo("Starting Unsloth server")
+    typer.echo("Starting LABZ server")
     typer.echo(f"Model: {_display_model_spec(model, load.gguf_variant)}")
     typer.echo(f"Server log: {log_path}")
     # 0600: the `unsloth run` banner in this log carries the minted sk-unsloth- key, and the tempdir is world-traversable. Unlink first so a stale looser-mode file (pid reuse) cannot survive with its old permissions.
@@ -1214,7 +1214,7 @@ def _start_studio_server(
     child_env["LLAMA_ARG_REASONING_EFFORT"] = server.reasoning_effort or "default"
     # Pass the marker via env so an older launcher ignores it instead of treating an unknown CLI flag as a llama-server arg; new launchers preserve it across re-exec.
     child_env[_START_API_KEY_MARKER_ENV] = "1"
-    # Convey healing/nudging through the env; `unsloth run` reads these when its own flags are omitted, so this works even if run re-execs into an older Unsloth venv. Only write when the operator set the flag explicitly; otherwise keep whatever they already exported (child_env is a copy of os.environ), falling back to the start defaults (healing on, nudging on) when nothing was inherited.
+    # Convey healing/nudging through the env; `unsloth run` reads these when its own flags are omitted, so this works even if run re-execs into an older LABZ venv. Only write when the operator set the flag explicitly; otherwise keep whatever they already exported (child_env is a copy of os.environ), falling back to the start defaults (healing on, nudging on) when nothing was inherited.
     if server.tool_call_healing is not None:
         child_env["UNSLOTH_DISABLE_TOOL_CALL_HEALING"] = "0" if server.tool_call_healing else "1"
     elif "UNSLOTH_DISABLE_TOOL_CALL_HEALING" not in child_env:
@@ -1262,7 +1262,7 @@ def _start_studio_server(
                 # The early key marker lands here before load finishes; redact it.
                 tail = _redacted_log_tail(log_path)
                 _shutdown_auto_served()
-                _fail(f"The Unsloth server stopped before it was ready. Last log lines:\n{tail}")
+                _fail(f"The LABZ server stopped before it was ready. Last log lines:\n{tail}")
             tail = _log_tail(log_path, lines = 400)
             # `unsloth run` falls forward off a taken port, so poll the port it reports. Printed
             # once, so read the whole log, not the tail below.
@@ -1315,7 +1315,7 @@ def _start_studio_server(
             progress.close()
     _shutdown_auto_served()
     _fail(
-        "The Unsloth server didn't become ready and made no progress for "
+        "The LABZ server didn't become ready and made no progress for "
         f"{_SERVER_START_TIMEOUT_S}s. See {log_path}."
     )
 
@@ -1355,7 +1355,7 @@ def _require_studio(
         ]
         if _pinned:
             typer.echo(
-                f"Warning: an Unsloth server is already running at {base}; sampling pins "
+                f"Warning: an LABZ server is already running at {base}; sampling pins "
                 f"({', '.join(_pinned)}) apply only when this command starts the server, so the "
                 "running server keeps its current sampling. Stop it with `unsloth studio stop` "
                 "and re-run to apply them.",
@@ -1371,7 +1371,7 @@ def _require_studio(
         ]
         if _reasoning_pins:
             typer.echo(
-                f"Warning: an Unsloth server is already running at {base}; "
+                f"Warning: an LABZ server is already running at {base}; "
                 f"{', '.join(_reasoning_pins)} takes effect only when this command starts "
                 "the server, so the running server keeps its current reasoning mode. Stop it "
                 "with `unsloth studio stop` and re-run to apply the override.",
@@ -1390,11 +1390,11 @@ def _require_studio(
         # Normalize to the port unsloth run actually binds, so the health poll and the returned base hit the same server we launch, not a portless :80.
         expected = _effective_base(expected)
         load = load or LoadOptions()
-        # Leave a bare GGUF repo's variant unset: the server's own quant preference already picks the best available (UD-Q4_K_XL for Unsloth uploads, else Q4_K_M) and falls back when that exact quant is missing, which forcing a fixed variant here would break.
+        # Leave a bare GGUF repo's variant unset: the server's own quant preference already picks the best available (UD-Q4_K_XL for LABZ uploads, else Q4_K_M) and falls back when that exact quant is missing, which forcing a fixed variant here would break.
         return _start_studio_server(expected, model, load, server_options)
     model_hint = "" if model else " Pass --model to have it start one for you, or"
     _fail(
-        f"No running Unsloth server found at {expected}.{model_hint} start one with "
+        f"No running LABZ server found at {expected}.{model_hint} start one with "
         "`unsloth studio`, or point UNSLOTH_STUDIO_URL at a remote server."
     )
 
@@ -1539,12 +1539,12 @@ def _key_accepted(base: str, key: str) -> bool:
         if exc.code in (401, 403):
             return False
         _fail(
-            f"Unsloth server error while checking an API key ({exc.code}). "
+            f"LABZ server error while checking an API key ({exc.code}). "
             "The server may be starting up or unhealthy; try again shortly."
         )
     except (urllib.error.URLError, TimeoutError) as exc:
         _fail(
-            "Couldn't reach the Unsloth server while checking an API key: "
+            "Couldn't reach the LABZ server while checking an API key: "
             f"{getattr(exc, 'reason', None) or exc}"
         )
 
@@ -1562,7 +1562,7 @@ def _agent_api_key(
             return explicit
         # The server was auto-started for this run, so an exported UNSLOTH_API_KEY meant for some other server must not fail the launch: the loopback mint path below is guaranteed to work. An explicit key the fresh server accepts is still honored above.
 
-    # Replay a key the user saved for THIS EXACT server first (scoped per base, so it only goes back there, including a remote or SSH-tunnelled Unsloth whose secret the local handshake cannot match). Skip ones the server rejects.
+    # Replay a key the user saved for THIS EXACT server first (scoped per base, so it only goes back there, including a remote or SSH-tunnelled LABZ whose secret the local handshake cannot match). Skip ones the server rejects.
     for key in _cached_keys(cache, base, "saved"):
         if _key_accepted(base, key):
             _remember_key(cache, base, key, "saved")
@@ -1572,15 +1572,15 @@ def _agent_api_key(
     if not is_loopback_url(base):
         _fail(
             f"No saved API key for {base} and automatic minting only runs against "
-            "a local Unsloth. Create an API key in Unsloth → Settings → API and "
+            "a local LABZ. Create an API key in LABZ → Settings → API and "
             "pass it with --api-key (it is remembered per server), or set "
             "UNSLOTH_API_KEY."
         )
     if not verify_studio_identity(base):
         _fail(
-            f"Couldn't verify that {base} is your Unsloth (it may be running as a "
+            f"Couldn't verify that {base} is your LABZ (it may be running as a "
             "different OS user, or another process took the port). Create an API "
-            "key in Unsloth → Settings → API and pass it with --api-key, or set "
+            "key in LABZ → Settings → API and pass it with --api-key, or set "
             "UNSLOTH_API_KEY."
         )
 
@@ -1594,8 +1594,8 @@ def _agent_api_key(
     token = _studio_token()
     if token is None:
         _fail(
-            "Couldn't authenticate with the Unsloth server automatically. Create "
-            "an API key in Unsloth → Settings → API and pass it with --api-key, "
+            "Couldn't authenticate with the LABZ server automatically. Create "
+            "an API key in LABZ → Settings → API and pass it with --api-key, "
             "or set UNSLOTH_API_KEY."
         )
     key = _http_json(
@@ -1642,7 +1642,7 @@ def _is_hub_model_id(value: object) -> bool:
         return False
     if len(text) >= 2 and text[1] == ":" and text[0].isalpha():
         return False
-    # A hub id is exactly "namespace/name" over a restricted charset. Anything with extra path segments (a server-side relative path such as models/Llama/Foo.gguf on a remote Unsloth) is not a hub id and must not be casefold-matched against a differently cased path on a case-sensitive filesystem. This is host independent, unlike the existence probe below which cannot see a path that only exists on the server.
+    # A hub id is exactly "namespace/name" over a restricted charset. Anything with extra path segments (a server-side relative path such as models/Llama/Foo.gguf on a remote LABZ) is not a hub id and must not be casefold-matched against a differently cased path on a case-sensitive filesystem. This is host independent, unlike the existence probe below which cannot see a path that only exists on the server.
     parts = text.split("/")
     if len(parts) != 2:
         return False
@@ -1668,7 +1668,7 @@ def _is_model_path(value: str) -> bool:
 
 
 def _public_model_id(value: Optional[str]) -> Optional[str]:
-    """The id Unsloth advertises for a model loaded by path. The loaded listing never echoes a host path: it reports the file or directory name with any .gguf suffix stripped (core.inference.model_ids.public_model_id), so a path we asked to load has to be matched by that name too."""
+    """The id LABZ advertises for a model loaded by path. The loaded listing never echoes a host path: it reports the file or directory name with any .gguf suffix stripped (core.inference.model_ids.public_model_id), so a path we asked to load has to be matched by that name too."""
     if not value or not _is_model_path(value):
         return None
     name = os.path.basename(value.replace("\\", "/").rstrip("/"))
@@ -1697,7 +1697,7 @@ def _model_id_matches(
 ) -> bool:
     if actual == requested:
         return True
-    # Case-insensitive matching is only safe when the local existence probe in _is_hub_model_id is authoritative, i.e. against a loopback Unsloth on this host. Against a remote Unsloth a two-segment string is indistinguishable from a server-side relative path (Models/Foo vs models/foo), so casefolding it could attach to the wrong model on a case-sensitive server; defer to an exact match there and let the load endpoint resolve the requested path.
+    # Case-insensitive matching is only safe when the local existence probe in _is_hub_model_id is authoritative, i.e. against a loopback LABZ on this host. Against a remote LABZ a two-segment string is indistinguishable from a server-side relative path (Models/Foo vs models/foo), so casefolding it could attach to the wrong model on a case-sensitive server; defer to an exact match there and let the load endpoint resolve the requested path.
     if not allow_casefold:
         return False
     if not (_is_hub_model_id(actual) and _is_hub_model_id(requested)):
@@ -1718,7 +1718,7 @@ def _resident_load_target(models: list, status: dict, allow_casefold: bool):
     if status.get("is_diffusion"):
         # An image runtime answers with an active_model like any other, but it cannot serve chat: targeting it would tear down the diffusion server and then point the agent at a model that can never answer it.
         _fail(
-            "Unsloth is serving an image model, which cannot serve chat, so there are no "
+            "LABZ is serving an image model, which cannot serve chat, so there are no "
             "settings to apply. Re-run with --model naming the chat model to load."
         )
     active_id = status.get("active_model")
@@ -1740,7 +1740,7 @@ def _resident_load_target(models: list, status: dict, allow_casefold: bool):
             entry = loaded[0]
         elif loaded:
             _fail(
-                "This Unsloth cannot say which model is serving chat, and more than one is "
+                "This LABZ cannot say which model is serving chat, and more than one is "
                 "loaded. Re-run with --model naming the one these settings are for."
             )
     public_id = active_id or (entry or {}).get("id")
@@ -1759,7 +1759,7 @@ def _resident_load_target(models: list, status: dict, allow_casefold: bool):
     if _is_hub_model_id(public_id):
         return public_id, public_id
     _fail(
-        f"Unsloth is serving '{public_id}' from a local path it does not expose, so these "
+        f"LABZ is serving '{public_id}' from a local path it does not expose, so these "
         "settings cannot be applied by attaching. Re-run with --model naming that path."
     )
 
@@ -1877,7 +1877,7 @@ def _resolve_model(
 ) -> dict:
     models = _loaded_models(base, key)
     load_requested = False
-    # Only casefold-match ids against a loopback Unsloth, where _is_hub_model_id's local existence probe can actually reject a server-side path; see the note there.
+    # Only casefold-match ids against a loopback LABZ, where _is_hub_model_id's local existence probe can actually reject a server-side path; see the note there.
     allow_casefold = is_loopback_url(base)
     # The loaded listing carries the active GGUF variant only while that quant reference still resolves, and never the runtime load settings, so an id match alone can hide the wrong quant (Q8_0 serving while the user asked for UD-Q4_K_XL). When the user passed any explicit load knob, defer to /api/inference/load: the server's already-loaded dedup answers "already_loaded" without reloading when the variant AND settings match, so a second session running the same command still attaches without evicting the first.
     overrides = load.overrides()
@@ -1990,7 +1990,7 @@ def _resolve_model(
             ):
                 switch_unknown = True
             else:
-                typer.echo(f"Switching the Unsloth server from {active_id} to {requested}.")
+                typer.echo(f"Switching the LABZ server from {active_id} to {requested}.")
                 typer.echo("This unloads the current model for every attached session.")
                 announced_switch = True
         elif active_id and load.gguf_variant:
@@ -2002,7 +2002,7 @@ def _resolve_model(
             resident = status.get("gguf_variant") if status.get("is_gguf") else None
             if resident and _normalized_variant(resident) != _normalized_variant(load.gguf_variant):
                 typer.echo(
-                    f"Switching the Unsloth server from {active_id}:{resident} "
+                    f"Switching the LABZ server from {active_id}:{resident} "
                     f"to {requested}:{load.gguf_variant}."
                 )
                 typer.echo("This unloads the current model for every attached session.")
@@ -2101,9 +2101,9 @@ def _resolve_model(
             typer.echo(f"Reusing loaded model: {_display_model_spec(requested, load.gguf_variant)}")
         return match
     if requested:
-        # We asked Unsloth to load it and it did not surface as loaded; do not silently hand back an unrelated loaded model.
+        # We asked LABZ to load it and it did not surface as loaded; do not silently hand back an unrelated loaded model.
         _fail(
-            f"Unsloth didn't report '{requested}' as loaded. Double-check the model "
+            f"LABZ didn't report '{requested}' as loaded. Double-check the model "
             "id, or load it from the model dropdown in the UI."
         )
     resident = next((m for m in models if m.get("loaded") is not False), None)
@@ -2111,7 +2111,7 @@ def _resolve_model(
         # An empty listing and one holding only unloaded entries are the same situation
         # to the user, and which one a server sends depends only on its version.
         _fail(
-            "No model is loaded in Unsloth. Load one from the model dropdown in "
+            "No model is loaded in LABZ. Load one from the model dropdown in "
             "the UI, or pass --model <hf-id-or-path> to load it from here."
         )
     return resident
@@ -2498,7 +2498,7 @@ def _attach_gguf_check(
             # alone gets an incomplete file loaded, and llama-server finds the missing bytes
             # only after teardown. Loopback does not prove that -- 127.0.0.1 may be an SSH or
             # container forward where a server-valid path is simply absent here -- so confirm
-            # this machine's Unsloth and otherwise defer to the probe.
+            # this machine's LABZ and otherwise defer to the probe.
             if is_loopback_url(base) and verify_studio_identity(base):
                 # A .gguf-NAMED DIRECTORY is scanned, not loaded, so the suffix proves nothing.
                 try:
@@ -2817,7 +2817,7 @@ def _merge_codex_config(existing: str, base: str) -> str:
         text += "\n"
     return text + (
         f"{_PROVIDER_HEADER}\n"
-        'name = "Unsloth Studio"\n'
+        'name = "LABZ Studio"\n'
         f"base_url = {json.dumps(base + '/v1')}\n"
         f'env_key = "{_CODEX_ENV_KEY}"\n'
         'wire_api = "responses"\n'
@@ -2868,13 +2868,13 @@ def _codex_supports_patch_line_endings() -> bool:
 
 
 def _codex_model_catalog(model: dict) -> dict:
-    """Return conservative metadata for an Unsloth model unknown to Codex's built-in catalog."""
+    """Return conservative metadata for an LABZ model unknown to Codex's built-in catalog."""
     model_id = model["id"]
     window = model.get("context_length") or model.get("max_context_length")
     entry = {
         "slug": model_id,
         "display_name": model_id,
-        "description": "Model served by Unsloth Studio",
+        "description": "Model served by LABZ Studio",
         "supported_reasoning_levels": [],
         "shell_type": "default",
         "visibility": "none",
@@ -3281,7 +3281,7 @@ if mode == "plan":
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
         "permissionDecisionReason": (
-            "Plan mode is active. Call the read-only Unsloth plan agent "
+            "Plan mode is active. Call the read-only LABZ plan agent "
             "(unsloth_plan_agent) instead of unsloth_agent."
         ),
     }}))
@@ -3330,7 +3330,7 @@ def write_claude_subagent_plugin(path: Path, server_env: dict) -> Path:
             "name": "unsloth-local-agent",
             "version": "1.0.0",
             "description": _SUBAGENT_DESCRIPTION,
-            "author": {"name": "Unsloth AI"},
+            "author": {"name": "LABZ AI"},
         },
     )
     _write_private_json(
@@ -3383,11 +3383,11 @@ def write_claude_subagent_plugin(path: Path, server_env: dict) -> Path:
     skill.parent.mkdir(parents = True, exist_ok = True, mode = 0o700)
     skill.write_text(
         "---\n"
-        "description: Delegate a task to the local agent powered by Unsloth. Use when the "
-        "user asks to spawn an Unsloth agent or local agent.\n"
+        "description: Delegate a task to the local agent powered by LABZ. Use when the "
+        "user asks to spawn an LABZ agent or local agent.\n"
         "---\n\n"
-        "Call the Unsloth local agent tool once with the complete task. In plan mode, call "
-        "the read-only Unsloth plan agent instead. Return its result to the user without "
+        "Call the LABZ local agent tool once with the complete task. In plan mode, call "
+        "the read-only LABZ plan agent instead. Return its result to the user without "
         "claiming that the cloud parent completed the local work.\n",
         encoding = "utf-8",
     )
@@ -3631,7 +3631,7 @@ def _augment_path_with_install_dirs() -> None:
 
 
 def _probe_env(**extra: str) -> dict:
-    """Environment for probes that RUN a resolved shim. _which_with_install_dirs restores PATH before returning, so a shim backed by Unsloth's managed Node would not find that node when executed."""
+    """Environment for probes that RUN a resolved shim. _which_with_install_dirs restores PATH before returning, so a shim backed by LABZ's managed Node would not find that node when executed."""
     original = os.environ.get("PATH")
     _augment_path_with_install_dirs()
     env = os.environ.copy()
@@ -3744,7 +3744,7 @@ def _install_command(install_hint: str) -> tuple[list[str], Optional[dict]]:
     if npm is None:
         _fail(
             "npm is required to install this agent, but no native system npm or usable "
-            "Unsloth-managed Node installation was found. Install Node.js with npm, "
+            "LABZ-managed Node installation was found. Install Node.js with npm, "
             "then re-run."
         )
     args = shlex.split(install_hint)
@@ -3782,14 +3782,14 @@ def _install_agent(name: str, install_hint: str) -> Optional[str]:
         if pinned_commit:
             warning = (
                 "Security warning: This will download and execute a third-party script "
-                f"from {source} with your privileges. Unsloth pins this content to "
+                f"from {source} with your privileges. LABZ pins this content to "
                 f"immutable upstream commit {pinned_commit}, but does not independently "
                 "verify or sandbox it. Continue only if you trust this source and commit."
             )
         else:
             warning = (
                 "Security warning: This will download and execute an unverified third-party "
-                f"script from {source} with your privileges. Unsloth does not pin or verify "
+                f"script from {source} with your privileges. LABZ does not pin or verify "
                 "the downloaded content. Continue only if you trust this source."
             )
     else:
@@ -4090,7 +4090,7 @@ def _connect(
     server_options: ServerOptions = ServerOptions(),
     preload_check = None,
 ) -> tuple:
-    # `--model org/name:QUANT` is shorthand for `--model org/name --gguf-variant QUANT`. Split it before we match or serve so the attach path resolves against the already-loaded `org/name` (listed without the suffix) instead of reloading a `:`-suffixed repo id, which Unsloth rejects and which would evict a model another session is using.
+    # `--model org/name:QUANT` is shorthand for `--model org/name --gguf-variant QUANT`. Split it before we match or serve so the attach path resolves against the already-loaded `org/name` (listed without the suffix) instead of reloading a `:`-suffixed repo id, which LABZ rejects and which would evict a model another session is using.
     if model:
         repo, variant = _split_repo_variant(model)
         if variant:
@@ -4143,7 +4143,7 @@ def _run(
     # Some agents (Pi) render inline from wherever the cursor sits: their first paint assumes a clean screen rather than clearing or entering the alternate screen themselves. Hand them one so the session does not start mid-scroll under our connection output. click.clear() is cross-platform and a no-op when stdout is not a terminal, so transcripts and --no-launch recipes stay intact.
     if launch and clear_screen:
         click.clear()
-    typer.echo(f"Unsloth ready at {base} · model {entry['id']}")
+    typer.echo(f"LABZ ready at {base} · model {entry['id']}")
     if not launch:
         env, wsl_env_bridge = _wsl_shim_env(command, env, unset_env, cwd_env)
         _print_env(
@@ -4154,7 +4154,7 @@ def _run(
             cwd_env = cwd_env,
         )
         if _keep_auto_served():
-            typer.echo(f"Unsloth Studio is still running at {base}.")
+            typer.echo(f"LABZ Studio is still running at {base}.")
             typer.echo("Stop it with: unsloth studio stop")
         return
     try:
@@ -4172,16 +4172,16 @@ def _run(
     auto_started = _auto_served_server is not None
     kept = _keep_auto_served()
     if auto_started and not kept:
-        typer.echo(f"The auto-started Unsloth server at {base} stopped during the session.")
+        typer.echo(f"The auto-started LABZ server at {base} stopped during the session.")
         raise typer.Exit(code = code)
     if code:
         # The server status below must not read as a successful agent session.
         typer.echo(f"The agent exited with code {code}.")
     if is_loopback_url(base):
-        typer.echo(f"Unsloth Studio is still running at {base}.")
+        typer.echo(f"LABZ Studio is still running at {base}.")
         typer.echo("Stop it with: unsloth studio stop")
     else:
-        typer.echo(f"The remote Unsloth server is still running at {base}.")
+        typer.echo(f"The remote LABZ server is still running at {base}.")
     raise typer.Exit(code = code)
 
 
@@ -4191,14 +4191,14 @@ def _agents_config_root() -> Path:
 
 @contextlib.contextmanager
 def _temporary_agent_config(prefix: str):
-    # Nothing else prunes Unsloth's auth tree, so reuse the locked session helper: the next launch reclaims homes left by a killed wrapper, and the lock spares live sessions.
+    # Nothing else prunes LABZ's auth tree, so reuse the locked session helper: the next launch reclaims homes left by a killed wrapper, and the lock spares live sessions.
     temp_root = _agents_config_root() / ".tmp"
     with contextlib.ExitStack() as stack:
         try:
             temp_root.mkdir(parents = True, exist_ok = True, mode = 0o700)
             path = stack.enter_context(_short_ephemeral_session(temp_root, prefix))
         except OSError:
-            # Attaching to a remote or running Unsloth needs no local auth tree, so it may be absent or unwritable. Fall back to the system temp dir, as before: no reclamation there, but the OS prunes it.
+            # Attaching to a remote or running LABZ needs no local auth tree, so it may be absent or unwritable. Fall back to the system temp dir, as before: no reclamation there, but the OS prunes it.
             path = Path(tempfile.mkdtemp(prefix = prefix))
             stack.callback(shutil.rmtree, path, ignore_errors = True)
         yield path
@@ -4348,9 +4348,9 @@ def _session_config(
     launch: bool,
     persist: bool = False,
 ):
-    """Yield a private directory for an agent's session config (never the user's own). launch (the default) uses an ephemeral temp dir removed after the agent process exits, so nothing persists; no-launch uses a stable Unsloth-owned dir, since the printed recipe is run later on this machine; persist (from --persist) uses that same stable dir even for a launch, so the agent's session survives the exit and can be resumed. Either way the user's real ~/.<agent> config is left untouched."""
+    """Yield a private directory for an agent's session config (never the user's own). launch (the default) uses an ephemeral temp dir removed after the agent process exits, so nothing persists; no-launch uses a stable LABZ-owned dir, since the printed recipe is run later on this machine; persist (from --persist) uses that same stable dir even for a launch, so the agent's session survives the exit and can be resumed. Either way the user's real ~/.<agent> config is left untouched."""
     if launch and not persist:
-        # Windows codex keeps #7519's short home (MAX_PATH); everyone else uses Unsloth's root.
+        # Windows codex keeps #7519's short home (MAX_PATH); everyone else uses LABZ's root.
         parent = _ephemeral_session_parent(agent)
         prefix = _ephemeral_session_prefix(agent, parent)
         if parent is not None:
@@ -4400,7 +4400,7 @@ def write_openclaw_config(
         )
         return
     before = json.dumps(config, sort_keys = True)
-    # Unsloth is a generic OpenAI-compatible /v1 endpoint (the vLLM/LM Studio path).
+    # LABZ is a generic OpenAI-compatible /v1 endpoint (the vLLM/LM Studio path).
     provider_model = {"id": model["id"], "name": model["id"]}
     window = model.get("context_length") or model.get("max_context_length")
     if window:
@@ -4443,7 +4443,7 @@ def write_openclaw_config(
         workspace.mkdir(parents = True, exist_ok = True, mode = 0o700)
         workspace_path = str(workspace)
     defaults["workspace"] = workspace_path
-    # Per-agent paths override agents.defaults.workspace and OPENCLAW_STATE_DIR. This config is itself an isolated Unsloth copy, so remove stale explicit paths and let OpenClaw resolve every listed agent beneath the managed defaults/state directory.
+    # Per-agent paths override agents.defaults.workspace and OPENCLAW_STATE_DIR. This config is itself an isolated LABZ copy, so remove stale explicit paths and let OpenClaw resolve every listed agent beneath the managed defaults/state directory.
     agent_list = agents.get("list")
     if isinstance(agent_list, list):
         for agent_config in agent_list:
@@ -4540,7 +4540,7 @@ def write_opencode_config(
         model_entry["limit"] = {"context": window, "output": min(window // 4, 8192)}
     _subdict(config, "provider")[_OPENCODE_PROVIDER] = {
         "npm": "@ai-sdk/openai-compatible",
-        "name": "Unsloth Studio",
+        "name": "LABZ Studio",
         "options": {"baseURL": f"{base}/v1", "apiKey": key},
         "models": {model["id"]: model_entry},
     }
@@ -4659,12 +4659,12 @@ def write_pi_config(base: str, key: str, model: dict, path: Path) -> None:
         )
         return
     before = json.dumps(config, sort_keys = True)
-    # Pi reads custom providers from ~/.pi/agent/models.json (HOME-relocated for the session). Unsloth is a generic OpenAI-compatible /v1 endpoint, and the key lives in the config rather than the env, matching openclaw/opencode.
+    # Pi reads custom providers from ~/.pi/agent/models.json (HOME-relocated for the session). LABZ is a generic OpenAI-compatible /v1 endpoint, and the key lives in the config rather than the env, matching openclaw/opencode.
     provider_model = {"id": model["id"]}
     window = model.get("context_length") or model.get("max_context_length")
     if window:
         window = int(window)
-        # An unspecified model defaults to contextWindow 128000 / maxTokens 16384, far larger than a small Unsloth context, so Pi compacts too late and overflows the server. Pin the real window and a sane output cap, mirroring OpenCode.
+        # An unspecified model defaults to contextWindow 128000 / maxTokens 16384, far larger than a small LABZ context, so Pi compacts too late and overflows the server. Pin the real window and a sane output cap, mirroring OpenCode.
         provider_model["contextWindow"] = window
         provider_model["maxTokens"] = min(window // 4, 8192)
     _subdict(config, "providers")[_PI_PROVIDER] = {
@@ -4971,7 +4971,7 @@ def write_dsh_config(base: str, model: dict, path: Path) -> None:
         model_entry["contextWindow"] = window
         model_entry["maxTokens"] = min(window // 4, 8192)
     _subdict(_subdict(config, "llm-pi-ai"), "providers")[_DSH_PROVIDER] = {
-        "displayName": "Unsloth Studio",
+        "displayName": "LABZ Studio",
         "api": "openai-completions",
         "baseURL": f"{base}/v1",
         "apiKeyEnv": _DSH_ENV_KEY,
@@ -5017,7 +5017,7 @@ def claude(
     persist: bool = _PERSIST_OPTION,
     as_subagent: bool = _AS_SUBAGENT_OPTION,
 ):
-    """Point Claude Code at the running Unsloth server and start it."""
+    """Point Claude Code at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     install_hint = (
@@ -5082,8 +5082,8 @@ def claude(
                 *ctx.args,
             ]
             typer.echo(
-                "Unsloth is available as a local agent. "
-                "Ask Claude to spawn an Unsloth or local agent."
+                "LABZ is available as a local agent. "
+                "Ask Claude to spawn an LABZ or local agent."
             )
             _run(
                 base,
@@ -5143,7 +5143,7 @@ def codex(
     persist: bool = _PERSIST_OPTION,
     as_subagent: bool = _AS_SUBAGENT_OPTION,
 ):
-    """Point OpenAI Codex at the running Unsloth server and start it."""
+    """Point OpenAI Codex at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     install_hint = _npm_install_hint("@openai/codex")
@@ -5198,8 +5198,8 @@ def codex(
                 *ctx.args,
             ]
             typer.echo(
-                "Unsloth is available as a local agent. "
-                "Ask Codex to spawn an Unsloth or local agent."
+                "LABZ is available as a local agent. "
+                "Ask Codex to spawn an LABZ or local agent."
             )
             _run(
                 base,
@@ -5258,7 +5258,7 @@ def openclaw(
     yolo: bool = _YOLO_OPTION,
     persist: bool = _PERSIST_OPTION,
 ):
-    """Point OpenClaw at the running Unsloth server and start it."""
+    """Point OpenClaw at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     _reject_as_subagent("openclaw", ctx.args)
@@ -5353,7 +5353,7 @@ def opencode(
     persist: bool = _PERSIST_OPTION,
     as_subagent: bool = _AS_SUBAGENT_OPTION,
 ):
-    """Point OpenCode at the running Unsloth server and start it."""
+    """Point OpenCode at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     command_name, opencode_v2 = _opencode_command()
@@ -5425,7 +5425,7 @@ def opencode(
                 "prompt": _SUBAGENT_INSTRUCTIONS,
             }
             env["OPENCODE_CONFIG_CONTENT"] = json.dumps(inline_config)
-            typer.echo("Unsloth is available as @unsloth and in /models.")
+            typer.echo("LABZ is available as @unsloth and in /models.")
             _run(
                 base,
                 subagent_model,
@@ -5464,7 +5464,7 @@ def opencode(
     # opencode keeps sessions in ~/.local/share/opencode (never relocated), so resume already survives exit; reopen the last one by passing `opencode --continue` through.
     with _session_config("opencode", launch, persist = persist) as cfg:
         config_path = cfg / "opencode.json"
-        # OPENCODE_CONFIG is an overlay, loaded between the user's global and project configs, so this adds the Unsloth provider/model for the session without changing the user's default model. The key lives in the config, not the env.
+        # OPENCODE_CONFIG is an overlay, loaded between the user's global and project configs, so this adds the LABZ provider/model for the session without changing the user's default model. The key lives in the config, not the env.
         session_permission = write_opencode_config(
             base,
             key,
@@ -5515,7 +5515,7 @@ def hermes(
     yolo: bool = _YOLO_OPTION,
     persist: bool = _PERSIST_OPTION,
 ):
-    """Point Hermes (Nous Research) at the running Unsloth server and start it."""
+    """Point Hermes (Nous Research) at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     _reject_as_subagent("hermes", ctx.args)
@@ -5579,7 +5579,7 @@ def pi(
     persist: bool = _PERSIST_OPTION,
     as_subagent: bool = _AS_SUBAGENT_OPTION,
 ):
-    """Point Pi (coding agent) at the running Unsloth server and start it."""
+    """Point Pi (coding agent) at the running LABZ server and start it."""
     # Route a leading `org/name` positional to --model; forward the rest to the agent.
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     install_hint = _npm_install_hint(
@@ -5632,8 +5632,8 @@ def pi(
                 *ctx.args,
             ]
             typer.echo(
-                "Unsloth is available as a local agent and in /model. "
-                "Ask Pi to spawn an Unsloth or local agent."
+                "LABZ is available as a local agent and in /model. "
+                "Ask Pi to spawn an LABZ or local agent."
             )
             _run(
                 base,
@@ -5706,7 +5706,7 @@ def dsh(
     yolo: bool = _YOLO_OPTION,
     persist: bool = _PERSIST_OPTION,
 ):
-    """Point DeepSeek Harness (dsh) at the running Unsloth server and start it."""
+    """Point DeepSeek Harness (dsh) at the running LABZ server and start it."""
     model, ctx.args[:] = _consume_positional_model(model, ctx.args)
     _reject_as_subagent("dsh", ctx.args)
     command = _dsh_command(ctx.args)

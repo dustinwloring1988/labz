@@ -54,12 +54,12 @@ def inference(
         "--max-seq-length",
         help = "Context length in tokens. 0 takes the checkpoint's trained window on GGUF "
         "and MLX, and 2048 on the transformers backend. A value that differs from a "
-        "running Unsloth server's reloads the model.",
+        "running LABZ server's reloads the model.",
     ),
     load_in_4bit: bool = typer.Option(
         True,
         "--load-in-4bit/--no-load-in-4bit",
-        help = "Load the model in 4-bit. Left unset, a running Unsloth server that already "
+        help = "Load the model in 4-bit. Left unset, a running LABZ server that already "
         "has this model loaded keeps its precision.",
     ),
     tensor_parallel: bool = typer.Option(
@@ -106,7 +106,7 @@ def inference(
     no_server: bool = typer.Option(
         False,
         "--no-server",
-        help = "Load the model in-process even if an Unsloth server is running.",
+        help = "Load the model in-process even if an LABZ server is running.",
     ),
 ):
     """Run a single inference using the specified model."""

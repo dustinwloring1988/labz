@@ -7,7 +7,7 @@ C:\\Windows\\System32 is unwritable for a normal user, and cwd-relative paths
 (`./models`, `unsloth_compiled_cache`) would resolve inside the Windows tree.
 
 Two ways in. "Run as administrator" opens a terminal there, a mistake that still
-stops with an actionable error. And "Run Unsloth at login" starts the desktop
+stops with an actionable error. And "Run LABZ at login" starts the desktop
 from an HKCU Run value, which carries no working directory, so it and every CLI
 child inherit System32 (issue #8510). That one is not the user's mistake: the
 desktop's own commands take no paths from the user, so they move to ~/.unsloth
@@ -19,7 +19,7 @@ STUDIO_HOME against the working directory.
 
 import os as _os
 
-# Set by Unsloth Desktop on every CLI child it owns (process.rs); forging it grants nothing,
+# Set by LABZ Desktop on every CLI child it owns (process.rs); forging it grants nothing,
 # the move lands in the caller's own account.
 DESKTOP_MANAGED_ENV = "UNSLOTH_DESKTOP_MANAGED"
 
@@ -81,7 +81,7 @@ def _normalize(path, pathmod):
 
 
 def system_dirs(windir, pathmod = _os.path):
-    """The Windows folders Unsloth refuses to run from."""
+    """The Windows folders LABZ refuses to run from."""
     # SysWOW64 too: a 32-bit elevated shell opens there, same unwritable folder.
     return [_normalize(pathmod.join(windir, name), pathmod) for name in ("System32", "SysWOW64")]
 
@@ -278,10 +278,10 @@ def is_relocatable_invocation(argv, environ):
     return tuple(rest) in _STUDIO_COMMANDS
 
 
-# Path overrides written relative to the folder being left: Unsloth resolves them with
+# Path overrides written relative to the folder being left: LABZ resolves them with
 # Path.resolve(), so moving first would silently retarget them.
 _RELATIVE_PATH_ENV = (
-    # Unsloth roots: storage_roots.py.
+    # LABZ roots: storage_roots.py.
     "UNSLOTH_HOME",
     "UNSLOTH_STUDIO_HOME",
     "STUDIO_HOME",
@@ -298,7 +298,7 @@ _RELATIVE_PATH_ENV = (
     "WHISPER_SERVER_PATH",
     "SD_CLI_PATH",
     "SD_SERVER_PATH",
-    # Model files llama-server reads from the environment and Unsloth reads back when sizing a
+    # Model files llama-server reads from the environment and LABZ reads back when sizing a
     # launch (llama_cpp.py). URL and HF-repo spellings are absent: they name no local file.
     "LLAMA_ARG_MODEL",
     "LLAMA_ARG_MMPROJ",
@@ -445,7 +445,7 @@ def pin_relative_overrides(
 _INLINE_JSON_ENV = frozenset(("MLX_HOSTFILE", "MLX_IBV_DEVICES"))
 
 # Readers disagree about %VAR%/$VAR: huggingface_hub expandvars HF_HOME, XDG_CACHE_HOME,
-# HF_HUB_CACHE and HF_ASSETS_CACHE and Unsloth does SENTENCE_TRANSFORMERS_HOME, but
+# HF_HUB_CACHE and HF_ASSETS_CACHE and LABZ does SENTENCE_TRANSFORMERS_HOME, but
 # hf_cache_settings._canonical() does not. Expanding here makes both readers see one absolute
 # path.
 _EXPANDED_ENV = frozenset(
@@ -629,7 +629,7 @@ def relocation_target(
     try:
         makedirs(work_dir, exist_ok = True)
     except OSError:
-        # An unwritable home is a broken profile and Unsloth must write there anyway, so stop now.
+        # An unwritable home is a broken profile and LABZ must write there anyway, so stop now.
         return None
     return work_dir
 
@@ -643,7 +643,7 @@ def blocked_message(
     sep = _os.sep,
     expanduser = None,
 ):
-    """The error shown to someone who ran Unsloth from a system folder by hand."""
+    """The error shown to someone who ran LABZ from a system folder by hand."""
     # allow_public here only: relocating to C:\Users\Public would share one account's state with every other account.
     home = safe_user_dir(environ, windir, pathmod, sep, expanduser, allow_public = True)
     if home:
@@ -659,7 +659,7 @@ def blocked_message(
     rendered_argv = " ".join((f'"{arg}"' if " " in arg else arg) for arg in argv)
     retry = ("unsloth " + rendered_argv).rstrip()
     return (
-        f"Unsloth cannot run from {cwd}\n"
+        f"LABZ cannot run from {cwd}\n"
         "\n"
         "That is a Windows system folder. Windows blocks writes here, and any\n"
         "relative path you pass would resolve inside the Windows folder.\n"
@@ -706,7 +706,7 @@ def check_working_directory(
         # The launch directory is gone: say so rather than name a folder they were never in.
         return (
             (
-                "Unsloth cannot determine its current folder. It may have been deleted,\n"
+                "LABZ cannot determine its current folder. It may have been deleted,\n"
                 "or it may be on a drive that is no longer available.\n"
                 "Change to a folder that exists and run the command again."
             ),
@@ -780,10 +780,10 @@ def check_working_directory(
         # override sends them looking in the wrong place.
         return (
             (
-                f"Unsloth cannot run from {cwd}, and could not move out of it\n"
+                f"LABZ cannot run from {cwd}, and could not move out of it\n"
                 "without changing where one of its path settings points\n"
                 f"({type(unpinnable).__name__}: {unpinnable}).\n"
-                "Set that value to a full path, or start Unsloth from a normal folder."
+                "Set that value to a full path, or start LABZ from a normal folder."
             ),
             "red",
             True,
@@ -793,7 +793,7 @@ def check_working_directory(
         # so it describes that case, not a shell.
         return (
             (
-                f"Unsloth cannot run from {cwd}, and no folder outside {windir} was\n"
+                f"LABZ cannot run from {cwd}, and no folder outside {windir} was\n"
                 "available to run from instead. Check that the user profile for this\n"
                 "account exists and is writable."
             ),
@@ -803,9 +803,9 @@ def check_working_directory(
 
     return (
         (
-            f"Unsloth was started from {cwd}, which is a Windows system folder,\n"
+            f"LABZ was started from {cwd}, which is a Windows system folder,\n"
             f"so it switched to {target} instead.\n"
-            "This happens when Unsloth Desktop is started by 'Run Unsloth at login'."
+            "This happens when LABZ Desktop is started by 'Run LABZ at login'."
         ),
         "yellow",
         False,

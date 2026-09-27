@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved.
 
-"""Coordinate launches that consume the Tauri-managed Unsloth environment."""
+"""Coordinate launches that consume the Tauri-managed LABZ environment."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ _POSIX_RUNTIME_LOCK_FILE = ".studio-runtime.lock"
 
 
 class StudioRuntimeGateBusy(RuntimeError):
-    """The managed Unsloth environment is being installed or repaired."""
+    """The managed LABZ environment is being installed or repaired."""
 
 
 class _SidAndAttributes(ctypes.Structure):
@@ -315,13 +315,13 @@ def ensure_managed_environment_is_idle(studio_home: Path) -> None:
     )
     if result.returncode != 0:
         detail = result.stderr.strip() or f"exit code {result.returncode}"
-        raise RuntimeError(f"Could not inspect running processes before Unsloth update: {detail}")
+        raise RuntimeError(f"Could not inspect running processes before LABZ update: {detail}")
 
     try:
         payload = json.loads(result.stdout or "[]")
     except json.JSONDecodeError as error:
         raise RuntimeError(
-            f"Could not decode the running-process list before Unsloth update: {error}"
+            f"Could not decode the running-process list before LABZ update: {error}"
         ) from error
     processes = payload if isinstance(payload, list) else [payload]
     process_by_pid = {
@@ -387,7 +387,7 @@ def ensure_managed_environment_is_idle(studio_home: Path) -> None:
         ):
             name = process.get("Name") or "process"
             raise RuntimeError(
-                "The managed Unsloth environment is in use by "
+                "The managed LABZ environment is in use by "
                 f"{name} (PID {process_id}). Stop that process, then retry the update."
             )
 

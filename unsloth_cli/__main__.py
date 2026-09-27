@@ -13,8 +13,8 @@ generated launcher:
 
     python -X utf8 -I -m unsloth_cli studio -p 8888
 
-Use -I when that `python` is the managed Unsloth interpreter, which is what every
-command Unsloth prints does. `-m` resolves the package before this file runs, so a
+Use -I when that `python` is the managed LABZ interpreter, which is what every
+command LABZ prints does. `-m` resolves the package before this file runs, so a
 shell standing in a directory that has an `unsloth_cli` folder would otherwise run
 that copy, and -I drops the working directory from sys.path first.
 

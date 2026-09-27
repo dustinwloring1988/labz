@@ -334,7 +334,7 @@ def test_stop_reports_nothing_running_without_pid_files(monkeypatch, tmp_path):
     result = _run_stop(studio_mod)
 
     assert result.exit_code == 0, result.output
-    assert "no running unsloth server" in result.output.lower()
+    assert "no running labz server" in result.output.lower()
 
 
 def test_stop_cleans_stale_pid_files_without_claiming_a_stop(monkeypatch, tmp_path):

@@ -5,7 +5,7 @@
 
 pip considers a distribution with intact metadata already satisfied, so an
 update reinstalls nothing when a package's files are damaged. Before this check
-it printed "Unsloth Studio Installed" and exited 0 while Unsloth died at boot
+it printed "LABZ Studio Installed" and exited 0 while LABZ died at boot
 with `cannot import name 'Depends' from 'fastapi'` -- and a missing-package
 check could not have caught it, because `import fastapi` still succeeded.
 
@@ -350,12 +350,12 @@ def test_duplicate_metadata_gets_its_own_actionable_failure(monkeypatch, capsys)
 
     assert excinfo.value.exit_code == 1
     err = capsys.readouterr().err
-    assert "Unsloth package metadata is inconsistent" in err
+    assert "LABZ package metadata is inconsistent" in err
     assert "cannot safely choose" in err
     assert "Recreate the managed environment before" in err
     assert "pip install" not in err
     assert "installed files are damaged" not in err
-    assert "Unsloth will keep failing to start" not in err
+    assert "LABZ will keep failing to start" not in err
 
 
 @pytest.mark.parametrize("package", ["typer", "torch"])
@@ -423,9 +423,9 @@ def test_a_foreign_cli_stays_quiet(monkeypatch):
 
 
 def test_a_system_python_is_not_treated_as_the_managed_venv(monkeypatch, tmp_path):
-    # Colab has no Unsloth venv: studio/setup.sh installs the backend into the system Python on
+    # Colab has no LABZ venv: studio/setup.sh installs the backend into the system Python on
     # purpose, and distro-packaged RECORDs there list files the distro never installed (PEP 627),
-    # so the file check would accuse the distro of damaging Unsloth. Reproduced on Ubuntu system
+    # so the file check would accuse the distro of damaging LABZ. Reproduced on Ubuntu system
     # Python, which reports an apt-owned `markdown-it-py: ../scripts/markdown-it is missing`.
     prefix = tmp_path / "usr"
     prefix.mkdir()
@@ -656,7 +656,7 @@ def test_the_message_covers_packages_the_installer_will_not_repair(monkeypatch, 
     # install_python_stack installs the current requirement sets and prunes nothing, and the
     # installer never recreates the venv, so damage in an orphan from an older release survives the
     # reinstall it recommends and would report the same failure forever. The scan is deliberately
-    # not scoped to Unsloth's dependency closure, since under-including would let real damage
+    # not scoped to LABZ's dependency closure, since under-including would let real damage
     # through, so the message carries the fallback instead.
     import typer
 
@@ -838,7 +838,7 @@ def test_our_own_shared_top_level_trees_may_also_vanish(site):
 
 
 def test_our_own_runtime_trees_are_still_checked(site):
-    # The exemption is scoped to the shared roots; everything Unsloth actually imports lives
+    # The exemption is scoped to the shared roots; everything LABZ actually imports lives
     # outside them and must still fail an update when damaged.
     _make_dist(
         site,

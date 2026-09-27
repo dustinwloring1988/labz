@@ -1,4 +1,4 @@
-# Copyright 2025-present the Unsloth AI Inc. team. All rights reserved.
+# Copyright 2025-present the LABZ AI Inc. team. All rights reserved.
 
 """Pure resolver for `unsloth studio [run] --enable-tools/--disable-tools`.
 
@@ -175,7 +175,7 @@ def resolve_tool_policy(
     every request. With no flag the result is None: tools still default on for
     every bind (the backend installs that default in `_apply_cli_tool_policy`),
     but as a default rather than an override, so a request's own
-    `enable_tools: false` is honored -- which is what the Unsloth UI sends with
+    `enable_tools: false` is honored -- which is what the LABZ UI sends with
     its tool pills off. `host`, `yes`, `silent`, `prompt` are kept for signature
     compatibility; no bind prompts."""
     return flag

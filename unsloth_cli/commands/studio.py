@@ -32,7 +32,7 @@ from unsloth_cli import _studio_deps, _studio_runtime_gate, _studio_stage
 from unsloth_cli._inference import SpeculativeType
 from unsloth_cli.commands import _password_prompt
 
-studio_app = typer.Typer(help = "Unsloth Studio commands.")
+studio_app = typer.Typer(help = "LABZ Studio commands.")
 
 
 def _enable_verbose_access_logs() -> None:
@@ -91,7 +91,7 @@ def _resolve_studio_home() -> tuple[Path, bool]:
             legacy = Path.home() / ".unsloth" / "studio"
         # install.sh and install.ps1 do not read UNSLOTH_HOME yet, so they leave the venv and the
         # launcher at the legacy root while setup puts the runtimes under the master root:
-        # preferring <master>/studio unconditionally reported "Unsloth Studio not set up" for an
+        # preferring <master>/studio unconditionally reported "LABZ Studio not set up" for an
         # install that is right there. The master root wins only when it HAS an install.
         if candidate != legacy and not _looks_like_installer_managed_studio_home(candidate):
             if _looks_like_installer_managed_studio_home(legacy):
@@ -325,13 +325,13 @@ def _studio_runtime_launch_guard(*, inherited: bool = False, wait: bool = False)
         acquired = guard.__enter__()
     except _studio_runtime_gate.StudioRuntimeGateBusy:
         typer.echo(
-            "Error: Unsloth installation is modifying the managed environment. "
+            "Error: LABZ installation is modifying the managed environment. "
             "Wait for it to finish, then try again.",
             err = True,
         )
         raise typer.Exit(1)
     except OSError as exc:
-        typer.echo(f"Error: could not coordinate the Unsloth launch: {exc}", err = True)
+        typer.echo(f"Error: could not coordinate the LABZ launch: {exc}", err = True)
         raise typer.Exit(1)
 
     try:
@@ -647,7 +647,7 @@ def _load_run_module():
 
     spec = importlib.util.spec_from_file_location("studio.backend.run", run_py)
     if spec is None or spec.loader is None:
-        raise ImportError(f"Could not load Unsloth backend from {run_py}")
+        raise ImportError(f"Could not load LABZ backend from {run_py}")
     module = importlib.util.module_from_spec(spec)
     sys.modules["studio.backend.run"] = module
     try:
@@ -1082,7 +1082,7 @@ def _create_desktop_secret_in_cli() -> str:
 def _launch_publishes_tunnel(
     *, cloudflare: Optional[bool], host: str, secure: bool, api_only: bool
 ) -> bool:
-    """Whether this launch will publish Unsloth through the Cloudflare tunnel. Kept separate from
+    """Whether this launch will publish LABZ through the Cloudflare tunnel. Kept separate from
     the wider _should_prompt_password_change, whose guards exist because a headless tunnel launch
     strips .bootstrap_password."""
     if secure:
@@ -1102,7 +1102,7 @@ def _bind_is_wildcard(host: str) -> bool:
 def _should_prompt_password_change(
     *, cloudflare: Optional[bool], host: str, secure: bool, api_only: bool
 ) -> bool:
-    """Whether this launch puts Unsloth where someone else can reach it. is_external_host, NOT
+    """Whether this launch puts LABZ where someone else can reach it. is_external_host, NOT
     is_wildcard_host: the narrower test let an ordinary LAN bind reach an older child that served
     the seeded password. A raw bind counts only with a terminal attached, since downstream deletes
     .bootstrap_password and would break -H 0.0.0.0 containers."""
@@ -1159,7 +1159,7 @@ def _deadline_sentence() -> str:
     operator acts on is worse than saying nothing."""
     if _bootstrap_deadline_active():
         return (
-            "Unsloth shuts down after the bootstrap deadline "
+            "LABZ shuts down after the bootstrap deadline "
             "(UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT, default 1h) unless the password "
             "is changed."
         )
@@ -1278,7 +1278,7 @@ def _apply_supplied_password_before_launch(supplied_password: "str | None") -> N
         conn = _connect_auth_db()
     except (OSError, sqlite3.Error) as exc:
         typer.echo(
-            f"Error: --password could not open the Unsloth auth database ({exc}); not starting.",
+            f"Error: --password could not open the LABZ auth database ({exc}); not starting.",
             err = True,
         )
         raise typer.Exit(1)
@@ -1298,7 +1298,7 @@ def _apply_supplied_password_before_launch(supplied_password: "str | None") -> N
             raise typer.Exit(1)
         if not row[2]:
             typer.echo(
-                "Error: an Unsloth admin password is already set; --password only sets "
+                "Error: an LABZ admin password is already set; --password only sets "
                 "the initial password. Change it in the UI, or run `unsloth studio "
                 "reset-password` for a new one.",
                 err = True,
@@ -1320,7 +1320,7 @@ def _apply_supplied_password_before_launch(supplied_password: "str | None") -> N
     except (OSError, sqlite3.Error) as exc:
         # Fail closed on any DB failure (typer.Exit from the branches above propagates).
         typer.echo(
-            f"Error: --password could not update the Unsloth auth database ({exc}); not starting.",
+            f"Error: --password could not update the LABZ auth database ({exc}); not starting.",
             err = True,
         )
         raise typer.Exit(1)
@@ -1336,9 +1336,9 @@ def _strip_seeded_bootstrap_password_or_exit(*, context: str) -> None:
         bootstrap_file.unlink(missing_ok = True)
     except OSError as exc:
         typer.echo(
-            "Error: refusing to publish Unsloth on a public Cloudflare URL: "
+            "Error: refusing to publish LABZ on a public Cloudflare URL: "
             f"could not remove the seeded bootstrap password file ({exc}), so an "
-            f"older Unsloth child could still serve the default credential ({context}). "
+            f"older LABZ child could still serve the default credential ({context}). "
             "Delete it manually or change the admin password (run `unsloth studio` "
             "locally with a terminal attached, or `unsloth studio reset-password`), "
             "then retry.",
@@ -1362,7 +1362,7 @@ def _require_servable_frontend_or_exit(
             return frontend
         typer.echo(
             "Error: --frontend points at a directory with no index.html, so a "
-            "public Unsloth launch would have no login page to change the seeded "
+            "public LABZ launch would have no login page to change the seeded "
             "admin password. Point --frontend at a built dist, rebuild it (re-run "
             "install.sh), or use --api-only.",
             err = True,
@@ -1372,7 +1372,7 @@ def _require_servable_frontend_or_exit(
     if resolved is not None:
         return resolved
     typer.echo(
-        "Error: the Unsloth frontend is not built, so a public launch would have "
+        "Error: the LABZ frontend is not built, so a public launch would have "
         "no login page to change the seeded admin password. Build it (re-run "
         "install.sh), pass --frontend PATH to a built dist, or use --api-only.",
         err = True,
@@ -1395,8 +1395,8 @@ def _validate_inproc_backend_before_strip(
         _load_run_module()
     except Exception as exc:
         typer.echo(
-            f"Error: the Unsloth backend could not be loaded ({exc}); refusing to "
-            "expose Unsloth publicly before it is confirmed runnable. Re-run: "
+            f"Error: the LABZ backend could not be loaded ({exc}); refusing to "
+            "expose LABZ publicly before it is confirmed runnable. Re-run: "
             "unsloth studio setup",
             err = True,
         )
@@ -1436,7 +1436,7 @@ def _tunnel_binary_confirmed_unavailable() -> bool:
 
 
 def _child_self_suppresses(*, in_studio_venv: bool, child_run_py: Optional[Path]) -> bool:
-    """True when the child serving Unsloth is provably THIS install's backend, which suppresses the
+    """True when the child serving LABZ is provably THIS install's backend, which suppresses the
     seeded credential, so the strip can be skipped. False on ANY doubt."""
     if in_studio_venv:
         return True
@@ -1483,8 +1483,8 @@ def _enforce_password_change_before_exposure(
     except (OSError, sqlite3.Error) as exc:
         # Cannot confirm a committed admin exists; a transient lock clears on retry.
         typer.echo(
-            f"Error: refusing to expose Unsloth {exposure}: could "
-            f"not open the Unsloth auth database ({exc}) to confirm the admin "
+            f"Error: refusing to expose LABZ {exposure}: could "
+            f"not open the LABZ auth database ({exc}) to confirm the admin "
             "password was changed. Retry (a transient database lock clears), or "
             "change the password first (run `unsloth studio` locally with a "
             "terminal attached, or `unsloth studio reset-password`).",
@@ -1503,8 +1503,8 @@ def _enforce_password_change_before_exposure(
             except OSError:
                 pass
             typer.echo(
-                f"Error: refusing to expose Unsloth {exposure}: could "
-                f"not initialize the admin account ({exc}), so a re-exec'd Unsloth "
+                f"Error: refusing to expose LABZ {exposure}: could "
+                f"not initialize the admin account ({exc}), so a re-exec'd LABZ "
                 "child could regenerate and serve a default credential. Retry (a "
                 "transient database lock clears), or change the password first (run "
                 "`unsloth studio` locally with a terminal attached, or `unsloth "
@@ -1524,7 +1524,7 @@ def _enforce_password_change_before_exposure(
                 return
             # The admin is committed, so an old child will not regenerate; strip anyway and fail closed.
             typer.echo(
-                f"Warning: could not read the Unsloth admin state back ({exc}); "
+                f"Warning: could not read the LABZ admin state back ({exc}); "
                 "removing the seeded bootstrap password before public exposure.",
                 err = True,
             )
@@ -1536,7 +1536,7 @@ def _enforce_password_change_before_exposure(
             # Only proceed headless if the bootstrap deadline protects the launch: it never arms for api-only, and TIMEOUT=0 disables it.
             if api_only or not _bootstrap_deadline_active():
                 typer.echo(
-                    "Error: refusing to publish Unsloth on a public Cloudflare "
+                    "Error: refusing to publish LABZ on a public Cloudflare "
                     "URL: the default admin password was never changed, no "
                     "terminal is attached to change it here, and the bootstrap "
                     "shutdown deadline does not apply to this launch (api-only, "
@@ -1549,12 +1549,12 @@ def _enforce_password_change_before_exposure(
             if child_self_suppresses:
                 # The child is this install's own backend and never serves the seeded credential publicly, so skip the strip and keep the file for LOCAL recovery.
                 typer.echo(
-                    "Warning: Unsloth is being exposed publicly while the admin "
+                    "Warning: LABZ is being exposed publicly while the admin "
                     "account still uses its auto-generated bootstrap password. The "
                     "login page forces a change and the credential is never served "
                     "on the public page. Set a new password by running `unsloth "
                     "studio` locally with a terminal attached, or `unsloth studio "
-                    "reset-password`; Unsloth shuts down after ~1h if the password "
+                    "reset-password`; LABZ shuts down after ~1h if the password "
                     "stays unchanged (UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT).",
                     err = True,
                 )
@@ -1562,7 +1562,7 @@ def _enforce_password_change_before_exposure(
             # On --secure the bind is loopback, so with cloudflared provably unavailable stripping the only recovery credential would just lock the user out.
             if secure and _tunnel_binary_confirmed_unavailable():
                 typer.echo(
-                    "Error: refusing to expose Unsloth: the Cloudflare tunnel binary "
+                    "Error: refusing to expose LABZ: the Cloudflare tunnel binary "
                     "(cloudflared) is unavailable and could not be downloaded, so no "
                     "public URL can start. The seeded bootstrap password is preserved "
                     "for recovery; fix connectivity and retry, or change the password "
@@ -1574,11 +1574,11 @@ def _enforce_password_change_before_exposure(
             # An OLD studio-venv child would serve the seeded credential from disk, so delete it here in the parent; must_change_password stays set.
             _strip_seeded_bootstrap_password_or_exit(context = "no terminal to change it")
             typer.echo(
-                "Warning: Unsloth is being exposed publicly while the admin account "
+                "Warning: LABZ is being exposed publicly while the admin account "
                 "still uses its auto-generated bootstrap password. The seeded password "
                 "file has been removed so it is not served on the public page. Set a new "
                 "password by running `unsloth studio` locally with a terminal attached, "
-                "or `unsloth studio reset-password`; Unsloth shuts down after ~1h if the "
+                "or `unsloth studio reset-password`; LABZ shuts down after ~1h if the "
                 "password stays unchanged (UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT).",
                 err = True,
             )
@@ -1591,7 +1591,7 @@ def _enforce_password_change_before_exposure(
             )
 
         typer.echo(
-            f"Unsloth Studio will be reachable {exposure}, so set a password now. "
+            f"LABZ Studio will be reachable {exposure}, so set a password now. "
             "Ctrl+C to abort.",
             err = True,
         )
@@ -1603,7 +1603,7 @@ def _enforce_password_change_before_exposure(
             )
         except _password_prompt.PromptUnattended:
             typer.echo(
-                "Warning: no response at the terminal, so Unsloth is starting with "
+                "Warning: no response at the terminal, so LABZ is starting with "
                 "the auto-generated admin password on a bind that is reachable from "
                 f"the network. {_deadline_sentence()} Change it by logging in, or "
                 "with `unsloth studio reset-password`.",
@@ -1615,7 +1615,7 @@ def _enforce_password_change_before_exposure(
         except (KeyboardInterrupt, EOFError):
             # An abort needs the non-interactive hatch more than the old warn did.
             typer.echo(
-                "\nError: password change aborted; refusing to expose Unsloth "
+                "\nError: password change aborted; refusing to expose LABZ "
                 "with the default admin password. Re-run and set a password, or "
                 "pass one with --password / UNSLOTH_STUDIO_PASSWORD, or "
                 + (
@@ -1729,14 +1729,14 @@ def studio_default(
         max = _PARALLEL_MAX,
         help = (
             f"llama-server parallel decode slots ({_PARALLEL_MIN}..{_PARALLEL_MAX}). "
-            f"Default {_PARALLEL_DEFAULT_PLAIN}. The Unsloth run settings "
+            f"Default {_PARALLEL_DEFAULT_PLAIN}. The LABZ run settings "
             "(Parallel Slots) override it per load."
         ),
     ),
     cloudflare: Optional[bool] = typer.Option(
         None,
         "--cloudflare/--no-cloudflare",
-        help = "Expose Unsloth on a PUBLIC internet URL via a free Cloudflare HTTPS "
+        help = "Expose LABZ on a PUBLIC internet URL via a free Cloudflare HTTPS "
         "tunnel, for non-api-only wildcard binds (0.0.0.0 or ::). Off by default; "
         "pass --cloudflare to enable it (--secure implies it). --no-cloudflare forces "
         "it off but does not change a raw wildcard bind.",
@@ -1787,7 +1787,7 @@ def studio_default(
         "process list and shell history. Rotate later with `unsloth studio reset-password`.",
     ),
 ):
-    """Launch the Unsloth Studio server."""
+    """Launch the LABZ Studio server."""
     # --not-secure is a deprecated alias for --no-secure.
     secure = _resolve_secure(secure, not_secure)
     _ensure_studio_env_exported()
@@ -1915,7 +1915,7 @@ def studio_default(
         studio_python = _studio_venv_python()
         run_py = _find_run_py()
         if not (studio_python and run_py):
-            typer.echo("Unsloth Studio not set up. Run install.sh first.")
+            typer.echo("LABZ Studio not set up. Run install.sh first.")
             raise typer.Exit(1)
         # A public UI launch needs a servable login page before the gate strips the seeded password.
         resolved_frontend = _require_servable_frontend_or_exit(
@@ -1957,7 +1957,7 @@ def studio_default(
     if not in_studio_venv:
         if studio_python and run_py:
             if not silent:
-                typer.echo("Launching Unsloth Studio... Please wait...")
+                typer.echo("Launching LABZ Studio... Please wait...")
             args = [
                 str(studio_python),
                 str(run_py),
@@ -2002,7 +2002,7 @@ def studio_default(
                     rc = proc.wait()
                 if rc != 0:
                     typer.echo(
-                        f"\nError: Unsloth server exited unexpectedly (code {rc}).",
+                        f"\nError: LABZ server exited unexpectedly (code {rc}).",
                         err = True,
                     )
                     typer.echo(
@@ -2014,7 +2014,7 @@ def studio_default(
             else:
                 os.execvp(str(studio_python), args)
         else:
-            typer.echo("Unsloth Studio not set up. Run install.sh first.")
+            typer.echo("LABZ Studio not set up. Run install.sh first.")
             raise typer.Exit(1)
 
     with _studio_runtime_launch_guard(
@@ -2027,7 +2027,7 @@ def studio_default(
 
         if not silent:
             launch_host = _openable_host_for_bind(run_mod, host)
-            typer.echo(f"Starting Unsloth Studio on http://{_url_host(launch_host)}:{port}")
+            typer.echo(f"Starting LABZ Studio on http://{_url_host(launch_host)}:{port}")
 
         run_kwargs = dict(
             host = host,
@@ -2191,7 +2191,7 @@ def run(
         "--gpu-memory-mode",
         rich_help_panel = _RUN_PANEL_MODEL,
         help = (
-            "GPU memory strategy for GGUF models. Auto lets Unsloth select GPUs "
+            "GPU memory strategy for GGUF models. Auto lets LABZ select GPUs "
             "and cap context to fit VRAM. Manual with default layers and context "
             "delegates placement and sizing to llama.cpp --fit."
         ),
@@ -2202,7 +2202,7 @@ def run(
         rich_help_panel = _RUN_PANEL_MODEL,
         help = (
             "Speculative decoding mode for GGUF models. DSpark automatically uses a "
-            "matching dspark-*.gguf sidecar when available. Default: unset (Unsloth auto)."
+            "matching dspark-*.gguf sidecar when available. Default: unset (LABZ auto)."
         ),
     ),
     spec_draft_n_max: Optional[int] = typer.Option(
@@ -2240,7 +2240,7 @@ def run(
         help = (
             "Force server-side tools (web search, code execution) on or off for "
             "every request. Default: on for every bind, with a request's own "
-            "enable_tools: false (what the Unsloth UI sends) honored. /v1/messages "
+            "enable_tools: false (what the LABZ UI sends) honored. /v1/messages "
             "takes the on direction per request (enable_tools) because it has no "
             "confirmation channel; the off direction still applies everywhere."
         ),
@@ -2342,7 +2342,7 @@ def run(
         help = (
             "llama-server parallel decode slots. N requests share one "
             "loaded model; each slot gets ctx/N KV cache. Default "
-            f"{_PARALLEL_DEFAULT_RUN} (pre-PR hardcoded value). The Unsloth "
+            f"{_PARALLEL_DEFAULT_RUN} (pre-PR hardcoded value). The LABZ "
             "run settings (Parallel Slots) can override it per load."
         ),
     ),
@@ -2350,7 +2350,7 @@ def run(
         None,
         "--cloudflare/--no-cloudflare",
         rich_help_panel = _RUN_PANEL_SERVER,
-        help = "Expose Unsloth on a PUBLIC internet URL via a free Cloudflare HTTPS "
+        help = "Expose LABZ on a PUBLIC internet URL via a free Cloudflare HTTPS "
         "tunnel, for non-api-only wildcard binds (0.0.0.0 or ::). Off by default; "
         "pass --cloudflare to enable it (--secure implies it). --no-cloudflare forces "
         "it off but does not change a raw wildcard bind.",
@@ -2395,16 +2395,16 @@ def run(
         "process list and shell history. Rotate later with `unsloth studio reset-password`.",
     ),
 ):
-    """Start Unsloth, load a model, print an API key -- one-liner server.
+    """Start LABZ, load a model, print an API key -- one-liner server.
 
-    Unknown flags pass through to llama-server (GGUF only). Unsloth
+    Unknown flags pass through to llama-server (GGUF only). LABZ
     rejects managed flags with HTTP 400: model identity, network
     (--host/--port/--path/--api-prefix/--reuse-port), auth/TLS
     (--api-key/--ssl-*), single-model UI (--ui/--models-*/--webui),
     and parallel slots (use --parallel above). Full denylist in
     studio/backend/core/inference/llama_server_args.py. Other knobs
     (-c, -ngl, --jinja, --flash-attn, -t, ...) pass through and
-    last-wins-override Unsloth's auto-set value.
+    last-wins-override LABZ's auto-set value.
 
     Example:
         unsloth studio run --model unsloth/Qwen3-1.7B-GGUF --gguf-variant UD-Q4_K_XL
@@ -2534,14 +2534,14 @@ def run(
     if not in_studio_venv:
         studio_python = _studio_venv_python()
         if not studio_python:
-            typer.echo("Unsloth Studio not set up. Run install.sh first.")
+            typer.echo("LABZ Studio not set up. Run install.sh first.")
             raise typer.Exit(1)
         # Re-exec via the studio venv's console script. On Windows quarantine deletes the stub from a working venv, so the package answers for it.
         studio_bin = studio_python.parent / (
             "unsloth.exe" if platform.system() == "Windows" else "unsloth"
         )
         if not studio_bin.is_file() and not _managed_cli_package_present(studio_python):
-            typer.echo("Unsloth venv missing 'unsloth' entry point. Re-run: unsloth studio setup")
+            typer.echo("LABZ venv missing 'unsloth' entry point. Re-run: unsloth studio setup")
             raise typer.Exit(1)
         resolved_frontend = _require_servable_frontend_or_exit(
             frontend = frontend,
@@ -2687,7 +2687,7 @@ def run(
             typer.echo("Error: server did not expose its bound address.", err = True)
             raise typer.Exit(1)
         if not silent:
-            typer.echo("Starting Unsloth Studio...")
+            typer.echo("Starting LABZ Studio...")
         if not _wait_for_server(actual_port, request_host = request_host):
             typer.echo("Error: server did not become healthy within 30 seconds.", err = True)
             raise typer.Exit(1)
@@ -2759,10 +2759,10 @@ def run(
         typer.echo("")
         typer.echo("=" * 56)
         if secure and _cf_url:
-            typer.echo(f"  Unsloth Studio running (secure) at {_cf_url}")
+            typer.echo(f"  LABZ Studio running (secure) at {_cf_url}")
             typer.echo(f"  On this machine only: {base_url}")
         else:
-            typer.echo(f"  Unsloth Studio running at {base_url}")
+            typer.echo(f"  LABZ Studio running at {base_url}")
             _emit_run_cloudflare_notice(run_mod, host, display_host, actual_port, secure)
         typer.echo(f"  Model loaded: {loaded_model}{display_variant}")
         if context_length_line:
@@ -2986,7 +2986,7 @@ def _signal_stop(pid: int) -> "str | None":
 
 @studio_app.command()
 def stop():
-    """Stop every running Unsloth Studio server for this STUDIO_HOME.
+    """Stop every running LABZ Studio server for this STUDIO_HOME.
 
     The port fallback can leave more than one running, so stop them all.
     """
@@ -2997,7 +2997,7 @@ def stop():
             # Reporting success would be a lie: the servers behind the unreadable records are still serving.
             _report_unreadable(unreadable)
             raise typer.Exit(1)
-        typer.echo("No running Unsloth server found (no PID file).")
+        typer.echo("No running LABZ server found (no PID file).")
         raise typer.Exit(0)
 
     signalled, failed = [], []
@@ -3009,16 +3009,16 @@ def stop():
         error = _signal_stop(pid)
         if error is not None:
             failed.append((pid, error))
-            typer.echo(f"Failed to stop Unsloth server (PID {pid}): {error}", err = True)
+            typer.echo(f"Failed to stop LABZ server (PID {pid}): {error}", err = True)
             continue
-        typer.echo(f"Sent shutdown signal to Unsloth server (PID {pid}).")
+        typer.echo(f"Sent shutdown signal to LABZ server (PID {pid}).")
         signalled.append((pid, paths))
 
     if not signalled and not failed:
         if unreadable:
             _report_unreadable(unreadable)
             raise typer.Exit(1)
-        typer.echo("No running Unsloth server found (cleaned up stale PID files).")
+        typer.echo("No running LABZ server found (cleaned up stale PID files).")
         raise typer.Exit(0)
 
     pending = list(signalled)
@@ -3035,9 +3035,9 @@ def stop():
 
     stopped = len(signalled) - len(pending)
     if stopped:
-        typer.echo(f"Unsloth server{'s' if stopped > 1 else ''} stopped ({stopped}).")
+        typer.echo(f"LABZ server{'s' if stopped > 1 else ''} stopped ({stopped}).")
     for pid, _paths in pending:
-        typer.echo(f"Unsloth server (PID {pid}) is shutting down (may take a few seconds).")
+        typer.echo(f"LABZ server (PID {pid}) is shutting down (may take a few seconds).")
     if unreadable:
         _report_unreadable(unreadable)
     if failed or unreadable:
@@ -3946,7 +3946,7 @@ def setup(
         help = "Full pip/build output during setup for troubleshooting.",
     ),
 ):
-    """Run Unsloth setup (called by install.ps1 / install.sh)."""
+    """Run LABZ setup (called by install.ps1 / install.sh)."""
     runtime_gate_handoff = _studio_runtime_gate.consume_runtime_gate_handoff()
     with _studio_runtime_launch_guard(inherited = runtime_gate_handoff):
         _studio_runtime_gate.ensure_managed_environment_is_idle(STUDIO_HOME)
@@ -3967,14 +3967,14 @@ def _fail_if_install_damaged(package_name: str = "unsloth") -> None:
     managed_conflicts = _studio_deps.installed_metadata_conflicts(names = managed_names)
     if managed_conflicts:
         typer.echo("", err = True)
-        typer.echo("Update finished, but Unsloth package metadata is inconsistent:", err = True)
+        typer.echo("Update finished, but LABZ package metadata is inconsistent:", err = True)
         for entry in managed_conflicts:
             typer.echo(f"  {entry}", err = True)
         typer.echo("", err = True)
         typer.echo("The file check cannot safely choose between these records.", err = True)
         typer.echo("The installer could not repair its managed package metadata.", err = True)
         typer.echo(
-            "Recreate the managed environment before running the Unsloth installer again.", err = True
+            "Recreate the managed environment before running the LABZ installer again.", err = True
         )
         typer.echo("", err = True)
         typer.echo(
@@ -3988,7 +3988,7 @@ def _fail_if_install_damaged(package_name: str = "unsloth") -> None:
         for entry in other_conflicts:
             typer.echo(f"  {entry}", err = True)
         typer.echo("", err = True)
-        typer.echo("Unsloth skipped file verification for these packages.", err = True)
+        typer.echo("LABZ skipped file verification for these packages.", err = True)
         typer.echo(
             "Reinstall the intended version from its original package source, or use a clean environment.",
             err = True,
@@ -4002,7 +4002,7 @@ def _fail_if_install_damaged(package_name: str = "unsloth") -> None:
         typer.echo(f"  {entry}", err = True)
     typer.echo("", err = True)
     typer.echo("An update cannot repair these. pip sees intact package metadata and", err = True)
-    typer.echo("reinstalls nothing, so Unsloth will keep failing to start. Reinstall", err = True)
+    typer.echo("reinstalls nothing, so LABZ will keep failing to start. Reinstall", err = True)
     typer.echo("over the top:", err = True)
     # Carry the custom root and the recorded install mode, or the reinstall builds a fresh ~/.unsloth/studio and pulls the whole PyTorch stack. No root argument: recorded_no_torch reads the VENV.
     no_torch = False
@@ -4067,7 +4067,7 @@ def update(
         help = "Accepted for 805-807 desktop shells, which get a refusal. Background staging is gone.",
     ),
 ):
-    """Update Unsloth Studio dependencies and rebuild."""
+    """Update LABZ Studio dependencies and rebuild."""
     # Re-export UNSLOTH_STUDIO_HOME so the refresh subprocess resolves the same install root.
     _ensure_studio_env_exported()
     # `is True`, not truthiness: an in-process caller that omits it gets a truthy OptionInfo sentinel.
@@ -4089,7 +4089,7 @@ def update(
             else Path(__file__).resolve().parents[2]
         )
         if not (repo_root / "pyproject.toml").is_file():
-            typer.echo("Error: --local needs an Unsloth checkout to install from.", err = True)
+            typer.echo("Error: --local needs an LABZ checkout to install from.", err = True)
             typer.echo(f"  no pyproject.toml under: {repo_root}", err = True)
             typer.echo("  This CLI is running from an installed copy, not a source tree.", err = True)
             typer.echo("", err = True)
@@ -4113,7 +4113,7 @@ def update(
     else:
         os.environ["STUDIO_LOCAL_INSTALL"] = "0"
         os.environ.pop("STUDIO_LOCAL_REPO", None)
-    # The gate keeps a second Unsloth process off the venv; the transaction keeps the launcher recoverable across setup.
+    # The gate keeps a second LABZ process off the venv; the transaction keeps the launcher recoverable across setup.
     runtime_gate_handoff = _studio_runtime_gate.consume_runtime_gate_handoff()
     with _studio_runtime_launch_guard(inherited = runtime_gate_handoff or staging):
         if not staging:
@@ -4265,7 +4265,7 @@ class _WindowsLauncherUpdateTransaction:
         except OSError:
             lock_file.close()
             typer.echo(
-                "Error: another Unsloth Studio update is already running for this environment.",
+                "Error: another LABZ Studio update is already running for this environment.",
                 err = True,
             )
             raise typer.Exit(1)
@@ -4334,7 +4334,7 @@ class _WindowsLauncherUpdateTransaction:
             os.replace(self.launcher, self.stale)
         except OSError as exc:
             # Not fatal, but say what it costs: the pip fallback drops --upgrade-package, leaving unsloth at its old version.
-            typer.echo(f"Warning: could not move the Unsloth launcher aside: {exc}", err = True)
+            typer.echo(f"Warning: could not move the LABZ launcher aside: {exc}", err = True)
             typer.echo(
                 "  unsloth itself may not be upgraded. Close anything holding "
                 f"{self.launcher} and re-run the update.",
@@ -4373,7 +4373,7 @@ class _WindowsLauncherUpdateTransaction:
                 if attempt + 1 < self._RESTORE_ATTEMPTS:
                     time.sleep(0.1)
         if last_error is not None:
-            typer.echo(f"Error: could not restore the Unsloth launcher: {last_error}", err = True)
+            typer.echo(f"Error: could not restore the LABZ launcher: {last_error}", err = True)
         return False
 
     def _restore_runnable(self) -> bool:
@@ -4491,7 +4491,7 @@ class _WindowsLauncherUpdateTransaction:
         self.launcher = scripts / "unsloth.exe"
         self.backup = scripts / "unsloth.exe.update-backup"
         self.legacy_backup = scripts / "unsloth.exe.deleteme"
-        # Under the Unsloth home, not the venv: setup.ps1 removes the whole $VenvDir, which Windows refuses while a handle inside is open.
+        # Under the LABZ home, not the venv: setup.ps1 removes the whole $VenvDir, which Windows refuses while a handle inside is open.
         self.lock_path = STUDIO_HOME / "unsloth.exe.update-lock"
         # install.ps1 hardlinks this to the launcher, so it survives the old updater and is a valid recovery source.
         self.shim = STUDIO_HOME / "bin" / "unsloth.exe"
@@ -4502,7 +4502,7 @@ class _WindowsLauncherUpdateTransaction:
             if not self._is_valid_pe(self.launcher):
                 # Warn, do not exit: the previous updater could leave no launcher and no .deleteme, and refusing would strand those users.
                 typer.echo(
-                    f"Warning: the managed Unsloth launcher is missing or invalid: {self.launcher}",
+                    f"Warning: the managed LABZ launcher is missing or invalid: {self.launcher}",
                     err = True,
                 )
                 typer.echo("Continuing; setup may reinstall it.", err = True)
@@ -4514,7 +4514,7 @@ class _WindowsLauncherUpdateTransaction:
                     self._atomic_copy(self.launcher, self.backup)
                 except OSError as exc:
                     # A backup is a safety net, not a precondition.
-                    typer.echo(f"Warning: could not back up the Unsloth launcher: {exc}", err = True)
+                    typer.echo(f"Warning: could not back up the LABZ launcher: {exc}", err = True)
                     self.backup = None
             self._move_launcher_aside()
         except BaseException:
@@ -4532,7 +4532,7 @@ class _WindowsLauncherUpdateTransaction:
             restored = self._restore_runnable()
             # Setup publishing nothing is the case this exists for, so restoring is success; a launcher setup DID write that cannot run is a failure.
             if published or not restored:
-                typer.echo(f"Error: Unsloth Studio update failed because {error}.", err = True)
+                typer.echo(f"Error: LABZ Studio update failed because {error}.", err = True)
                 if restored:
                     typer.echo("The previous launcher was restored.", err = True)
                 elif self._retained_backup() is not None:
@@ -4826,7 +4826,7 @@ def verify_install(
         help = "Emit machine-readable JSON.",
     ),
 ):
-    """Check that the Unsloth Studio dependency install completed.
+    """Check that the LABZ Studio dependency install completed.
 
     Exits 0 when complete, 1 otherwise. setup.sh / setup.ps1 use the exit code
     to decide whether the "already up to date" fast path may be taken.
@@ -4841,10 +4841,10 @@ def verify_install(
         raise typer.Exit(0 if state["ok"] else 1)
 
     if state["ok"]:
-        typer.echo("Unsloth Studio install is complete.")
+        typer.echo("LABZ Studio install is complete.")
         raise typer.Exit(0)
 
-    typer.echo(f"Unsloth Studio install is incomplete ({state['reason']}).")
+    typer.echo(f"LABZ Studio install is incomplete ({state['reason']}).")
     if state["missing"]:
         typer.echo(f"  missing packages: {', '.join(state['missing'])}")
     typer.echo("  repair with: unsloth studio update")
@@ -4882,7 +4882,7 @@ def reset_password(
         None, "--username", help = "Account to reset; required with multiple active accounts."
     ),
 ):
-    """Reset an Unsloth account password. Rotates in place, so nothing needs restarting. Shared /p
+    """Reset an LABZ account password. Rotates in place, so nothing needs restarting. Shared /p
     preview links are not revoked; rotate those in Settings if the old password leaked."""
     new_password = _generate_reset_password()
     try:
@@ -4891,7 +4891,7 @@ def reset_password(
         typer.echo(
             f"Error: could not open the auth database ({exc}). Check that "
             f"{STUDIO_HOME / 'auth'} is writable; if auth.db itself is unreadable, stop "
-            "Unsloth, delete it, and start again to re-seed.",
+            "LABZ, delete it, and start again to re-seed.",
             err = True,
         )
         raise typer.Exit(1)
@@ -4908,6 +4908,6 @@ def reset_password(
 
     typer.echo(f"New password for '{target}': {new_password}")
     typer.echo(
-        "Sessions and API keys revoked. A running Unsloth takes it on the next request, "
+        "Sessions and API keys revoked. A running LABZ takes it on the next request, "
         "though repeated failed logins can hold the rate limit shut for up to a minute."
     )

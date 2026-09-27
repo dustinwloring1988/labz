@@ -79,7 +79,7 @@ def test_site_packages_is_refused_with_an_actionable_message(monkeypatch, tmp_pa
     result = CliRunner().invoke(studio.studio_app, ["update", "--local"])
     assert result.exit_code == 2, result.output
     out = result.output
-    assert "needs an Unsloth checkout" in out
+    assert "needs an LABZ checkout" in out
     assert "no pyproject.toml under" in out
     # Both ways forward, because neither is obvious from the uv error it replaces.
     assert "STUDIO_LOCAL_REPO=" in out
@@ -154,7 +154,7 @@ def test_the_override_runs_that_checkouts_setup_script(monkeypatch, tmp_path):
     setup.sh/setup.ps1 build the frontend under their own $SCRIPT_DIR, and the
     editable install of the checkout removes the installed tree the installed
     copy's script would have built into. studio/frontend/dist is gitignored, so
-    running the installed script against a fresh checkout leaves Unsloth with no
+    running the installed script against a fresh checkout leaves LABZ with no
     frontend at all.
     """
     import platform as _platform

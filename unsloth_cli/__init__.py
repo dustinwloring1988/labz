@@ -147,7 +147,7 @@ else:  # pragma: no cover
 
 
 app = typer.Typer(
-    help = "Command-line interface for Unsloth training, inference, and export.",
+    help = "Command-line interface for LABZ training, inference, and export.",
     context_settings = {"help_option_names": ["-h", "--help"]},
     **({"cls": _ArgvCapturingGroup} if _ArgvCapturingGroup is not None else {}),
 )
@@ -200,7 +200,7 @@ def main(
         raise typer.Exit(code = 1)
 
 
-app.add_typer(studio_app, name = "studio", help = "Unsloth Studio commands.")
+app.add_typer(studio_app, name = "studio", help = "LABZ Studio commands.")
 if not _windows_studio_mutation_entry:
     app.command()(train)
     app.command()(inference)
@@ -211,7 +211,7 @@ if not _windows_studio_mutation_entry:
         start_app,
         name = "start",
         help = "Start a coding agent (Claude, Codex, OpenClaw, OpenCode, Hermes, Pi, dsh) "
-        "against Unsloth.",
+        "against LABZ.",
     )
     # backwards-compatible hidden alias: `unsloth connect` routes to `unsloth start`.
     app.add_typer(
