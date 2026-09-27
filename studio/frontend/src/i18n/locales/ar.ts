@@ -128,8 +128,8 @@ export const ar = {
       truncated: "هذه الصفحة أطول من أن يتم البحث فيها بالكامل.",
     },
     beta: "BETA",
-    brand: "unsloth",
-    product: "Unsloth",
+    brand: "LABZ",
+    product: "LABZ",
     accountMenu: "قائمة حساب {name}",
     updateAvailable: "يتوفر تحديث",
     resize: {
@@ -138,7 +138,7 @@ export const ar = {
       drag: "اسحب لتغيير الحجم",
     },
     aria: {
-      home: "الصفحة الرئيسية لـ Unsloth",
+      home: "الصفحة الرئيسية لـ LABZ",
       closeSidebar: "إغلاق الشريط الجانبي",
       openSidebar: "فتح الشريط الجانبي",
       resizeSidebar: "تغيير حجم الشريط الجانبي أو طيه",
@@ -158,6 +158,8 @@ export const ar = {
       projects: "المشاريع",
       train: "تدريب",
       nanochat: "nanochat",
+      autoresearch: "autoresearch",
+      benchmarks: "المعايير",
       recipes: "الوصفات",
       images: "الصور",
       video: "الفيديو",
@@ -259,7 +261,7 @@ export const ar = {
   settings: {
     accounts: {
       title: "الحسابات",
-      description: "أنشئ حسابات Unsloth خاصة. يسجّل المستخدمون الجدد الدخول برمز إعداد يُستخدم مرة واحدة ثم يختارون كلمة مرور.",
+      description: "أنشئ حسابات LABZ خاصة. يسجّل المستخدمون الجدد الدخول برمز إعداد يُستخدم مرة واحدة ثم يختارون كلمة مرور.",
       username: "اسم المستخدم",
       create: "إنشاء حساب",
       createDescription: "شارك رمز إعداد ليختار صاحب الحساب كلمة مروره بنفسه.",
@@ -298,7 +300,7 @@ export const ar = {
     title: "الإعدادات",
     dialog: {
       title: "الإعدادات",
-      description: "إدارة تفضيلات Unsloth الخاصة بك.",
+      description: "إدارة تفضيلات LABZ الخاصة بك.",
       closeAriaLabel: "إغلاق الإعدادات",
       searchPlaceholder: "ابحث في الإعدادات…",
       searchNoResults: "لم يُعثر على أي إعداد.",
@@ -366,7 +368,7 @@ export const ar = {
         },
         logOut: {
           label: "تسجيل الخروج",
-          description: "تسجيل الخروج من Unsloth",
+          description: "تسجيل الخروج من LABZ",
         },
         approveToolRequest: {
           label: "الموافقة على الطلب",
@@ -475,6 +477,10 @@ export const ar = {
         switchToTrain: {
           label: "التبديل إلى التدريب",
           description: "الانتقال إلى مساحة عمل التدريب",
+        },
+        switchToBenchmarks: {
+          label: "التبديل إلى المعايير",
+          description: "الانتقال إلى مساحة عمل المعايير",
         },
         switchToRecipes: {
           label: "التبديل إلى Recipes",
@@ -606,8 +612,8 @@ export const ar = {
       openLogsFolder: "فتح مجلد السجلات",
       openLogsFolderFailed: "تعذّر فتح مجلد السجلات.",
       exportFailed: "تعذّر تنزيل السجلات.",
-      exportTooOld: "خادم Unsloth العامل أقدم من أن يدعم تصدير السجلات. حدِّثه وأعد تشغيله.",
-      exportForbidden: "يتطلب تنزيل كل السجلات جلسة Unsloth مسجّل الدخول إليها. لا يكفي مفتاح API.",
+      exportTooOld: "خادم LABZ العامل أقدم من أن يدعم تصدير السجلات. حدِّثه وأعد تشغيله.",
+      exportForbidden: "يتطلب تنزيل كل السجلات جلسة LABZ مسجّل الدخول إليها. لا يكفي مفتاح API.",
       keywords: "تصحيح الأخطاء سجل السجلات خطأ أخطاء تعطل تتبع تشخيص استكشاف الأخطاء debug log logs error",
     },
     voice: {
@@ -710,7 +716,7 @@ export const ar = {
           "اسمح بالوصول إلى الميكروفون لعرض أسماء الأجهزة",
         allowMicrophone: "السماح بالميكروفون",
         micAccessBlocked:
-          "تم حظر الوصول إلى الميكروفون. اسمح بالوصول إلى الميكروفون لصفحة Unsloth هذه ثم أعد المحاولة.",
+          "تم حظر الوصول إلى الميكروفون. اسمح بالوصول إلى الميكروفون لصفحة LABZ هذه ثم أعد المحاولة.",
         micAccessBlockedDesktop:
           "تم حظر الوصول إلى الميكروفون. أعد المحاولة واختر السماح، أو مكّن الميكروفون من إعدادات الخصوصية في النظام.",
         micAccessUnsupported:
@@ -814,7 +820,7 @@ export const ar = {
     },
     general: {
       title: "عام",
-      description: "التفضيلات العامة لـ Unsloth.",
+      description: "التفضيلات العامة لـ LABZ.",
       account: "الحساب",
       huggingFaceToken: "رمز وصول Hugging Face",
       huggingFaceTokenDescription:
@@ -825,7 +831,7 @@ export const ar = {
       checkingToken: "جارٍ التحقق من رمز الوصول...",
       tokenValidated: "تم التحقق من الرمز",
       password: "كلمة المرور",
-      passwordDescription: "تغيير كلمة المرور لحساب Unsloth هذا.",
+      passwordDescription: "تغيير كلمة المرور لحساب LABZ هذا.",
       passwordDialog: {
         trigger: "تغيير كلمة المرور",
         title: "تغيير كلمة المرور",
@@ -834,7 +840,7 @@ export const ar = {
         setTrigger: "تعيين كلمة مرور الوصول عن بُعد",
         setTitle: "تعيين كلمة مرور الوصول عن بُعد",
         setDescription:
-          "اختر كلمة المرور التي تسجّل بها المتصفحات البعيدة الدخول باسم unsloth (بحد أدنى {minLength} حرفًا). سيواصل تطبيق Unsloth لسطح المكتب تسجيل الدخول تلقائيًا.",
+          "اختر كلمة المرور التي تسجّل بها المتصفحات البعيدة الدخول باسم unsloth (بحد أدنى {minLength} حرفًا). سيواصل تطبيق LABZ لسطح المكتب تسجيل الدخول تلقائيًا.",
         setSubmit: "تعيين كلمة المرور",
         setting: "جارٍ التعيين...",
         setDone: "تم تعيين كلمة المرور.",
@@ -902,7 +908,7 @@ export const ar = {
           "يحفظ ذاكرة KV المؤقتة قبل التفريغ التلقائي عند الخمول، حتى لا تعيد المحادثات المستأنفة قراءة السجل. بحد أقصى 10 جيجابايت على القرص.",
         apiOnly: "تفريغ النماذج التي حمّلتها واجهة API فقط",
         apiOnlyDescription:
-          "يُبقي التفريغ التلقائي عند الخمول النموذج الذي حمّلته من Unsloth في الذاكرة، ولا يفرّغ سوى النماذج التي حمّلها طلب عبر واجهة API.",
+          "يُبقي التفريغ التلقائي عند الخمول النموذج الذي حمّلته من LABZ في الذاكرة، ولا يفرّغ سوى النماذج التي حمّلها طلب عبر واجهة API.",
       },
       previewSharing: {
         sectionTitle: "مشاركة المعاينة",
@@ -947,13 +953,13 @@ export const ar = {
       },
       startup: {
         sectionTitle: "بدء التشغيل",
-        launchAtLogin: "تشغيل Unsloth عند تسجيل الدخول",
+        launchAtLogin: "تشغيل LABZ عند تسجيل الدخول",
         launchAtLoginDescription:
-          "يبدأ Unsloth في الخلفية عند تسجيل الدخول، ويبقى في شريط القوائم أو علبة النظام حتى تفتحه.",
+          "يبدأ LABZ في الخلفية عند تسجيل الدخول، ويبقى في شريط القوائم أو علبة النظام حتى تفتحه.",
 
         closeToTray: "الإغلاق إلى علبة النظام",
         closeToTrayDescription:
-          "إبقاء Unsloth وخادمه قيد التشغيل في الخلفية عند إغلاق النافذة الرئيسية.",
+          "إبقاء LABZ وخادمه قيد التشغيل في الخلفية عند إغلاق النافذة الرئيسية.",
         closeToTraySaveError: "تعذّر تحديث إعداد الإغلاق إلى علبة النظام.",
         loadError: "تعذر تحميل إعداد التشغيل عند تسجيل الدخول.",
         saveError: "تعذر تحديث إعداد التشغيل عند تسجيل الدخول.",
@@ -1046,22 +1052,22 @@ export const ar = {
         action: "إعادة تعيين التفضيلات",
         confirmTitle: "إعادة تعيين جميع التفضيلات المحلية؟",
         confirmDescription:
-          "يمسح التفضيلات المحلية فقط ويعيد تحميل Unsloth. تُحفظ المحادثات ووصول API والإعدادات المخزّنة في قاعدة البيانات.",
+          "يمسح التفضيلات المحلية فقط ويعيد تحميل LABZ. تُحفظ المحادثات ووصول API والإعدادات المخزّنة في قاعدة البيانات.",
         confirmAction: "إعادة التعيين وإعادة التحميل",
       },
       permissions: {
         sectionTitle: "الأذونات",
         bypassLabel: "أذونات الأدوات",
         bypassDescription:
-          "كيفية موافقة Unsloth على استدعاءات أدوات المحادثة (الطرفية، python، الويب، MCP) قبل تشغيلها. وضع «Full access» يعطّل الموافقات وصندوق عزل الشيفرة.",
+          "كيفية موافقة LABZ على استدعاءات أدوات المحادثة (الطرفية، python، الويب، MCP) قبل تشغيلها. وضع «Full access» يعطّل الموافقات وصندوق عزل الشيفرة.",
       },
     },
     profile: {
       title: "الملف الشخصي",
-      description: "كيفية ظهور ملفك الشخصي في Unsloth.",
+      description: "كيفية ظهور ملفك الشخصي في LABZ.",
       changePicture: "تغيير صورة الملف الشخصي",
       displayName: "الاسم المعروض",
-      nickname: "بماذا يجب أن يناديك Unsloth؟",
+      nickname: "بماذا يجب أن يناديك LABZ؟",
       nicknamePlaceholder: "الاسم المفضّل",
       nicknameSaved: "تم حفظ الاسم المفضّل",
       avatarShape: "شكل صورة الملف الشخصي",
@@ -1088,10 +1094,10 @@ export const ar = {
       stats: {
         title: "إحصاءاتك",
         subtitle:
-          "كل ما يلي محسوب من سجلك الخاص. لا يُجمَع أي شيء ولا يُرسَل إلى Unsloth.",
+          "كل ما يلي محسوب من سجلك الخاص. لا يُجمَع أي شيء ولا يُرسَل إلى LABZ.",
         retry: "إعادة المحاولة",
         privacyNote:
-          "تُحسب الإحصاءات من سجل المحادثات واستخدام API والتدريب المحلي في نسخة Unsloth لديك. لا تُحفظ مطالبات API أو ردوده أو مفاتيحه للإحصاءات، ولا يُرسل شيء إلى Unsloth أو أي طرف ثالث.",
+          "تُحسب الإحصاءات من سجل المحادثات واستخدام API والتدريب المحلي في نسخة LABZ لديك. لا تُحفظ مطالبات API أو ردوده أو مفاتيحه للإحصاءات، ولا يُرسل شيء إلى LABZ أو أي طرف ثالث.",
         emptyChats:
           "لا يوجد استخدام للمحادثات أو API بعد. ابدأ محادثة أو أرسل طلب API محليًا ومصادقًا عليه لتظهر إحصاءاتك هنا.",
         lifetimeTokens: "إجمالي التوكنات",
@@ -1120,7 +1126,7 @@ export const ar = {
         tokensIn: "التوكنات المُرسَلة",
         tokensOut: "التوكنات المُولَّدة",
         totalTokens: "إجمالي التوكنات",
-        studioChatTokens: "توكنات محادثة Unsloth",
+        studioChatTokens: "توكنات محادثة LABZ",
         apiTokens: "توكنات API",
         cachedTokens: "التوكنات المخزّنة مؤقتًا",
         cachedValue: "{tokens} ({percent}% من المُدخَلات)",
@@ -1151,7 +1157,7 @@ export const ar = {
     },
     appearance: {
       title: "المظهر",
-      description: "كيفية ظهور Unsloth على هذا الجهاز.",
+      description: "كيفية ظهور LABZ على هذا الجهاز.",
       theme: {
         title: "السمة",
         label: "نظام الألوان",
@@ -1162,7 +1168,7 @@ export const ar = {
       },
       palette: {
         label: "لوحة الألوان",
-        description: "الألوان المستخدمة في Unsloth في الوضعين الفاتح والداكن.",
+        description: "الألوان المستخدمة في LABZ في الوضعين الفاتح والداكن.",
         standard: "قياسية",
         classic: "كلاسيكية",
         minimal: "بسيطة",
@@ -1231,7 +1237,7 @@ export const ar = {
         },
         uiFontSize: {
           label: "حجم خط الواجهة",
-          description: "اضبط الحجم الأساسي المستخدم في واجهة Unsloth.",
+          description: "اضبط الحجم الأساسي المستخدم في واجهة LABZ.",
         },
         codeFontSize: {
           label: "حجم خط الشيفرة",
@@ -1260,7 +1266,7 @@ export const ar = {
       language: {
         title: "اللغة",
         label: "لغة العرض",
-        description: "اللغة التي يستخدمها Unsloth.",
+        description: "اللغة التي يستخدمها LABZ.",
         autoDetect: "اكتشاف تلقائي",
       },
       layout: {
@@ -1287,7 +1293,7 @@ export const ar = {
     },
     resources: {
       title: "النظام",
-      description: "راقب عتاد خادم Unsloth هذا ومساحة تخزينه.",
+      description: "راقب عتاد خادم LABZ هذا ومساحة تخزينه.",
       liveUpdates: "التحديثات المباشرة",
       floatingWindow: "نافذة عائمة",
       disableOverlay: "تعطيل التراكب",
@@ -1354,7 +1360,7 @@ export const ar = {
           description: "استخدم إصدار llama-server الخاص بك.",
           hint: "اختر مجلد llama.cpp الذي يحتوي على llama-server، أو إصدارًا يوجد فيه ضمن build/bin. يُستخدم وقت التشغيل المخصّص لمحادثة GGUF والتضمينات ونماذج الصوت المدعومة. تبقى لمتغيرات البيئة الأولوية.",
           automatic: "تلقائي (مضمّن)",
-          bundled: "يستخدم وقت تشغيل llama.cpp الذي ثبّته Unsloth.",
+          bundled: "يستخدم وقت تشغيل llama.cpp الذي ثبّته LABZ.",
           active: "سيُستخدم llama-server المخصّص عند تحميل النموذج التالي.",
           environmentManaged: "تديره متغير البيئة {variable}.",
           missingBinary: "لم يعد llama-server متاحًا في هذا المجلد. اختر مجلدًا آخر أو استخدم وقت التشغيل المضمّن.",
@@ -1377,7 +1383,7 @@ export const ar = {
         },
         unsupported: {
           notInstalled: "لم يُعثر على تثبيت llama.cpp مُدار، لذا لا توجد خلفية لتبديلها.",
-          localLink: "llama.cpp مجلد محلي ربطته بنفسك، ولن يستبدله Unsloth.",
+          localLink: "llama.cpp مجلد محلي ربطته بنفسك، ولن يستبدله LABZ.",
           sourceBuild: "بُني هذا الإصدار من llama.cpp من الشيفرة المصدرية، لذا لا يمكن تبديل خلفيته من هنا.",
           customPath: "تم تحديد مجلد llama.cpp مخصّص. يحدد هذا الإصدار خلفية الحوسبة.",
           unresolved: "تعذّر التحقق من الخلفيات المتاحة. تحقّق من اتصالك وحاول مرة أخرى.",
@@ -1424,7 +1430,7 @@ export const ar = {
           label: "ملفات ذاكرة التخزين المؤقت",
           description:
             "{size} في ذاكرات التخزين المؤقت، يمكن مسح {reclaimable} منها الآن.",
-          hint: "تنزيلات الحزم والنوى المُصرَّفة وذاكرات النقل المؤقتة التي تعيد Unsloth بناءها عند الحاجة إليها. لا يتم هنا مسح النماذج المُنزَّلة أو المشاريع أو المحادثات أو الإعدادات أو رمز Hugging Face الخاص بك.",
+          hint: "تنزيلات الحزم والنوى المُصرَّفة وذاكرات النقل المؤقتة التي تعيد LABZ بناءها عند الحاجة إليها. لا يتم هنا مسح النماذج المُنزَّلة أو المشاريع أو المحادثات أو الإعدادات أو رمز Hugging Face الخاص بك.",
           keywords:
             "ذاكرة مؤقت تخزين كاش مسح تنظيف تفريغ مساحة قرص مؤقتة مُصرَّف cache caches purge prune clear clean free space disk uv pip npm bun triton inductor cuda numba matplotlib vllm compiled xet temporary",
           measuring: "جارٍ قياس أحجام ذاكرات التخزين المؤقت...",
@@ -1440,7 +1446,7 @@ export const ar = {
           confirmDescription: "سيؤدي ذلك إلى تحرير نحو {size}.",
           confirmOneTitle: "هل تريد مسح {name}؟",
           safety:
-            "تعيد Unsloth بناء ذاكرة التخزين المؤقت في المرة التالية التي تحتاج إليها. لن تُمَس النماذج المُنزَّلة أو المشاريع أو المحادثات أو الإعدادات أو رمز Hugging Face الخاص بك.",
+            "تعيد LABZ بناء ذاكرة التخزين المؤقت في المرة التالية التي تحتاج إليها. لن تُمَس النماذج المُنزَّلة أو المشاريع أو المحادثات أو الإعدادات أو رمز Hugging Face الخاص بك.",
           hubCost:
             "هذه هي ذاكرة النماذج المؤقتة. مسحها يعني تنزيل تلك النماذج من جديد عند استخدامها في المرة القادمة.",
           datasetsCost:
@@ -1461,7 +1467,7 @@ export const ar = {
             numba: "ذاكرة تصريف Numba المؤقتة",
             matplotlib: "ذاكرة خطوط Matplotlib المؤقتة",
             vllm: "ذاكرة vLLM المؤقتة",
-            unslothCompiled: "وحدات Unsloth المُصرَّفة",
+            unslothCompiled: "وحدات LABZ المُصرَّفة",
             hfXet: "ذاكرة نقل Hugging Face المؤقتة",
             hfAssets: "ذاكرة أصول Hugging Face المؤقتة",
             hfDatasets: "ذاكرة مجموعات بيانات Hugging Face المؤقتة",
@@ -1504,7 +1510,7 @@ export const ar = {
       description:
         "اربط وكلاء البرمجة مثل Claude Code وCodex بنموذج محلي باستخدام unsloth start.",
       intro:
-        "يربط Claude Code وCodex وDeepSeek Harness وHermes وOpenClaw وOpenCode وغيرها من الوكلاء بنموذج يقدّمه Unsloth محليًا، دون اتصال بالإنترنت تمامًا. يشغّل خادمًا متوافقًا مع OpenAI ولا يمسّ ملفات إعدادات وكيلك إطلاقًا.",
+        "يربط Claude Code وCodex وDeepSeek Harness وHermes وOpenClaw وOpenCode وغيرها من الوكلاء بنموذج يقدّمه LABZ محليًا، دون اتصال بالإنترنت تمامًا. يشغّل خادمًا متوافقًا مع OpenAI ولا يمسّ ملفات إعدادات وكيلك إطلاقًا.",
       readDocs: "قراءة التوثيق",
       copy: "نسخ",
       copied: "تم النسخ",
@@ -1530,17 +1536,17 @@ export const ar = {
       // English is the baseline until translated: the three-part sentence is assembled around an
       // inline link and needs restructuring first.
       automaticSettingsNote:
-        "Unsloth automatically applies the model’s recommended settings if you have not set any flags.",
+        "LABZ automatically applies the model’s recommended settings if you have not set any flags.",
       configurationNote:
         "You can also adjust any configuration. See further below or",
       configurationDocs: "docs",
       configurationFlagsSuffix: "for flags.",
       modelNote:
-        "يتطلب Codex نموذج GGUF يقدّمه llama-server. أما الوكلاء الآخرون فيمكنهم استخدام النماذج المبنية على transformers أيضًا؛ احذف ‎--model لاستخدام النموذج المُحمَّل بالفعل في Unsloth.",
+        "يتطلب Codex نموذج GGUF يقدّمه llama-server. أما الوكلاء الآخرون فيمكنهم استخدام النماذج المبنية على transformers أيضًا؛ احذف ‎--model لاستخدام النموذج المُحمَّل بالفعل في LABZ.",
       subagent: {
         title: "استخدام نموذج محلي كوكيل فرعي",
         description:
-          "أبقِ {agent} على نموذجه الحالي وفوّض مهام محددة إلى نموذج Unsloth المحلي هذا.",
+          "أبقِ {agent} على نموذجه الحالي وفوّض مهام محددة إلى نموذج LABZ المحلي هذا.",
         setupCommand: "أمر الإعداد",
         copySetupCommand: "نسخ أمر إعداد الوكيل الفرعي",
         usagePrompt: "ثم اكتب في {agent}:",
@@ -1551,7 +1557,7 @@ export const ar = {
       quickstart: {
         title: "بناء أمر",
         description:
-          "شغّل وكيلًا على النموذج المُحمَّل حاليًا في Unsloth. حمّل نموذجًا أولًا، ثم استبدل claude بأي وكيل مدعوم أدناه.",
+          "شغّل وكيلًا على النموذج المُحمَّل حاليًا في LABZ. حمّل نموذجًا أولًا، ثم استبدل claude بأي وكيل مدعوم أدناه.",
         noneDetected: "لم يُعثر في متغيّر PATH لديك على أي واجهة أوامر لوكيل مدعوم.",
         installed: "مثبّت",
       },
@@ -1570,9 +1576,9 @@ export const ar = {
       options: {
         title: "الخيارات الشائعة",
         description:
-          "تُحلَّل رايات Unsloth أولًا؛ وأي شيء لا يتعرّف عليه يُمرَّر كما هو إلى الوكيل.",
+          "تُحلَّل رايات LABZ أولًا؛ وأي شيء لا يتعرّف عليه يُمرَّر كما هو إلى الوكيل.",
         model:
-          "يختار نموذجًا. بدون ‎--model يستخدم unsloth start النموذج المُحمَّل حاليًا في Unsloth، ويُظهر خطأ إن لم يكن هناك أي نموذج محمَّل.",
+          "يختار نموذجًا. بدون ‎--model يستخدم unsloth start النموذج المُحمَّل حاليًا في LABZ، ويُظهر خطأ إن لم يكن هناك أي نموذج محمَّل.",
         contextLength:
           "يحدد طول السياق المطلوب (اسم بديل: ‎--max-seq-length).",
         ggufVariant: "يختار نسخة تكميم GGUF.",
@@ -1581,10 +1587,10 @@ export const ar = {
           "يفعّل أو يعطّل التوازي التنسوري عبر عدة أجهزة GPU.",
         serve: "يفعّل أو يعطّل الخادم المحلي التلقائي.",
         launch: "يشغّل الوكيل، أو يكتفي بطباعة الأمر والبيئة.",
-        persist: "يحتفظ بمساحة تخزين الوكيل التي يديرها Unsloth بين عمليات التشغيل.",
+        persist: "يحتفظ بمساحة تخزين الوكيل التي يديرها LABZ بين عمليات التشغيل.",
         asSubagent:
-          "يبقي الوكيل الأصلي على نموذجه الحالي ويسجّل Unsloth كوكيل فرعي محلي (Claude Code وCodex وOpenCode).",
-        apiKey: "يمرّر مفتاح API الخاص بـ Unsloth (أو اضبط UNSLOTH_API_KEY).",
+          "يبقي الوكيل الأصلي على نموذجه الحالي ويسجّل LABZ كوكيل فرعي محلي (Claude Code وCodex وOpenCode).",
+        apiKey: "يمرّر مفتاح API الخاص بـ LABZ (أو اضبط UNSLOTH_API_KEY).",
         reasoning:
           "استخدام الاستدلال في المحادثة: on أو off أو auto. ويتبع auto قالب المحادثة الخاص بالنموذج، وهو غالبًا on.",
         reasoningEffort:
@@ -1592,14 +1598,14 @@ export const ar = {
         yolo: "يتخطى طلبات الموافقة. استخدمه في البيئات الموثوقة فقط.",
       },
       remote: {
-        title: "الاتصال بنسخة بعيدة من Unsloth",
+        title: "الاتصال بنسخة بعيدة من LABZ",
         description:
-          "وجّه unsloth start إلى نسخة من Unsloth تعمل في مكان آخر بضبط ما يلي قبل التشغيل (أو مرّر ‎--api-key مباشرة):",
+          "وجّه unsloth start إلى نسخة من LABZ تعمل في مكان آخر بضبط ما يلي قبل التشغيل (أو مرّر ‎--api-key مباشرة):",
       },
       passthrough: {
         title: "تمرير وسائط إلى الوكيل",
         description:
-          "الوسائط التي تأتي بعد رايات Unsloth تُمرَّر إلى الوكيل نفسه، لذا تظل أوامره الأصلية مثل resume تعمل:",
+          "الوسائط التي تأتي بعد رايات LABZ تُمرَّر إلى الوكيل نفسه، لذا تظل أوامره الأصلية مثل resume تعمل:",
       },
       dryRun: {
         title: "المعاينة دون تشغيل",
@@ -1955,11 +1961,11 @@ export const ar = {
     remoteLan: {
       title: "الوصول عن بُعد والشبكة المحلية",
       description:
-        "الوصول إلى Unsloth من أجهزتك الأخرى عبر شبكتك المحلية أو عنوان URL عام مؤقت.",
+        "الوصول إلى LABZ من أجهزتك الأخرى عبر شبكتك المحلية أو عنوان URL عام مؤقت.",
     },
     apiKeys: {
       title: "API",
-      description: "الوصول إلى Unsloth عبر واجهة API المتوافقة مع OpenAI.",
+      description: "الوصول إلى LABZ عبر واجهة API المتوافقة مع OpenAI.",
       readDocs: "قراءة وثائق API",
       noAccess: "لا يوجد وصول إلى API بعد.",
       accessTokens: "توكنات الوصول",
@@ -1987,7 +1993,7 @@ export const ar = {
       osWindows: "Windows",
       secureHttps: "HTTPS آمن",
       secureHttpsHint:
-        "لا يزال المنفذ على العنوان 0.0.0.0 متاحًا عالميًا. للحصول على أمان كامل، شغّل Unsloth باستخدام --secure لإتاحة رابط HTTPS هذا فقط.",
+        "لا يزال المنفذ على العنوان 0.0.0.0 متاحًا عالميًا. للحصول على أمان كامل، شغّل LABZ باستخدام --secure لإتاحة رابط HTTPS هذا فقط.",
       copyTunnelUrl: "نسخ رابط النفق",
       copySnippet: "نسخ المقتطف",
       copy: "نسخ",
@@ -2050,7 +2056,7 @@ export const ar = {
     about: {
       title: "حول",
       description: "الوثائق وملاحظات الإصدار والآراء ومعلومات النسخة.",
-      studioVersion: "إصدار Unsloth",
+      studioVersion: "إصدار LABZ",
       packageVersion: "إصدار الحزمة",
       desktopAppVersion: "إصدار تطبيق سطح المكتب",
       desktopAppVersionUnavailable: "غير متاح",
@@ -2069,27 +2075,27 @@ export const ar = {
       reportIssue: "الإبلاغ عن مشكلة",
       license: {
         sectionTitle: "الترخيص",
-        studioLabel: "Unsloth",
+        studioLabel: "LABZ",
         studioLicense: "AGPL-3.0",
         studioDescription: "مفتوح المصدر بموجب GNU AGPL v3.0.",
-        libraryLabel: "Unsloth Core",
+        libraryLabel: "LABZ Core",
         libraryLicense: "Apache-2.0",
         libraryDescription: "مرخّص بموجب Apache 2.0.",
       },
       dangerZone: "منطقة الخطر",
-      shutDownStudio: "إيقاف تشغيل Unsloth",
+      shutDownStudio: "إيقاف تشغيل LABZ",
       shutDownStudioDescription:
-        "يوقف خادم Unsloth وينهي جلستك.",
+        "يوقف خادم LABZ وينهي جلستك.",
       shutDown: "إيقاف التشغيل",
       update: {
-        title: "تحديث Unsloth",
+        title: "تحديث LABZ",
         commandText: "نص {label}",
         copied: "تم النسخ",
         copyCommand: "نسخ الأمر",
         commandCopied: "تم نسخ {label}",
         copyNamedCommand: "نسخ {label}",
-        checkingInstall: "جارٍ التحقق من طريقة تثبيت Unsloth...",
-        installIntro: "لتثبيت أو تحديث Unsloth:",
+        checkingInstall: "جارٍ التحقق من طريقة تثبيت LABZ...",
+        installIntro: "لتثبيت أو تحديث LABZ:",
         localUpdateHeading: "تحديث محلي",
         installCommandUnix: "أمر التثبيت على macOS أو Linux",
         installCommandWindows: "أمر التثبيت على Windows",
@@ -2103,7 +2109,7 @@ export const ar = {
           "تم اكتشاف تثبيت من المصدر أو حزمة VCS. أعد التثبيت من المسار المحلي الأصلي أو رابط Git.",
         repoCheckoutFallback:
           "إذا كانت لا تزال لديك نسخة المستودع، شغّل المثبّت المحلي منها:",
-        restartAfterUpdate: "أعد تشغيل Unsloth بعد التحديث.",
+        restartAfterUpdate: "أعد تشغيل LABZ بعد التحديث.",
         desktopManaged:
           "يتحقق تطبيق سطح المكتب تلقائيًا من توفر إصدارات جديدة. ويمكنك أيضًا التحقق من وجود تحديثات أو تثبيتها هنا في أي وقت.",
         desktopReady: "تحديثات تطبيق سطح المكتب",
@@ -2121,7 +2127,7 @@ export const ar = {
         desktopCheckFailed: "تعذّر التحقق من وجود تحديثات",
         desktopCheckFailedDescription: "تحقق من اتصالك ثم حاول مرة أخرى.",
         desktopCurrent: "تطبيق سطح المكتب محدّث",
-        desktopCurrentDescription: "سيواصل Unsloth التحقق تلقائيًا.",
+        desktopCurrentDescription: "سيواصل LABZ التحقق تلقائيًا.",
         checkForUpdates: "التحقق من وجود تحديثات",
         checkAgain: "التحقق مرة أخرى",
         retryCheck: "إعادة المحاولة",
@@ -2129,7 +2135,7 @@ export const ar = {
         updateNow: "التحديث الآن",
         openReleasePage: "فتح صفحة الإصدار",
         unknownInstall:
-          "تعذّر اكتشاف طريقة تثبيت Unsloth. لعمليات تثبيت المثبّت أو PyPI، استخدم الأوامر أعلاه.",
+          "تعذّر اكتشاف طريقة تثبيت LABZ. لعمليات تثبيت المثبّت أو PyPI، استخدم الأوامر أعلاه.",
         localCheckout:
           "لعمليات تثبيت النسخة المحلية، شغّل المثبّت المحلي من تلك النسخة:",
         docs: "وثائق التثبيت:",
@@ -2632,7 +2638,7 @@ export const ar = {
       },
       startFailed: "فشل بدء التدريب",
       startUnconfirmed:
-        "تعذّر على Unsloth تأكيد بدء التدريب. جارٍ التحقق من الحالة في الخلفية.",
+        "تعذّر على LABZ تأكيد بدء التدريب. جارٍ التحقق من الحالة في الخلفية.",
       stopFailed: "فشل إيقاف التدريب",
       trainingStillActiveTitle: "لا يزال التدريب نشطًا",
       stopBeforeConfig: "أوقف التدريب أولًا، ثم عُد إلى التكوين.",
@@ -2823,7 +2829,7 @@ export const ar = {
       preparing: "جارٍ التحضير",
       left: "{eta} متبقٍ",
       downloaded: "تم تنزيل {size}",
-      terminalStart: "> يبدأ تدريب Unsloth...",
+      terminalStart: "> يبدأ تدريب LABZ...",
       preparingResources: "> جارٍ تحضير النموذج ومجموعة البيانات...",
       gettingReady: "> نُجهّز كل شيء لعملية التدريب...",
       waitingForFirstStep: "> {message} | في انتظار الخطوة الأولى... ({step})",

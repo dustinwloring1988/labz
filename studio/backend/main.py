@@ -336,6 +336,8 @@ from routes import (
     inference_studio_router,
     mcp_servers_router,
     nanochat_router,
+    benchmarks_router,
+    autoresearch_router,
     skills_router,
     models_router,
     providers_router,
@@ -931,6 +933,18 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         _lifespan_log.warning("nanochat shutdown failed: %s", exc)
 
+    # autoresearch drives a coding agent and a training run in its own
+    # virtualenv, and the agent cannot be reattached to, so an interrupted loop
+    # is lost work rather than a paused one. It is stopped rather than left.
+    try:
+        from core.autoresearch.chat_sidecar import unload as _autoresearch_unload
+        from core.autoresearch.orchestrator import get_run_manager as _autoresearch_manager
+
+        await asyncio.to_thread(_autoresearch_manager().shutdown, 30.0)
+        await asyncio.to_thread(_autoresearch_unload)
+    except Exception as exc:
+        _lifespan_log.warning("autoresearch shutdown failed: %s", exc)
+
     from core.inference.openai_codex_auth import shutdown_flows
 
     await shutdown_flows()
@@ -975,9 +989,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title = "Unsloth UI Backend",
+    # `title` is reported as `service` in the health payload, and the desktop app
+    # matches on it to confirm the process answering on its port is really this
+    # backend and not a stale build or an unrelated service. Keep it equal to
+    # EXPECTED_BACKEND_SERVICE in src-tauri/src/preflight/backend.rs.
+    title = "LABZ Backend",
     version = UNSLOTH_VERSION,
-    description = "Backend API for Unsloth UI - Training and Model Management",
+    description = "Backend API for the LABZ desktop app - Training and Model Management",
     lifespan = lifespan,
     # Swagger UI and ReDoc are re-registered below on these same paths, against vendored assets instead of
     # a CDN: FastAPI's built-ins point at cdn.jsdelivr.net, and this origin holds the auth tokens.
@@ -1613,6 +1631,15 @@ app.include_router(training_router, prefix = "/api/train", tags = ["training"])
 # nanochat is a second, independent training path (its own virtualenv, its own
 # pipeline), mounted separately so it cannot be confused with the Unsloth trainer.
 app.include_router(nanochat_router, prefix = "/api/nanochat", tags = ["nanochat"])
+# Benchmarks evaluate a model rather than training one, but they reuse nanochat's
+# task definitions and datasets, and they are mutually exclusive with training
+# because both want the whole GPU. Mounted separately so neither is confused with
+# the other.
+app.include_router(benchmarks_router, prefix = "/api/benchmarks", tags = ["benchmarks"])
+# autoresearch is a third independent path: nanochat's pipeline run repeatedly by
+# an agent, in its own virtualenv, judged on one metric. It is mutually exclusive
+# with both training paths for the same reason benchmarks is — one GPU.
+app.include_router(autoresearch_router, prefix = "/api/autoresearch", tags = ["autoresearch"])
 app.include_router(models_router, prefix = "/api/models", tags = ["models"])
 app.include_router(chat_history_router, prefix = "/api/chat", tags = ["chat"])
 app.include_router(research_runs_router, prefix = "/api/chat/research-runs", tags = ["research-runs"])
@@ -1854,7 +1881,12 @@ async def liveness_check():
     """Cheap process liveness for desktop port validation."""
     alive = {
         "status": "alive",
-        "service": "Unsloth UI Backend",
+        # Lockstep with the FastAPI `title` above, which is what the desktop app
+        # compares against (EXPECTED_BACKEND_SERVICE in
+        # src-tauri/src/preflight/backend.rs). A hardcoded copy here is what
+        # strands startup: the app rejects the port as "not this backend" and
+        # the window waits on a server-port that never arrives.
+        "service": app.title,
         "desktop_protocol_version": 1,
         # Lockstep with DESKTOP_MANAGEABILITY_VERSION in
         # studio/src-tauri/src/preflight/version.rs and `desktop-capabilities`.
@@ -1920,7 +1952,8 @@ async def health_check(request: Request):
     base = {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "service": "Unsloth UI Backend",
+        # Lockstep with /api/liveness above.
+        "service": app.title,
         # Literal True with no snapshot, not a CHAT_ONLY read: a pass in flight sets the flag False
         # before a probe that can still fall back to CPU.
         "chat_only": snapshot[0] if snapshot is not None else True,

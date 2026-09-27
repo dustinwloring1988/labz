@@ -391,7 +391,7 @@ fn acquire_named_studio_runtime_launch_guard(
     };
     if handle.is_null() {
         return Err(format!(
-            "Could not create the Unsloth runtime lock: {}",
+            "Could not create the LABZ runtime lock: {}",
             std::io::Error::last_os_error()
         ));
     }
@@ -411,7 +411,7 @@ fn acquire_named_studio_runtime_launch_guard(
                 let _ = windows_sys::Win32::Foundation::CloseHandle(handle);
             }
             Err(format!(
-                "Could not acquire the Unsloth runtime lock: {error}"
+                "Could not acquire the LABZ runtime lock: {error}"
             ))
         }
     }
@@ -433,7 +433,7 @@ fn current_windows_user_sid() -> Result<String, String> {
     let mut token = std::ptr::null_mut();
     if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) } == 0 {
         return Err(format!(
-            "Could not open the Windows user token for the Unsloth runtime lock: {}",
+            "Could not open the Windows user token for the LABZ runtime lock: {}",
             std::io::Error::last_os_error()
         ));
     }
@@ -445,7 +445,7 @@ fn current_windows_user_sid() -> Result<String, String> {
         }
         if required == 0 {
             return Err(format!(
-                "Could not size the Windows user SID for the Unsloth runtime lock: {}",
+                "Could not size the Windows user SID for the LABZ runtime lock: {}",
                 std::io::Error::last_os_error()
             ));
         }
@@ -463,7 +463,7 @@ fn current_windows_user_sid() -> Result<String, String> {
         } == 0
         {
             return Err(format!(
-                "Could not read the Windows user SID for the Unsloth runtime lock: {}",
+                "Could not read the Windows user SID for the LABZ runtime lock: {}",
                 std::io::Error::last_os_error()
             ));
         }
@@ -471,14 +471,14 @@ fn current_windows_user_sid() -> Result<String, String> {
         let token_user = unsafe { &*(buffer.as_ptr().cast::<TOKEN_USER>()) };
         let sid = token_user.User.Sid;
         if sid.is_null() || unsafe { IsValidSid(sid) } == 0 {
-            return Err("Windows returned an invalid user SID for the Unsloth runtime lock".into());
+            return Err("Windows returned an invalid user SID for the LABZ runtime lock".into());
         }
 
         let authority_ptr = unsafe { GetSidIdentifierAuthority(sid) };
         let count_ptr = unsafe { GetSidSubAuthorityCount(sid) };
         if authority_ptr.is_null() || count_ptr.is_null() {
             return Err(
-                "Could not inspect the Windows user SID for the Unsloth runtime lock".into(),
+                "Could not inspect the Windows user SID for the LABZ runtime lock".into(),
             );
         }
         let authority = unsafe { (*authority_ptr).Value }
@@ -491,7 +491,7 @@ fn current_windows_user_sid() -> Result<String, String> {
             let sub_authority = unsafe { GetSidSubAuthority(sid, index) };
             if sub_authority.is_null() {
                 return Err(
-                    "Could not inspect the Windows user SID for the Unsloth runtime lock".into(),
+                    "Could not inspect the Windows user SID for the LABZ runtime lock".into(),
                 );
             }
             sid_text.push_str(&format!("-{}", unsafe { *sub_authority }));
@@ -518,14 +518,14 @@ fn acquire_file_studio_runtime_launch_guard(
     use std::os::fd::AsRawFd;
 
     std::fs::create_dir_all(home)
-        .map_err(|error| format!("Could not create the Unsloth runtime lock directory: {error}"))?;
+        .map_err(|error| format!("Could not create the LABZ runtime lock directory: {error}"))?;
     let path = home.join(".studio-runtime.lock");
     let file = std::fs::OpenOptions::new()
         .read(true)
         .write(true)
         .create(true)
         .open(&path)
-        .map_err(|error| format!("Could not open the Unsloth runtime lock: {error}"))?;
+        .map_err(|error| format!("Could not open the LABZ runtime lock: {error}"))?;
     let result = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) };
     if result == 0 {
         return Ok(StudioManagedRuntimeLaunchGuard { file });
@@ -534,7 +534,7 @@ fn acquire_file_studio_runtime_launch_guard(
     if error.kind() == std::io::ErrorKind::WouldBlock {
         return Err(STUDIO_RUNTIME_GATE_BUSY.to_string());
     }
-    Err(format!("Could not acquire the Unsloth runtime lock: {error}"))
+    Err(format!("Could not acquire the LABZ runtime lock: {error}"))
 }
 
 #[cfg(unix)]
@@ -597,7 +597,7 @@ mod posix_studio_runtime_launch_guard_tests {
 #[cfg(windows)]
 fn normalized_existing_windows_path(path: &std::path::Path) -> Result<String, String> {
     let resolved = std::fs::canonicalize(path)
-        .map_err(|error| format!("Could not resolve managed Unsloth path {:?}: {error}", path))?;
+        .map_err(|error| format!("Could not resolve managed LABZ path {:?}: {error}", path))?;
     Ok(resolved
         .to_string_lossy()
         .trim_end_matches(['\\', '/'])
@@ -609,15 +609,15 @@ fn windows_ordinal_ignore_case_equal(left: &[u16], right: &[u16]) -> Result<bool
     use windows_sys::Win32::Globalization::{CompareStringOrdinal, CSTR_EQUAL};
 
     let left_length = i32::try_from(left.len())
-        .map_err(|_| "Normalized Unsloth path exceeds Win32 comparison limits".to_string())?;
+        .map_err(|_| "Normalized LABZ path exceeds Win32 comparison limits".to_string())?;
     let right_length = i32::try_from(right.len())
-        .map_err(|_| "Normalized Unsloth path exceeds Win32 comparison limits".to_string())?;
+        .map_err(|_| "Normalized LABZ path exceeds Win32 comparison limits".to_string())?;
     let comparison = unsafe {
         CompareStringOrdinal(left.as_ptr(), left_length, right.as_ptr(), right_length, 1)
     };
     if comparison == 0 {
         return Err(format!(
-            "Could not compare normalized Unsloth paths: {}",
+            "Could not compare normalized LABZ paths: {}",
             std::io::Error::last_os_error()
         ));
     }
@@ -708,13 +708,13 @@ pub(crate) fn ensure_managed_environment_is_idle(
             .and_then(std::path::Path::parent)
             .ok_or_else(|| {
                 format!(
-                    "Could not determine the managed Unsloth environment for {:?}",
+                    "Could not determine the managed LABZ environment for {:?}",
                     managed_binary
                 )
             })?;
         let studio_home = venv.parent().ok_or_else(|| {
             format!(
-                "Could not determine the managed Unsloth root for {:?}",
+                "Could not determine the managed LABZ root for {:?}",
                 managed_binary
             )
         })?;
@@ -728,7 +728,7 @@ pub(crate) fn ensure_managed_environment_is_idle(
         let snapshot = unsafe { CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) };
         if snapshot == INVALID_HANDLE_VALUE {
             return Err(format!(
-                "Could not inspect running processes before Unsloth update: {}",
+                "Could not inspect running processes before LABZ update: {}",
                 std::io::Error::last_os_error()
             ));
         }
@@ -745,7 +745,7 @@ pub(crate) fn ensure_managed_environment_is_idle(
                     return Ok(());
                 }
                 return Err(format!(
-                    "Could not enumerate running processes before Unsloth update: {}",
+                    "Could not enumerate running processes before LABZ update: {}",
                     std::io::Error::from_raw_os_error(error as i32)
                 ));
             }
@@ -766,7 +766,7 @@ pub(crate) fn ensure_managed_environment_is_idle(
                                 .unwrap_or(entry.szExeFile.len());
                             let name = String::from_utf16_lossy(&entry.szExeFile[..name_length]);
                             return Err(format!(
-                                "The managed Unsloth environment is in use by {} (PID {}). Stop that process, then retry the update.",
+                                "The managed LABZ environment is in use by {} (PID {}). Stop that process, then retry the update.",
                                 name, entry.th32ProcessID
                             ));
                         }
@@ -926,7 +926,7 @@ mod studio_runtime_launch_guard_tests {
         let managed_binary = target_root.join("Scripts").join("unsloth.exe");
 
         let error = ensure_managed_environment_is_idle(&managed_binary).unwrap_err();
-        assert!(error.contains("managed Unsloth environment is in use"));
+        assert!(error.contains("managed LABZ environment is in use"));
     }
 
     #[test]
@@ -1704,11 +1704,11 @@ pub(crate) fn resolve_managed_cli_invocation_with(
     {
         let python = bin
             .parent()
-            .ok_or_else(|| "Managed Unsloth executable has no parent directory.".to_string())?
+            .ok_or_else(|| "Managed LABZ executable has no parent directory.".to_string())?
             .join("python.exe");
         if !python.is_file() {
             return Err(format!(
-                "Managed Python interpreter not found beside Unsloth: {}",
+                "Managed Python interpreter not found beside LABZ: {}",
                 python.display()
             ));
         }
@@ -3488,7 +3488,7 @@ pub(crate) fn resolve_backend_binary() -> Result<std::path::PathBuf, String> {
     }
 
     find_unsloth_binary()
-        .ok_or_else(|| "Unsloth binary not found. Please install Unsloth first.".to_string())
+        .ok_or_else(|| "LABZ binary not found. Please install LABZ first.".to_string())
 }
 
 fn backend_args(port: u16) -> Vec<String> {
@@ -3615,7 +3615,7 @@ pub fn start_backend(
     if let Err(error) = apply_managed_cli_context_at(&mut cmd, &work_dir) {
         // The drive holding an override can go between the preflight check and
         // this call, and a panic in the spawn path takes the desktop with it.
-        let msg = format!("Failed to prepare the Unsloth backend command: {}", error);
+        let msg = format!("Failed to prepare the LABZ backend command: {}", error);
         diagnostics::record_backend_start_failure(
             diagnostics_state,
             Some(port),
@@ -3883,7 +3883,7 @@ async fn generic_backend_health_ok(port: u16) -> bool {
     let service = json
         .get("service")
         .and_then(|v| v.as_str())
-        .map(|s| s == "Unsloth UI Backend")
+        .map(|s| s == crate::preflight::EXPECTED_BACKEND_SERVICE)
         .unwrap_or(false);
     info!(
         "Backend port candidate {} liveness live={} service={} in {}ms",
@@ -4133,12 +4133,12 @@ fn start_watchdog(
         let secs = BACKEND_START_DEADLINE.as_secs();
         let msg = if tail.trim().is_empty() {
             format!(
-                "The Unsloth backend did not start within {secs} seconds and produced no \
+                "The LABZ backend did not start within {secs} seconds and produced no \
                  output at all. It is still running but is not responding."
             )
         } else {
             format!(
-                "The Unsloth backend did not start within {secs} seconds. Its last output \
+                "The LABZ backend did not start within {secs} seconds. Its last output \
                  was:\n{tail}"
             )
         };

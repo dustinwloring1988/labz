@@ -41,7 +41,7 @@ test("the default model demonstrates reasoning effort without sampling flags", (
   );
   assert.equal(
     en.settings.agents.automaticSettingsNote,
-    "Unsloth automatically applies the model’s recommended settings if you have not set any flags.",
+    "LABZ automatically applies the model’s recommended settings if you have not set any flags.",
   );
   assert.equal(
     en.settings.agents.configurationNote,

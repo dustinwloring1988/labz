@@ -130,8 +130,8 @@ export const ja = {
       truncated: "このページは長すぎるため、全体を検索できません。",
     },
     beta: "BETA",
-    brand: "unsloth",
-    product: "Unsloth",
+    brand: "LABZ",
+    product: "LABZ",
     accountMenu: "{name} のアカウントメニュー",
     updateAvailable: "アップデートが利用可能です",
     resize: {
@@ -140,7 +140,7 @@ export const ja = {
       drag: "ドラッグでサイズ変更",
     },
     aria: {
-      home: "Unsloth ホーム",
+      home: "LABZ ホーム",
       closeSidebar: "サイドバーを閉じる",
       openSidebar: "サイドバーを開く",
       resizeSidebar: "サイドバーのサイズ変更または折りたたみ",
@@ -160,6 +160,8 @@ export const ja = {
       projects: "プロジェクト",
       train: "トレーニング",
       nanochat: "nanochat",
+      autoresearch: "autoresearch",
+      benchmarks: "ベンチマーク",
       recipes: "レシピ",
       images: "画像",
       video: "動画",
@@ -261,7 +263,7 @@ export const ja = {
   settings: {
     accounts: {
       title: "アカウント",
-      description: "個別の Unsloth アカウントを作成します。新しいユーザーは一度きりのセットアップコードでサインインし、パスワードを設定します。",
+      description: "個別の LABZ アカウントを作成します。新しいユーザーは一度きりのセットアップコードでサインインし、パスワードを設定します。",
       username: "ユーザー名",
       create: "アカウントを作成",
       createDescription: "セットアップコードを渡すと、本人がパスワードを設定できます。",
@@ -300,7 +302,7 @@ export const ja = {
     title: "設定",
     dialog: {
       title: "設定",
-      description: "Unsloth の環境設定を管理します。",
+      description: "LABZ の環境設定を管理します。",
       closeAriaLabel: "設定を閉じる",
       searchPlaceholder: "設定を検索…",
       searchNoResults: "設定が見つかりません。",
@@ -368,7 +370,7 @@ export const ja = {
         },
         logOut: {
           label: "ログアウト",
-          description: "Unsloth からサインアウトします",
+          description: "LABZ からサインアウトします",
         },
         approveToolRequest: {
           label: "リクエストを承認",
@@ -477,6 +479,10 @@ export const ja = {
         switchToTrain: {
           label: "トレーニングへ切り替え",
           description: "トレーニングのワークスペースへ移動します",
+        },
+        switchToBenchmarks: {
+          label: "ベンチマークに切り替え",
+          description: "ベンチマークワークスペースを開く",
         },
         switchToRecipes: {
           label: "Recipes へ切り替え",
@@ -608,8 +614,8 @@ export const ja = {
       openLogsFolder: "ログフォルダーを開く",
       openLogsFolderFailed: "ログフォルダーを開けませんでした。",
       exportFailed: "ログをダウンロードできませんでした。",
-      exportTooOld: "実行中の Unsloth バックエンドが古すぎるため、ログを書き出せません。バックエンドを更新して再起動してください。",
-      exportForbidden: "すべてのログをダウンロードするには、サインイン済みの Unsloth セッションが必要です。API キーだけでは実行できません。",
+      exportTooOld: "実行中の LABZ バックエンドが古すぎるため、ログを書き出せません。バックエンドを更新して再起動してください。",
+      exportForbidden: "すべてのログをダウンロードするには、サインイン済みの LABZ セッションが必要です。API キーだけでは実行できません。",
       keywords: "デバッグ ログ エラー クラッシュ トレースバック スタックトレース 診断 障害 調査 debug log logs error",
     },
     voice: {
@@ -714,7 +720,7 @@ export const ja = {
           "デバイス名を表示するにはマイクへのアクセスを許可してください",
         allowMicrophone: "マイクへのアクセスを許可",
         micAccessBlocked:
-          "マイクへのアクセスがブロックされました。この Unsloth のページでマイクへのアクセスを許可してから、もう一度お試しください。",
+          "マイクへのアクセスがブロックされました。この LABZ のページでマイクへのアクセスを許可してから、もう一度お試しください。",
         micAccessBlockedDesktop:
           "マイクへのアクセスがブロックされました。もう一度お試しになり「許可」を選択するか、システムのプライバシー設定でマイクを有効にしてください。",
         micAccessUnsupported:
@@ -818,7 +824,7 @@ export const ja = {
     },
     general: {
       title: "一般",
-      description: "Unsloth の全体的な設定。",
+      description: "LABZ の全体的な設定。",
       account: "アカウント",
       huggingFaceToken: "Hugging Face トークン",
       huggingFaceTokenDescription: "ゲート付きモデルの読み込みや、アーティファクトのプッシュに使用されます。",
@@ -828,14 +834,14 @@ export const ja = {
       checkingToken: "トークンを確認中...",
       tokenValidated: "トークンは検証済みです",
       password: "パスワード",
-      passwordDescription: "この Unsloth アカウントのパスワードを変更します。",
+      passwordDescription: "この LABZ アカウントのパスワードを変更します。",
       passwordDialog: {
         trigger: "パスワード変更",
         title: "パスワード変更",
         description: "現在のパスワードと新しいパスワード（最低 {minLength} 文字）を入力してください。",
         setTrigger: "リモートパスワードを設定",
         setTitle: "リモートパスワードを設定",
-        setDescription: "リモートのブラウザーが unsloth としてサインインするためのパスワード（最低 {minLength} 文字）を選んでください。Unsloth デスクトップアプリは引き続き自動でサインインします。",
+        setDescription: "リモートのブラウザーが unsloth としてサインインするためのパスワード（最低 {minLength} 文字）を選んでください。LABZ デスクトップアプリは引き続き自動でサインインします。",
         setSubmit: "パスワードを設定",
         setting: "設定中...",
         setDone: "パスワードを設定しました。",
@@ -895,7 +901,7 @@ export const ja = {
           "アイドル時の自動アンロードの前に KV キャッシュを保存し、再開したチャットが履歴を読み直さずに済むようにします。ディスク使用量は最大 10 GB です。",
         apiOnly: "API が読み込んだモデルのみアンロード",
         apiOnlyDescription:
-          "アイドル時の自動アンロードでは、Unsloth から自分で読み込んだモデルはメモリに残し、API リクエストが読み込んだモデルだけを解放します。",
+          "アイドル時の自動アンロードでは、LABZ から自分で読み込んだモデルはメモリに残し、API リクエストが読み込んだモデルだけを解放します。",
       },
       previewSharing: {
         sectionTitle: "プレビュー共有",
@@ -936,13 +942,13 @@ export const ja = {
       },
       startup: {
         sectionTitle: "起動",
-        launchAtLogin: "ログイン時に Unsloth を起動",
+        launchAtLogin: "ログイン時に LABZ を起動",
         launchAtLoginDescription:
-          "ログイン時に Unsloth をバックグラウンドで起動します。開くまでメニューバーまたはシステムトレイに常駐します。",
+          "ログイン時に LABZ をバックグラウンドで起動します。開くまでメニューバーまたはシステムトレイに常駐します。",
 
         closeToTray: "システムトレイに格納して閉じる",
         closeToTrayDescription:
-          "メインウィンドウを閉じても、Unsloth とサーバーをバックグラウンドで実行し続けます。",
+          "メインウィンドウを閉じても、LABZ とサーバーをバックグラウンドで実行し続けます。",
         closeToTraySaveError: "システムトレイに格納する設定を更新できませんでした。",
         loadError: "ログイン時起動の設定を読み込めませんでした。",
         saveError: "ログイン時起動の設定を更新できませんでした。",
@@ -1030,22 +1036,22 @@ export const ja = {
         description: "ローカル限定の設定を消去します。チャット、APIアクセス、DBに保存された設定は保持されます。",
         action: "設定をリセット",
         confirmTitle: "すべてのローカル設定をリセットしますか？",
-        confirmDescription: "ローカル限定の設定を消去し、Unsloth を再読み込みします。チャット、APIアクセス、DBに保存された設定は保持されます。",
+        confirmDescription: "ローカル限定の設定を消去し、LABZ を再読み込みします。チャット、APIアクセス、DBに保存された設定は保持されます。",
         confirmAction: "リセットして再読み込み",
       },
       permissions: {
         sectionTitle: "権限",
         bypassLabel: "ツールの権限",
         bypassDescription:
-          "チャットのツール呼び出し (ターミナル、python、ウェブ、MCP) を実行する前に、Unsloth がどのように承認するかを決めます。「Full access」にすると承認とコードサンドボックスが無効になります。",
+          "チャットのツール呼び出し (ターミナル、python、ウェブ、MCP) を実行する前に、LABZ がどのように承認するかを決めます。「Full access」にすると承認とコードサンドボックスが無効になります。",
       },
     },
     profile: {
       title: "プロフィール",
-      description: "Unsloth 内でのプロフィールの表示方法。",
+      description: "LABZ 内でのプロフィールの表示方法。",
       changePicture: "プロフィール写真を変更",
       displayName: "表示名",
-      nickname: "Unsloth での呼び名",
+      nickname: "LABZ での呼び名",
       nicknamePlaceholder: "ニックネーム",
       nicknameSaved: "希望する名前を保存しました",
       avatarShape: "プロフィール写真の形状",
@@ -1070,10 +1076,10 @@ export const ja = {
       stats: {
         title: "あなたの統計",
         subtitle:
-          "以下はすべてご自身の履歴から集計しています。収集も Unsloth への送信も行いません。",
+          "以下はすべてご自身の履歴から集計しています。収集も LABZ への送信も行いません。",
         retry: "再試行",
         privacyNote:
-          "統計は、お使いの Unsloth にあるローカルのチャット、API 利用、トレーニング履歴から計算されます。統計用に API のプロンプト、応答、キーを保存することはありません。Unsloth や第三者への送信も行いません。",
+          "統計は、お使いの LABZ にあるローカルのチャット、API 利用、トレーニング履歴から計算されます。統計用に API のプロンプト、応答、キーを保存することはありません。LABZ や第三者への送信も行いません。",
         emptyChats:
           "チャットまたは API の利用履歴がまだありません。会話を始めるか、認証済みのローカル API リクエストを実行してください。",
         lifetimeTokens: "累計トークン",
@@ -1102,7 +1108,7 @@ export const ja = {
         tokensIn: "送信トークン",
         tokensOut: "生成トークン",
         totalTokens: "合計トークン",
-        studioChatTokens: "Unsloth Chat トークン",
+        studioChatTokens: "LABZ Chat トークン",
         apiTokens: "API トークン",
         cachedTokens: "キャッシュされたトークン",
         cachedValue: "{tokens} (入力の {percent}%)",
@@ -1133,7 +1139,7 @@ export const ja = {
     },
     appearance: {
       title: "外観",
-      description: "このデバイスでの Unsloth の見た目。",
+      description: "このデバイスでの LABZ の見た目。",
       theme: {
         title: "テーマ",
         label: "カラー構成",
@@ -1144,7 +1150,7 @@ export const ja = {
       },
       palette: {
         label: "カラーパレット",
-        description: "Unsloth 全体で使用される配色。ライト・ダーク両対応。",
+        description: "LABZ 全体で使用される配色。ライト・ダーク両対応。",
         standard: "スタンダード",
         classic: "クラシック",
         minimal: "ミニマル",
@@ -1211,7 +1217,7 @@ export const ja = {
         },
         uiFontSize: {
           label: "UI フォントサイズ",
-          description: "Unsloth UI の基本サイズを調整します。",
+          description: "LABZ UI の基本サイズを調整します。",
         },
         codeFontSize: {
           label: "コードフォントサイズ",
@@ -1240,7 +1246,7 @@ export const ja = {
       language: {
         title: "言語",
         label: "表示言語",
-        description: "Unsloth で使用される言語。",
+        description: "LABZ で使用される言語。",
         autoDetect: "自動検出",
       },
       layout: {
@@ -1266,7 +1272,7 @@ export const ja = {
     },
     resources: {
       title: "システム",
-      description: "この Unsloth サーバーのハードウェアとストレージを監視します。",
+      description: "この LABZ サーバーのハードウェアとストレージを監視します。",
       liveUpdates: "リアルタイム更新",
       floatingWindow: "フローティングウィンドウ",
       disableOverlay: "オーバーレイを無効化",
@@ -1335,7 +1341,7 @@ export const ja = {
           description: "独自の llama-server ビルドを使用します。",
           hint: "llama-server を含む llama.cpp フォルダー、または build/bin 配下にあるビルドを選択します。カスタムランタイムは GGUF チャット、埋め込み、対応する音声モデルで使用されます。環境変数が引き続き優先されます。",
           automatic: "自動（同梱）",
-          bundled: "Unsloth がインストールした llama.cpp ランタイムを使用します。",
+          bundled: "LABZ がインストールした llama.cpp ランタイムを使用します。",
           active: "次回のモデル読み込みからカスタム llama-server が使用されます。",
           environmentManaged: "環境変数 {variable} によって管理されています。",
           missingBinary: "このフォルダーでは llama-server を利用できなくなりました。別のフォルダーを選ぶか、同梱ランタイムを使用してください。",
@@ -1358,7 +1364,7 @@ export const ja = {
         },
         unsupported: {
           notInstalled: "管理対象の llama.cpp インストールが見つからないため、切り替えるバックエンドがありません。",
-          localLink: "llama.cpp は自分でリンクしたローカルディレクトリのため、Unsloth は置き換えません。",
+          localLink: "llama.cpp は自分でリンクしたローカルディレクトリのため、LABZ は置き換えません。",
           sourceBuild: "この llama.cpp はソースからビルドされているため、ここではバックエンドを切り替えられません。",
           customPath: "カスタム llama.cpp フォルダーが選択されています。そのビルドによって計算バックエンドが決まります。",
           unresolved: "利用可能なバックエンドを確認できませんでした。接続を確認して再試行してください。",
@@ -1485,7 +1491,7 @@ export const ja = {
       description:
         "unsloth start で Claude Code や Codex などのコーディングエージェントをローカルモデルに接続します。",
       intro:
-        "は Claude Code、Codex、DeepSeek Harness、Hermes、OpenClaw、OpenCode などのエージェントを、Unsloth がローカルで提供するモデルに完全オフラインで接続します。OpenAI 互換サーバーを起動し、エージェントの設定ファイルには一切手を加えません。",
+        "は Claude Code、Codex、DeepSeek Harness、Hermes、OpenClaw、OpenCode などのエージェントを、LABZ がローカルで提供するモデルに完全オフラインで接続します。OpenAI 互換サーバーを起動し、エージェントの設定ファイルには一切手を加えません。",
       readDocs: "ドキュメントを読む",
       copy: "コピー",
       copied: "コピーしました",
@@ -1511,17 +1517,17 @@ export const ja = {
       // English is the baseline until translated: the three-part sentence is assembled around an
       // inline link and needs restructuring first.
       automaticSettingsNote:
-        "Unsloth automatically applies the model’s recommended settings if you have not set any flags.",
+        "LABZ automatically applies the model’s recommended settings if you have not set any flags.",
       configurationNote:
         "You can also adjust any configuration. See further below or",
       configurationDocs: "docs",
       configurationFlagsSuffix: "for flags.",
       modelNote:
-        "Codex には llama-server が提供する GGUF モデルが必要です。他のエージェントは transformers ベースのモデルも利用できます。Unsloth に読み込み済みのモデルを使うには --model を外してください。",
+        "Codex には llama-server が提供する GGUF モデルが必要です。他のエージェントは transformers ベースのモデルも利用できます。LABZ に読み込み済みのモデルを使うには --model を外してください。",
       subagent: {
         title: "ローカルモデルをサブエージェントとして使う",
         description:
-          "{agent} は現在のモデルのまま、選んだタスクだけをこのローカルの Unsloth モデルに委任します。",
+          "{agent} は現在のモデルのまま、選んだタスクだけをこのローカルの LABZ モデルに委任します。",
         setupCommand: "セットアップコマンド",
         copySetupCommand: "サブエージェントのセットアップコマンドをコピー",
         usagePrompt: "続いて {agent} で次のように入力します:",
@@ -1533,7 +1539,7 @@ export const ja = {
       quickstart: {
         title: "コマンドを組み立てる",
         description:
-          "Unsloth に読み込み済みのモデルでエージェントを起動します。先にモデルを読み込み、claude を下記の対応エージェントに置き換えてください。",
+          "LABZ に読み込み済みのモデルでエージェントを起動します。先にモデルを読み込み、claude を下記の対応エージェントに置き換えてください。",
         noneDetected:
           "対応するエージェントの CLI が PATH 上に見つかりませんでした。",
         installed: "インストール済み",
@@ -1553,9 +1559,9 @@ export const ja = {
       options: {
         title: "主なオプション",
         description:
-          "Unsloth のフラグが先に解釈され、認識されなかったものはそのままエージェントへ渡されます。",
+          "LABZ のフラグが先に解釈され、認識されなかったものはそのままエージェントへ渡されます。",
         model:
-          "モデルを選択します。--model がない場合、unsloth start は Unsloth に読み込み済みのモデルを使用し、未読み込みならエラーになります。",
+          "モデルを選択します。--model がない場合、unsloth start は LABZ に読み込み済みのモデルを使用し、未読み込みならエラーになります。",
         contextLength:
           "要求するコンテキスト長を設定します (エイリアス: --max-seq-length)。",
         ggufVariant: "GGUF の量子化バリアントを選択します。",
@@ -1566,11 +1572,11 @@ export const ja = {
         launch:
           "エージェントを起動するか、コマンドと環境変数の表示だけを行います。",
         persist:
-          "Unsloth が管理するエージェントのストレージを実行間で保持します。",
+          "LABZ が管理するエージェントのストレージを実行間で保持します。",
         asSubagent:
-          "親エージェントを現在のモデルのままにし、Unsloth をローカルのサブエージェントとして登録します (Claude Code、Codex、OpenCode)。",
+          "親エージェントを現在のモデルのままにし、LABZ をローカルのサブエージェントとして登録します (Claude Code、Codex、OpenCode)。",
         apiKey:
-          "Unsloth の API キーを指定します (または UNSLOTH_API_KEY を設定)。",
+          "LABZ の API キーを指定します (または UNSLOTH_API_KEY を設定)。",
         reasoning:
           "チャットで推論を使うかどうか: on、off、auto。auto はモデルのチャットテンプレートに従い、通常は on になります。",
         reasoningEffort:
@@ -1579,14 +1585,14 @@ export const ja = {
           "承認の確認をスキップします。信頼できる環境でのみ使用してください。",
       },
       remote: {
-        title: "リモートの Unsloth に接続する",
+        title: "リモートの LABZ に接続する",
         description:
-          "起動前に次を設定すると、unsloth start を別の場所で動作している Unsloth に向けられます (--api-key を直接渡すことも可能です):",
+          "起動前に次を設定すると、unsloth start を別の場所で動作している LABZ に向けられます (--api-key を直接渡すことも可能です):",
       },
       passthrough: {
         title: "エージェントへの引数の受け渡し",
         description:
-          "Unsloth のフラグより後ろの引数はエージェント自身へ転送されるため、resume のようなネイティブコマンドもそのまま使えます:",
+          "LABZ のフラグより後ろの引数はエージェント自身へ転送されるため、resume のようなネイティブコマンドもそのまま使えます:",
       },
       dryRun: {
         title: "起動せずに内容を確認する",
@@ -1932,7 +1938,7 @@ export const ja = {
     },
     apiKeys: {
       title: "API",
-      description: "OpenAI互換 API を介して Unsloth にアクセスします。",
+      description: "OpenAI互換 API を介して LABZ にアクセスします。",
       readDocs: "API ドキュメントを読む",
       noAccess: "アクセストークンはまだありません。",
       accessTokens: "アクセストークン",
@@ -1959,7 +1965,7 @@ export const ja = {
       osUnix: "Linux / macOS / WSL",
       osWindows: "Windows",
       secureHttps: "セキュア HTTPS",
-      secureHttpsHint: "0.0.0.0 ポートは依然としてグローバルにアクセス可能です。完全なセキュリティを確保するには、Unsloth を --secure 付きで起動し、この HTTPS リンクのみを公開してください。",
+      secureHttpsHint: "0.0.0.0 ポートは依然としてグローバルにアクセス可能です。完全なセキュリティを確保するには、LABZ を --secure 付きで起動し、この HTTPS リンクのみを公開してください。",
       copyTunnelUrl: "トンネル URL をコピー",
       copySnippet: "スニペットをコピー",
       copy: "コピー",
@@ -2020,7 +2026,7 @@ export const ja = {
     about: {
       title: "情報",
       description: "ドキュメント、リリースノート、フィードバック、およびビルド情報。",
-      studioVersion: "Unsloth バージョン",
+      studioVersion: "LABZ バージョン",
       packageVersion: "パッケージバージョン",
       desktopAppVersion: "デスクトップアプリのバージョン",
       desktopAppVersionUnavailable: "利用できません",
@@ -2039,26 +2045,26 @@ export const ja = {
       reportIssue: "問題を報告",
       license: {
         sectionTitle: "ライセンス",
-        studioLabel: "Unsloth",
+        studioLabel: "LABZ",
         studioLicense: "AGPL-3.0",
         studioDescription: "GNU AGPL v3.0 の下でオープンソース化されています。",
-        libraryLabel: "Unsloth Core",
+        libraryLabel: "LABZ Core",
         libraryLicense: "Apache-2.0",
         libraryDescription: "Apache 2.0 ライセンスの下で提供されています。",
       },
       dangerZone: "危険ゾーン",
-      shutDownStudio: "Unsloth をシャットダウン",
-      shutDownStudioDescription: "Unsloth サーバーを停止し、セッションを終了します。",
+      shutDownStudio: "LABZ をシャットダウン",
+      shutDownStudioDescription: "LABZ サーバーを停止し、セッションを終了します。",
       shutDown: "シャットダウン",
       update: {
-        title: "Unsloth のアップデート",
+        title: "LABZ のアップデート",
         commandText: "{label}のテキスト",
         copied: "コピーしました",
         copyCommand: "コマンドをコピー",
         commandCopied: "{label} をコピーしました",
         copyNamedCommand: "{label} をコピー",
-        checkingInstall: "Unsloth がどのようにインストールされたかを確認中...",
-        installIntro: "Unsloth のインストールまたはアップデート方法:",
+        checkingInstall: "LABZ がどのようにインストールされたかを確認中...",
+        installIntro: "LABZ のインストールまたはアップデート方法:",
         localUpdateHeading: "ローカルアップデート",
         installCommandUnix: "macOS/Linux インストールコマンド",
         installCommandWindows: "Windows インストールコマンド",
@@ -2069,7 +2075,7 @@ export const ja = {
         sourceInstallDetected:
           "ソースまたは VCS パッケージからのインストールが検出されました。元のローカルパスまたは Git URL から再インストールしてください。",
         repoCheckoutFallback: "リポジトリが手元に残っている場合は、そこからローカルインストーラーを実行してください:",
-        restartAfterUpdate: "アップデート後に Unsloth を再起動してください。",
+        restartAfterUpdate: "アップデート後に LABZ を再起動してください。",
         desktopManaged:
           "デスクトップアプリは新しいバージョンを自動的に確認します。ここからいつでも手動で確認またはアップデートできます。",
         desktopReady: "デスクトップアプリのアップデート",
@@ -2089,14 +2095,14 @@ export const ja = {
           "接続を確認して、もう一度お試しください。",
         desktopCurrent: "デスクトップアプリは最新です",
         desktopCurrentDescription:
-          "Unsloth は今後も自動的にアップデートを確認します。",
+          "LABZ は今後も自動的にアップデートを確認します。",
         checkForUpdates: "アップデートを確認",
         checkAgain: "もう一度確認",
         retryCheck: "再試行",
         checking: "確認中...",
         updateNow: "今すぐアップデート",
         openReleasePage: "リリースページを開く",
-        unknownInstall: "Unsloth がどのようにインストールされたか検出できませんでした。インストーラーまたは PyPI インストールの場合は、上記のコマンドを使用してください。",
+        unknownInstall: "LABZ がどのようにインストールされたか検出できませんでした。インストーラーまたは PyPI インストールの場合は、上記のコマンドを使用してください。",
         localCheckout:
           "ローカルチェックアウトからインストールした場合は、そのチェックアウトでローカルインストーラーを実行してください:",
         docs: "インストールガイド:",

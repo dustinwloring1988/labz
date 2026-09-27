@@ -4,6 +4,8 @@
 """API Routes"""
 
 from routes.nanochat import router as nanochat_router
+from routes.autoresearch import router as autoresearch_router
+from routes.benchmarks import router as benchmarks_router
 from routes.training import router as training_router
 from routes.models import router as models_router
 from routes.inference import router as inference_router
@@ -28,6 +30,8 @@ from routes.youtube import router as youtube_router
 
 __all__ = [
     "nanochat_router",
+    "autoresearch_router",
+    "benchmarks_router",
     "training_router",
     "models_router",
     "inference_router",
@@ -53,6 +57,7 @@ __all__ = [
 # Bind the re-export so the import-hoist verifier counts it as used.
 _ = (
     rag_router,
+    benchmarks_router,
     video_router,
     video_openai_router,
     research_runs_router,

@@ -481,7 +481,7 @@ struct BackendLiveness {
 }
 
 /// Check if an Unsloth backend is running on the given port.
-/// Expects JSON with status=="alive" (or "healthy") AND service=="Unsloth UI Backend".
+/// Expects JSON with status=="alive" (or "healthy") AND service=="LABZ Backend".
 #[tauri::command]
 pub async fn check_health(port: u16) -> Result<bool, String> {
     match check_health_inner(port, HEALTH_PROBE_TIMEOUT).await {
@@ -676,7 +676,7 @@ async fn check_health_inner(
     let correct_service = json
         .get("service")
         .and_then(|v| v.as_str())
-        .map(|s| s == "Unsloth UI Backend")
+        .map(|s| s == crate::preflight::EXPECTED_BACKEND_SERVICE)
         .unwrap_or(false);
     // Both routes carry `torch_warm_in_progress` while the backend's coordinated warm thread
     // is running, and drop it the moment that thread is done or was never started. That is
@@ -890,7 +890,7 @@ pub async fn start_install(
 ) -> Result<(), String> {
     if has_owned_backend(&backend_state)? {
         return Err(
-            "The Unsloth backend is still running. Stop it before starting installation."
+            "The LABZ backend is still running. Stop it before starting installation."
                 .to_string(),
         );
     }
@@ -1090,7 +1090,7 @@ pub async fn start_managed_repair(
         let _ = app.emit("repair-progress", "Running bundled installer...");
         Ok(())
     } else {
-        let _ = app.emit("repair-progress", "Updating existing Unsloth install...");
+        let _ = app.emit("repair-progress", "Updating existing LABZ install...");
         let update_app = app.clone();
         let update_state = update_state.inner().clone();
         let update_diagnostics = diagnostics_state.clone();
@@ -1120,7 +1120,7 @@ pub async fn start_managed_repair(
             warn!("Managed repair update finished, but preflight is still not ready; falling back to installer");
             let _ = app.emit(
                 "repair-progress",
-                "Update finished, but Unsloth is still not ready. Running bundled installer...",
+                "Update finished, but LABZ is still not ready. Running bundled installer...",
             );
         }
         Err(msg) => {
@@ -1213,7 +1213,7 @@ pub async fn start_managed_repair(
         return Ok(());
     }
 
-    let msg = "Repair finished, but Unsloth install is still not desktop-ready.".to_string();
+    let msg = "Repair finished, but the LABZ install is still not desktop-ready.".to_string();
     error!("{}", msg);
     diagnostics::finish_repair_group(
         &diagnostics_state,
@@ -1254,7 +1254,7 @@ mod tests {
             ""
         };
         format!(
-            r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,{leases}"studio_root_id":"{ROOT_ID}"{owner}}}"#
+            r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,{leases}"studio_root_id":"{ROOT_ID}"{owner}}}"#
         )
     }
 
@@ -1403,7 +1403,7 @@ mod tests {
         // /api/health awaits hardware detection on purpose, so probing it bills the
         // watchdog for a torch import. Liveness must be the only route touched.
         let (port, paths) = probe_test_backend(
-            Some(r#"{"status":"alive","service":"Unsloth UI Backend"}"#.to_string()),
+            Some(r#"{"status":"alive","service":"LABZ Backend"}"#.to_string()),
             ready_health(false),
         )
         .await;
@@ -1438,7 +1438,7 @@ mod tests {
     async fn a_warming_backend_is_alive_but_not_finished_starting() {
         let (port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","hardware_detecting":true}"#
+                r#"{"status":"alive","service":"LABZ Backend","hardware_detecting":true}"#
                     .to_string(),
             ),
             ready_health(false),
@@ -1464,7 +1464,7 @@ mod tests {
         // three-strikes count that killed a healthy backend.
         let (port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","torch_warm_in_progress":true}"#
+                r#"{"status":"alive","service":"LABZ Backend","torch_warm_in_progress":true}"#
                     .to_string(),
             ),
             ready_health(false),
@@ -1489,7 +1489,7 @@ mod tests {
         // and a genuinely hung backend waits out the full five minutes.
         let (port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","torch_warm_in_progress":false}"#
+                r#"{"status":"alive","service":"LABZ Backend","torch_warm_in_progress":false}"#
                     .to_string(),
             ),
             ready_health(false),
@@ -1510,7 +1510,7 @@ mod tests {
         // it is the only warm-up signal that backend has.
         let (port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","hardware_detecting":true}"#
+                r#"{"status":"alive","service":"LABZ Backend","hardware_detecting":true}"#
                     .to_string(),
             ),
             ready_health(false),
@@ -1530,7 +1530,7 @@ mod tests {
         // as warming up would hold the startup grace open until it expires on its own.
         let (port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","hardware_detecting":true,"hardware_detection_deferred":true}"#
+                r#"{"status":"alive","service":"LABZ Backend","hardware_detecting":true,"hardware_detection_deferred":true}"#
                     .to_string(),
             ),
             ready_health(false),
@@ -2171,14 +2171,14 @@ mod tests {
         // is checked against what main.py publishes rather than against itself.
         let (busy_port, _) = probe_test_backend(
             Some(
-                r#"{"status":"alive","service":"Unsloth UI Backend","inference_active":true}"#
+                r#"{"status":"alive","service":"LABZ Backend","inference_active":true}"#
                     .to_string(),
             ),
             ready_health(false),
         )
         .await;
         let (idle_port, _) = probe_test_backend(
-            Some(r#"{"status":"alive","service":"Unsloth UI Backend"}"#.to_string()),
+            Some(r#"{"status":"alive","service":"LABZ Backend"}"#.to_string()),
             ready_health(false),
         )
         .await;
@@ -2597,7 +2597,7 @@ mod tests {
         // budget that expires before the answer and one that does not.
         let port = slow_test_backend(
             Duration::from_millis(600),
-            r#"{"status":"alive","service":"Unsloth UI Backend","inference_active":true}"#,
+            r#"{"status":"alive","service":"LABZ Backend","inference_active":true}"#,
         )
         .await;
 

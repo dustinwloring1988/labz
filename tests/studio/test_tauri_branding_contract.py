@@ -21,6 +21,21 @@ def read(path: Path) -> str:
     return path.read_text(encoding = "utf-8")
 
 
+RELEASE_WORKFLOW = REPO / ".github/workflows/release-desktop.yml"
+
+
+def read_release_workflow() -> str:
+    """The release workflow, or a skip.
+
+    This checkout has no .github/ directory and git history has never held one, so the workflow
+    two of these contracts read is not on disk. Skipping says "not in this checkout"; letting it
+    raise FileNotFoundError reads as a branding failure, which it is not.
+    """
+    if not RELEASE_WORKFLOW.exists():
+        pytest.skip(f"release workflow is not in this checkout: {RELEASE_WORKFLOW}")
+    return read(RELEASE_WORKFLOW)
+
+
 def bmp_metadata(path: Path) -> tuple[int, int, int]:
     data = path.read_bytes()
     assert data[:2] == b"BM"
@@ -52,24 +67,35 @@ def tiff_first_image_size(path: Path) -> tuple[int, int]:
 
 def test_desktop_display_name_and_compatibility_ids() -> None:
     config = json.loads(read(TAURI / "tauri.conf.json"))
-    assert config["productName"] == "Unsloth"
-    assert config["app"]["windows"][0]["title"] == "Unsloth"
+    assert config["productName"] == "LABZ"
+    assert config["app"]["windows"][0]["title"] == "LABZ"
 
-    assert config["identifier"] == "ai.unsloth.studio"
-    assert config["plugins"]["deep-link"]["desktop"]["schemes"] == ["unsloth"]
+    assert config["identifier"] == "ai.labz.studio"
+    assert config["plugins"]["deep-link"]["desktop"]["schemes"] == ["labz"]
     assert config["plugins"]["updater"]["endpoints"] == [
-        "https://github.com/unslothai/unsloth/releases/latest/download/latest.json"
+        "https://github.com/dustinwloring1988/labz/releases/latest/download/latest.json"
     ]
+    # Deliberately not part of the rebrand. This is the binary name the installer writes as
+    # MAINBINARYNAME, and renaming it leaves every existing install pointing at a .exe that is
+    # no longer there, so it has to stay stable the way INSTALLIDENTITY does below.
     assert 'name = "unsloth-studio"' in read(TAURI / "Cargo.toml")
 
 
 def test_desktop_package_transitions_preserve_legacy_installs() -> None:
     config = json.loads(read(TAURI / "tauri.conf.json"))
     deb = config["bundle"]["linux"]["deb"]
-    for field in ("provides", "conflicts", "replaces"):
-        assert deb[field] == ["unsloth-studio-desktop"]
+
+    # The display name moved; the package identity has to be recognised under both spellings.
+    # dpkg decides an upgrade purely off Conflicts/Replaces, so a list that only carried the new
+    # name would let someone install LABZ *beside* the Unsloth build they already have.
+    assert deb["provides"] == ["labz-studio-desktop"]
+    for field in ("conflicts", "replaces"):
+        assert deb[field] == ["labz-studio-desktop", "unsloth-studio-desktop"]
 
     installer = read(TAURI / "windows/installer.nsi")
+    # installer.nsi:61 says why this one stays put -- "Stable across display-name changes."
+    # It is the Add/Remove Programs entry, the registry key and $INSTDIR all at once, so moving
+    # it orphans every install rather than upgrading it.
     assert '!define INSTALLIDENTITY "Unsloth Studio (Desktop)"' in installer
     assert "Uninstall\\${INSTALLIDENTITY}" in installer
     assert "${MANUKEY}\\${INSTALLIDENTITY}" in installer
@@ -83,7 +109,7 @@ def test_desktop_package_transitions_preserve_legacy_installs() -> None:
     assert 'Rename "$DESKTOP\\${INSTALLIDENTITY}.lnk"' in installer
 
 
-def test_desktop_artwork_uses_plain_unsloth_lockups() -> None:
+def test_desktop_artwork_uses_plain_labz_lockups() -> None:
     config = json.loads(read(TAURI / "tauri.conf.json"))
     nsis = config["bundle"]["windows"]["nsis"]
     assert nsis["headerImage"] == "./windows/branding/nsis-header.bmp"
@@ -93,12 +119,16 @@ def test_desktop_artwork_uses_plain_unsloth_lockups() -> None:
         source = read(FRONTEND / "src/components/tauri" / component)
         assert "/sticker.png" in source
         assert "fontFamily: '\"Hellix\", sans-serif'" in source
-        assert "unsloth" in source
+        assert "LABZ" in source
         assert "/studio.png" not in source
 
     sidebar = read(FRONTEND / "src/components/app-sidebar.tsx")
     assert "/circle-logo-small.png" in sidebar
-    assert "unsloth" in sidebar
+    # The wordmark is catalogued, not inlined, so a bare "unsloth" match here was passing on the
+    # unsloth-* CSS class names rather than on anything a user can actually read. Assert the two
+    # halves that put the name on screen: the lookup, and the value it resolves to.
+    assert 't("shell.brand")' in sidebar
+    assert 'brand: "LABZ"' in read(FRONTEND / "src/i18n/locales/en.ts")
 
     assert 'chatDisabled && "pointer-events-none opacity-50"' not in sidebar
     assert not (FRONTEND / "public/studio.png").exists()
@@ -174,7 +204,7 @@ def test_dmg_icon_label_stays_legible_over_the_halo() -> None:
 
 
 def test_desktop_release_asset_names_are_human_readable() -> None:
-    workflow = read(REPO / ".github/workflows/release-desktop.yml")
+    workflow = read_release_workflow()
     assert "base_name = 'Unsloth-Desktop'" in workflow
     expected_suffixes = {
         "MacOS.dmg",
@@ -286,14 +316,14 @@ def rust_branding_offenders() -> list[str]:
 
 
 def test_desktop_surfaces_do_not_restore_studio_branding() -> None:
-    # The desktop app displays itself as "Unsloth", never "Unsloth Studio". The i18n catalogs are swept by key rather
+    # The desktop app displays itself as "LABZ", never "Unsloth Studio". The i18n catalogs are swept by key rather
     # than by file: a handful of entries have to name the *remote server* a user points the app at, which genuinely is
     # an Unsloth Studio and is not this app's display name, so those keys are spared and every other entry is not.
     display_sources = [
         TAURI / "Info.plist",
         TAURI / "capabilities/default.json",
         TAURI / "windows/sign-with-trusted-signing.ps1",
-        REPO / ".github/workflows/release-desktop.yml",
+        RELEASE_WORKFLOW,
         FRONTEND / "index.html",
         *sorted(
             path
@@ -303,7 +333,12 @@ def test_desktop_surfaces_do_not_restore_studio_branding() -> None:
         ),
     ]
     offenders = [
-        str(path.relative_to(REPO)) for path in display_sources if "Unsloth Studio" in read(path)
+        str(path.relative_to(REPO))
+        # A source that is not in this checkout cannot carry the display name. The release workflow
+        # is one of those here, and reading it unconditionally turned a missing CI file into a
+        # branding failure.
+        for path in display_sources
+        if path.exists() and "Unsloth Studio" in read(path)
     ]
 
     # The crate is swept whole. The four Rust files that used to be named here are still covered, and so is every
@@ -320,7 +355,7 @@ def test_desktop_surfaces_do_not_restore_studio_branding() -> None:
     ]
     assert offenders == []
 
-    workflow = read(REPO / ".github/workflows/release-desktop.yml")
+    workflow = read_release_workflow()
     assert "Desktop app for Unsloth." in workflow
     assert '--title "Unsloth Desktop updater channel"' not in workflow
 

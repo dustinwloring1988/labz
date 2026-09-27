@@ -131,8 +131,8 @@ export const fr = {
       truncated: "Cette page est trop longue pour être parcourue en entier.",
     },
     beta: "BETA",
-    brand: "unsloth",
-    product: "Unsloth",
+    brand: "LABZ",
+    product: "LABZ",
     accountMenu: "Menu du compte de {name}",
     updateAvailable: "Mise à jour disponible",
     resize: {
@@ -141,7 +141,7 @@ export const fr = {
       drag: "Faites glisser pour redimensionner",
     },
     aria: {
-      home: "Accueil Unsloth",
+      home: "Accueil LABZ",
       closeSidebar: "Fermer la barre latérale",
       openSidebar: "Ouvrir la barre latérale",
       resizeSidebar: "Redimensionner ou réduire la barre latérale",
@@ -161,6 +161,8 @@ export const fr = {
       projects: "Projets",
       train: "Entraîner",
       nanochat: "nanochat",
+      autoresearch: "autoresearch",
+      benchmarks: "Benchmarks",
       recipes: "Recettes",
       images: "Images",
       video: "Vidéo",
@@ -263,7 +265,7 @@ export const fr = {
   settings: {
     accounts: {
       title: "Comptes",
-      description: "Créez des comptes Unsloth privés. Les nouveaux utilisateurs se connectent avec un code de configuration à usage unique et choisissent un mot de passe.",
+      description: "Créez des comptes LABZ privés. Les nouveaux utilisateurs se connectent avec un code de configuration à usage unique et choisissent un mot de passe.",
       username: "Nom d'utilisateur",
       create: "Créer un compte",
       createDescription: "Partagez un code de configuration pour que la personne choisisse son propre mot de passe.",
@@ -302,7 +304,7 @@ export const fr = {
     title: "Paramètres",
     dialog: {
       title: "Paramètres",
-      description: "Gérez vos préférences Unsloth.",
+      description: "Gérez vos préférences LABZ.",
       closeAriaLabel: "Fermer les paramètres",
       searchPlaceholder: "Rechercher dans les paramètres…",
       searchNoResults: "Aucun paramètre trouvé.",
@@ -370,7 +372,7 @@ export const fr = {
         },
         logOut: {
           label: "Se déconnecter",
-          description: "Se déconnecter d’Unsloth",
+          description: "Se déconnecter d’LABZ",
         },
         approveToolRequest: {
           label: "Approuver la demande",
@@ -479,6 +481,10 @@ export const fr = {
         switchToTrain: {
           label: "Aller à Entraînement",
           description: "Ouvrir l’espace d’entraînement",
+        },
+        switchToBenchmarks: {
+          label: "Aller à Benchmarks",
+          description: "Ouvrir l’espace de travail des benchmarks",
         },
         switchToRecipes: {
           label: "Aller à Recipes",
@@ -610,8 +616,8 @@ export const fr = {
       openLogsFolder: "Ouvrir le dossier des journaux",
       openLogsFolderFailed: "Le dossier des journaux n'a pas pu être ouvert.",
       exportFailed: "Les journaux n'ont pas pu être téléchargés.",
-      exportTooOld: "Le backend Unsloth en cours d'exécution est trop ancien pour exporter les journaux. Mettez-le à jour et redémarrez-le.",
-      exportForbidden: "Le téléchargement de tous les journaux nécessite une session Unsloth connectée. Une clé d'API ne suffit pas.",
+      exportTooOld: "Le backend LABZ en cours d'exécution est trop ancien pour exporter les journaux. Mettez-le à jour et redémarrez-le.",
+      exportForbidden: "Le téléchargement de tous les journaux nécessite une session LABZ connectée. Une clé d'API ne suffit pas.",
       keywords: "debogage deboguer journal journaux log logs erreur erreurs plantage trace diagnostic depannage debug",
     },
     voice: {
@@ -719,7 +725,7 @@ export const fr = {
           "Autorisez l'accès au micro pour afficher le nom des périphériques",
         allowMicrophone: "Autoriser l’accès au microphone",
         micAccessBlocked:
-          "L'accès au microphone a été bloqué. Autorisez l'accès au microphone pour cette page Unsloth, puis réessayez.",
+          "L'accès au microphone a été bloqué. Autorisez l'accès au microphone pour cette page LABZ, puis réessayez.",
         micAccessBlockedDesktop:
           "L'accès au microphone a été bloqué. Réessayez et choisissez Autoriser, ou activez le microphone dans les paramètres de confidentialité du système.",
         micAccessUnsupported:
@@ -825,7 +831,7 @@ export const fr = {
     },
     general: {
       title: "Général",
-      description: "Préférences globales pour Unsloth.",
+      description: "Préférences globales pour LABZ.",
       account: "Compte",
       huggingFaceToken: "Jeton Hugging Face",
       huggingFaceTokenDescription:
@@ -837,7 +843,7 @@ export const fr = {
       tokenValidated: "Jeton validé",
       password: "Mot de passe",
       passwordDescription:
-        "Changez le mot de passe de ce compte Unsloth.",
+        "Changez le mot de passe de ce compte LABZ.",
       passwordDialog: {
         trigger: "Changer le mot de passe",
         title: "Changer le mot de passe",
@@ -846,7 +852,7 @@ export const fr = {
         setTrigger: "Définir le mot de passe distant",
         setTitle: "Définir le mot de passe distant",
         setDescription:
-          "Choisissez le mot de passe utilisé par les navigateurs distants pour se connecter avec l'identifiant unsloth (au moins {minLength} caractères). L'application de bureau Unsloth continue de se connecter automatiquement.",
+          "Choisissez le mot de passe utilisé par les navigateurs distants pour se connecter avec l'identifiant unsloth (au moins {minLength} caractères). L'application de bureau LABZ continue de se connecter automatiquement.",
         setSubmit: "Définir le mot de passe",
         setting: "Définition...",
         setDone: "Mot de passe défini.",
@@ -918,7 +924,7 @@ export const fr = {
           "Enregistrer le cache KV avant un déchargement en cas d'inactivité, afin qu'une discussion reprise n'ait pas à relire l'historique. Jusqu'à 10 Go sur le disque.",
         apiOnly: "Décharger uniquement les modèles chargés par l'API",
         apiOnlyDescription:
-          "Le déchargement en cas d'inactivité laisse en mémoire un modèle que vous avez chargé depuis Unsloth et ne libère que ceux chargés par une requête API.",
+          "Le déchargement en cas d'inactivité laisse en mémoire un modèle que vous avez chargé depuis LABZ et ne libère que ceux chargés par une requête API.",
       },
       previewSharing: {
         sectionTitle: "Partage de l'aperçu",
@@ -966,13 +972,13 @@ export const fr = {
       },
       startup: {
         sectionTitle: "Démarrage",
-        launchAtLogin: "Lancer Unsloth à la connexion",
+        launchAtLogin: "Lancer LABZ à la connexion",
         launchAtLoginDescription:
-          "Démarre Unsloth en arrière-plan lorsque vous vous connectez. Il reste dans la barre de menus ou la zone de notification jusqu'à ce que vous l'ouvriez.",
+          "Démarre LABZ en arrière-plan lorsque vous vous connectez. Il reste dans la barre de menus ou la zone de notification jusqu'à ce que vous l'ouvriez.",
 
         closeToTray: "Fermer dans la zone de notification",
         closeToTrayDescription:
-          "Laisser Unsloth et son serveur fonctionner en arrière-plan lorsque vous fermez la fenêtre principale.",
+          "Laisser LABZ et son serveur fonctionner en arrière-plan lorsque vous fermez la fenêtre principale.",
         closeToTraySaveError:
           "Impossible de mettre à jour le réglage de fermeture dans la zone de notification.",
         loadError:
@@ -1070,22 +1076,22 @@ export const fr = {
         action: "Réinitialiser les préférences",
         confirmTitle: "Réinitialiser toutes les préférences locales ?",
         confirmDescription:
-          "Efface les préférences locales uniquement et recharge Unsloth. Les discussions, l'accès API et les paramètres stockés en base de données sont conservés.",
+          "Efface les préférences locales uniquement et recharge LABZ. Les discussions, l'accès API et les paramètres stockés en base de données sont conservés.",
         confirmAction: "Réinitialiser et recharger",
       },
       permissions: {
         sectionTitle: "Autorisations",
         bypassLabel: "Autorisations des outils",
         bypassDescription:
-          "Comment Unsloth approuve les appels d'outils de la discussion (terminal, python, web, MCP) avant leur exécution. Le mode « Full access » désactive les demandes d'approbation et le bac à sable d'exécution du code.",
+          "Comment LABZ approuve les appels d'outils de la discussion (terminal, python, web, MCP) avant leur exécution. Le mode « Full access » désactive les demandes d'approbation et le bac à sable d'exécution du code.",
       },
     },
     profile: {
       title: "Profil",
-      description: "Comment votre profil apparaît dans Unsloth.",
+      description: "Comment votre profil apparaît dans LABZ.",
       changePicture: "Changer la photo de profil",
       displayName: "Nom affiché",
-      nickname: "Comment Unsloth doit-il vous appeler ?",
+      nickname: "Comment LABZ doit-il vous appeler ?",
       nicknamePlaceholder: "Surnom",
       nicknameSaved: "Nom préféré enregistré",
       avatarShape: "Forme de l'avatar",
@@ -1113,10 +1119,10 @@ export const fr = {
       stats: {
         title: "Vos statistiques",
         subtitle:
-          "Tout ce qui suit est calculé à partir de votre propre historique. Rien n'est collecté ni envoyé à Unsloth.",
+          "Tout ce qui suit est calculé à partir de votre propre historique. Rien n'est collecté ni envoyé à LABZ.",
         retry: "Réessayer",
         privacyNote:
-          "Les statistiques sont calculées à partir de l'historique local des discussions, de l'utilisation de l'API et des entraînements de votre installation Unsloth. Les requêtes, réponses et clés API ne sont jamais stockées pour les statistiques. Rien n'est envoyé à Unsloth ni à un tiers.",
+          "Les statistiques sont calculées à partir de l'historique local des discussions, de l'utilisation de l'API et des entraînements de votre installation LABZ. Les requêtes, réponses et clés API ne sont jamais stockées pour les statistiques. Rien n'est envoyé à LABZ ni à un tiers.",
         emptyChats:
           "Aucune utilisation du chat ou de l'API pour le moment. Lancez une conversation ou effectuez une requête authentifiée vers l'API locale.",
         lifetimeTokens: "Tokens cumulés",
@@ -1145,7 +1151,7 @@ export const fr = {
         tokensIn: "Tokens envoyés",
         tokensOut: "Tokens générés",
         totalTokens: "Total des tokens",
-        studioChatTokens: "Tokens de Unsloth Chat",
+        studioChatTokens: "Tokens de LABZ Chat",
         apiTokens: "Tokens API",
         cachedTokens: "Tokens mis en cache",
         cachedValue: "{tokens} ({percent} % des tokens d'entrée)",
@@ -1176,7 +1182,7 @@ export const fr = {
     },
     appearance: {
       title: "Apparence",
-      description: "L'apparence d'Unsloth sur cet appareil.",
+      description: "L'apparence d'LABZ sur cet appareil.",
       theme: {
         title: "Thème",
         label: "Mode de couleur",
@@ -1187,7 +1193,7 @@ export const fr = {
       },
       palette: {
         label: "Palette",
-        description: "Couleurs utilisées dans Unsloth, en mode clair et sombre.",
+        description: "Couleurs utilisées dans LABZ, en mode clair et sombre.",
         standard: "Standard",
         classic: "Classique",
         minimal: "Minimale",
@@ -1256,7 +1262,7 @@ export const fr = {
         },
         uiFontSize: {
           label: "Taille de police de l'interface",
-          description: "Ajustez la taille de base utilisée pour l'interface Unsloth.",
+          description: "Ajustez la taille de base utilisée pour l'interface LABZ.",
         },
         codeFontSize: {
           label: "Taille de police du code",
@@ -1285,7 +1291,7 @@ export const fr = {
       language: {
         title: "Langue",
         label: "Langue d'affichage",
-        description: "La langue utilisée par Unsloth.",
+        description: "La langue utilisée par LABZ.",
         autoDetect: "Détection automatique",
       },
       layout: {
@@ -1313,7 +1319,7 @@ export const fr = {
     resources: {
       title: "Système",
       description:
-        "Surveillez le matériel et le stockage de ce serveur Unsloth.",
+        "Surveillez le matériel et le stockage de ce serveur LABZ.",
       liveUpdates: "Mises à jour en direct",
       floatingWindow: "Fenêtre flottante",
       disableOverlay: "Désactiver la superposition",
@@ -1382,7 +1388,7 @@ export const fr = {
           description: "Utilisez votre propre build de llama-server.",
           hint: "Choisissez le dossier llama.cpp contenant llama-server, ou un build où il se trouve sous build/bin. Le runtime personnalisé est utilisé pour le chat GGUF, les embeddings et les modèles vocaux compatibles. Les variables d'environnement restent prioritaires.",
           automatic: "Automatique (fourni)",
-          bundled: "Utilise le runtime llama.cpp installé par Unsloth.",
+          bundled: "Utilise le runtime llama.cpp installé par LABZ.",
           active: "Votre llama-server personnalisé sera utilisé au prochain chargement de modèle.",
           environmentManaged: "Géré par la variable d'environnement {variable}.",
           missingBinary: "llama-server n'est plus disponible dans ce dossier. Choisissez un autre dossier ou utilisez le runtime fourni.",
@@ -1405,7 +1411,7 @@ export const fr = {
         },
         unsupported: {
           notInstalled: "Aucune installation llama.cpp gérée n'a été trouvée, il n'y a donc pas de backend à changer.",
-          localLink: "llama.cpp est un dossier local que vous avez lié vous-même ; Unsloth ne le remplacera pas.",
+          localLink: "llama.cpp est un dossier local que vous avez lié vous-même ; LABZ ne le remplacera pas.",
           sourceBuild: "Ce llama.cpp a été compilé depuis les sources, son backend ne peut pas être changé ici.",
           customPath: "Un dossier llama.cpp personnalisé est sélectionné. Son build détermine le backend de calcul.",
           unresolved: "Impossible de vérifier les backends disponibles. Vérifiez votre connexion et réessayez.",
@@ -1452,7 +1458,7 @@ export const fr = {
           label: "Fichiers de cache",
           description:
             "{size} dans les caches, dont {reclaimable} peuvent être vidés maintenant.",
-          hint: "Téléchargements de paquets, noyaux compilés et caches de transfert que Unsloth reconstruit quand il en a besoin. Les modèles téléchargés, les projets, les conversations, les paramètres et votre jeton Hugging Face ne sont jamais vidés ici.",
+          hint: "Téléchargements de paquets, noyaux compilés et caches de transfert que LABZ reconstruit quand il en a besoin. Les modèles téléchargés, les projets, les conversations, les paramètres et votre jeton Hugging Face ne sont jamais vidés ici.",
           keywords:
             "cache caches vider nettoyer purger supprimer libérer espace disque temporaire compilé cache caches purge prune clear clean free space disk uv pip npm bun triton inductor cuda numba matplotlib vllm compiled xet temporary",
           measuring: "Mesure de la taille des caches...",
@@ -1468,7 +1474,7 @@ export const fr = {
           confirmDescription: "Cela libère environ {size}.",
           confirmOneTitle: "Vider {name} ?",
           safety:
-            "Unsloth reconstruit un cache la prochaine fois qu'il en a besoin. Les modèles téléchargés, les projets, les conversations, les paramètres et votre jeton Hugging Face ne sont pas touchés.",
+            "LABZ reconstruit un cache la prochaine fois qu'il en a besoin. Les modèles téléchargés, les projets, les conversations, les paramètres et votre jeton Hugging Face ne sont pas touchés.",
           hubCost:
             "Il s'agit du cache des modèles. Le vider entraîne un nouveau téléchargement de ces modèles lors de leur prochaine utilisation.",
           datasetsCost:
@@ -1489,7 +1495,7 @@ export const fr = {
             numba: "Cache de compilation Numba",
             matplotlib: "Cache des polices Matplotlib",
             vllm: "Cache vLLM",
-            unslothCompiled: "Modules compilés Unsloth",
+            unslothCompiled: "Modules compilés LABZ",
             hfXet: "Cache de transfert Hugging Face",
             hfAssets: "Cache des ressources Hugging Face",
             hfDatasets: "Cache des jeux de données Hugging Face",
@@ -1533,7 +1539,7 @@ export const fr = {
       description:
         "Connectez des agents de codage comme Claude Code et Codex à un modèle local avec unsloth start.",
       intro:
-        "connecte Claude Code, Codex, DeepSeek Harness, Hermes, OpenClaw, OpenCode et d'autres agents à un modèle servi localement par Unsloth, entièrement hors ligne. Il lance un serveur compatible OpenAI et ne touche jamais aux fichiers de configuration de votre agent.",
+        "connecte Claude Code, Codex, DeepSeek Harness, Hermes, OpenClaw, OpenCode et d'autres agents à un modèle servi localement par LABZ, entièrement hors ligne. Il lance un serveur compatible OpenAI et ne touche jamais aux fichiers de configuration de votre agent.",
       readDocs: "Lire la documentation",
       copy: "Copier",
       copied: "Copié",
@@ -1559,17 +1565,17 @@ export const fr = {
       // English is the baseline until translated: the three-part sentence is assembled around an
       // inline link and needs restructuring first.
       automaticSettingsNote:
-        "Unsloth automatically applies the model’s recommended settings if you have not set any flags.",
+        "LABZ automatically applies the model’s recommended settings if you have not set any flags.",
       configurationNote:
         "You can also adjust any configuration. See further below or",
       configurationDocs: "docs",
       configurationFlagsSuffix: "for flags.",
       modelNote:
-        "Codex nécessite un modèle GGUF servi par llama-server. Les autres agents peuvent aussi utiliser des modèles basés sur transformers ; retirez --model pour utiliser le modèle déjà chargé dans Unsloth.",
+        "Codex nécessite un modèle GGUF servi par llama-server. Les autres agents peuvent aussi utiliser des modèles basés sur transformers ; retirez --model pour utiliser le modèle déjà chargé dans LABZ.",
       subagent: {
         title: "Utiliser un modèle local comme sous-agent",
         description:
-          "Gardez {agent} sur son modèle actuel et déléguez certaines tâches à ce modèle Unsloth local.",
+          "Gardez {agent} sur son modèle actuel et déléguez certaines tâches à ce modèle LABZ local.",
         setupCommand: "Commande de configuration",
         copySetupCommand: "Copier la commande de configuration du sous-agent",
         usagePrompt: "Ensuite, dans {agent}, tapez :",
@@ -1580,7 +1586,7 @@ export const fr = {
       quickstart: {
         title: "Construire une commande",
         description:
-          "Lancez un agent sur le modèle actuellement chargé dans Unsloth. Chargez d'abord un modèle, puis remplacez claude par n'importe quel agent pris en charge ci-dessous.",
+          "Lancez un agent sur le modèle actuellement chargé dans LABZ. Chargez d'abord un modèle, puis remplacez claude par n'importe quel agent pris en charge ci-dessous.",
         noneDetected:
           "Aucune CLI d'agent prise en charge n'a été trouvée dans votre PATH.",
         installed: "Installé",
@@ -1600,9 +1606,9 @@ export const fr = {
       options: {
         title: "Options courantes",
         description:
-          "Les options Unsloth sont analysées en premier ; tout ce qu'Unsloth ne reconnaît pas est transmis tel quel à l'agent.",
+          "Les options LABZ sont analysées en premier ; tout ce qu'LABZ ne reconnaît pas est transmis tel quel à l'agent.",
         model:
-          "Sélectionne un modèle. Sans --model, unsloth start utilise le modèle actuellement chargé dans Unsloth et échoue si aucun modèle n'est chargé.",
+          "Sélectionne un modèle. Sans --model, unsloth start utilise le modèle actuellement chargé dans LABZ et échoue si aucun modèle n'est chargé.",
         contextLength:
           "Définit la longueur de contexte demandée (alias : --max-seq-length).",
         ggufVariant: "Choisit la variante de quantification GGUF.",
@@ -1614,11 +1620,11 @@ export const fr = {
         launch:
           "Lance l'agent, ou affiche simplement la commande et l'environnement.",
         persist:
-          "Conserve d'une exécution à l'autre les données d'agent gérées par Unsloth.",
+          "Conserve d'une exécution à l'autre les données d'agent gérées par LABZ.",
         asSubagent:
-          "Garde l'agent parent sur son modèle actuel et enregistre Unsloth comme sous-agent local (Claude Code, Codex et OpenCode).",
+          "Garde l'agent parent sur son modèle actuel et enregistre LABZ comme sous-agent local (Claude Code, Codex et OpenCode).",
         apiKey:
-          "Fournit votre clé API Unsloth, ou lit la variable UNSLOTH_API_KEY.",
+          "Fournit votre clé API LABZ, ou lit la variable UNSLOTH_API_KEY.",
         reasoning:
           "Utiliser le raisonnement dans le chat : on, off ou auto. Auto suit le modèle de chat du modèle, ce qui veut généralement dire on.",
         reasoningEffort:
@@ -1627,14 +1633,14 @@ export const fr = {
           "Ignore les demandes d'autorisation. À n'utiliser que dans des environnements de confiance.",
       },
       remote: {
-        title: "Se connecter à un Unsloth distant",
+        title: "Se connecter à un LABZ distant",
         description:
-          "Faites pointer unsloth start vers un Unsloth exécuté ailleurs en définissant ces variables avant le lancement (ou passez --api-key directement) :",
+          "Faites pointer unsloth start vers un LABZ exécuté ailleurs en définissant ces variables avant le lancement (ou passez --api-key directement) :",
       },
       passthrough: {
         title: "Transmettre des arguments à l'agent",
         description:
-          "Les arguments placés après les options Unsloth sont transmis à l'agent lui-même, donc les commandes natives comme resume fonctionnent toujours :",
+          "Les arguments placés après les options LABZ sont transmis à l'agent lui-même, donc les commandes natives comme resume fonctionnent toujours :",
       },
       dryRun: {
         title: "Prévisualiser sans lancer",
@@ -1999,11 +2005,11 @@ export const fr = {
     remoteLan: {
       title: "Accès distant et LAN",
       description:
-        "Accédez à cet Unsloth depuis vos autres appareils, via votre réseau local ou une URL publique temporaire.",
+        "Accédez à cet LABZ depuis vos autres appareils, via votre réseau local ou une URL publique temporaire.",
     },
     apiKeys: {
       title: "API",
-      description: "Accédez à Unsloth via l'API compatible OpenAI.",
+      description: "Accédez à LABZ via l'API compatible OpenAI.",
       readDocs: "Lire la documentation de l'API",
       noAccess: "Aucun accès API pour le moment.",
       accessTokens: "Jetons d’accès",
@@ -2031,7 +2037,7 @@ export const fr = {
       osWindows: "Windows",
       secureHttps: "HTTPS sécurisé",
       secureHttpsHint:
-        "Le service lié à l’adresse 0.0.0.0 reste accessible sur toutes les interfaces réseau. Pour une sécurité complète, lancez Unsloth avec --secure afin de n’exposer que ce lien HTTPS.",
+        "Le service lié à l’adresse 0.0.0.0 reste accessible sur toutes les interfaces réseau. Pour une sécurité complète, lancez LABZ avec --secure afin de n’exposer que ce lien HTTPS.",
       copyTunnelUrl: "Copier l'URL du tunnel",
       copySnippet: "Copier l'extrait",
       copy: "Copier",
@@ -2096,7 +2102,7 @@ export const fr = {
       title: "À propos",
       description:
         "Documentation, notes de version, retours et informations de compilation.",
-      studioVersion: "Version d'Unsloth",
+      studioVersion: "Version d'LABZ",
       packageVersion: "Version du paquet",
       desktopAppVersion: "Version de l’application de bureau",
       desktopAppVersionUnavailable: "Indisponible",
@@ -2115,27 +2121,27 @@ export const fr = {
       reportIssue: "Signaler un problème",
       license: {
         sectionTitle: "Licence",
-        studioLabel: "Unsloth",
+        studioLabel: "LABZ",
         studioLicense: "AGPL-3.0",
         studioDescription: "Open source sous licence GNU AGPL v3.0.",
-        libraryLabel: "Unsloth Core",
+        libraryLabel: "LABZ Core",
         libraryLicense: "Apache-2.0",
         libraryDescription: "Sous licence Apache 2.0.",
       },
       dangerZone: "Zone de danger",
-      shutDownStudio: "Arrêter Unsloth",
+      shutDownStudio: "Arrêter LABZ",
       shutDownStudioDescription:
-        "Arrête le serveur Unsloth et met fin à votre session.",
+        "Arrête le serveur LABZ et met fin à votre session.",
       shutDown: "Arrêter",
       update: {
-        title: "Mettre à jour Unsloth",
+        title: "Mettre à jour LABZ",
         commandText: "Texte de la {label}",
         copied: "Copié",
         copyCommand: "Copier la commande",
         commandCopied: "{label} copiée",
         copyNamedCommand: "Copier la {label}",
-        checkingInstall: "Vérification du mode d'installation d'Unsloth...",
-        installIntro: "Pour installer ou mettre à jour Unsloth :",
+        checkingInstall: "Vérification du mode d'installation d'LABZ...",
+        installIntro: "Pour installer ou mettre à jour LABZ :",
         localUpdateHeading: "Mise à jour locale",
         installCommandUnix: "Commande d'installation macOS/Linux",
         installCommandWindows: "Commande d'installation Windows",
@@ -2149,7 +2155,7 @@ export const fr = {
           "Installation depuis la source ou un paquet VCS détectée. Réinstallez depuis le chemin local d'origine ou l'URL Git.",
         repoCheckoutFallback:
           "Si vous avez encore le checkout du dépôt, lancez l'installateur local depuis celui-ci :",
-        restartAfterUpdate: "Redémarrez Unsloth après la mise à jour.",
+        restartAfterUpdate: "Redémarrez LABZ après la mise à jour.",
         desktopManaged:
           "L’application de bureau recherche automatiquement les nouvelles versions. Vous pouvez également rechercher ou installer une mise à jour ici à tout moment.",
         desktopReady: "Mises à jour de l’application de bureau",
@@ -2171,7 +2177,7 @@ export const fr = {
           "Vérifiez votre connexion, puis réessayez.",
         desktopCurrent: "L’application de bureau est à jour",
         desktopCurrentDescription:
-          "Unsloth continuera à rechercher automatiquement les mises à jour.",
+          "LABZ continuera à rechercher automatiquement les mises à jour.",
         checkForUpdates: "Rechercher les mises à jour",
         checkAgain: "Rechercher à nouveau",
         retryCheck: "Réessayer",
@@ -2179,7 +2185,7 @@ export const fr = {
         updateNow: "Mettre à jour maintenant",
         openReleasePage: "Ouvrir la page des versions",
         unknownInstall:
-          "Impossible de détecter le mode d'installation d'Unsloth. Pour les installations via installateur ou PyPI, utilisez les commandes ci-dessus.",
+          "Impossible de détecter le mode d'installation d'LABZ. Pour les installations via installateur ou PyPI, utilisez les commandes ci-dessus.",
         localCheckout:
           "Pour les installations depuis un checkout local, lancez l'installateur local depuis ce checkout :",
         docs: "Documentation d'installation :",
@@ -2704,7 +2710,7 @@ export const fr = {
       },
       startFailed: "Échec du démarrage de l'entraînement",
       startUnconfirmed:
-        "Unsloth n'a pas pu confirmer le démarrage de l'entraînement. Vérification de l'état en arrière-plan.",
+        "LABZ n'a pas pu confirmer le démarrage de l'entraînement. Vérification de l'état en arrière-plan.",
       stopFailed: "Échec de l'arrêt de l'entraînement",
       trainingStillActiveTitle: "L'entraînement est toujours actif",
       stopBeforeConfig:

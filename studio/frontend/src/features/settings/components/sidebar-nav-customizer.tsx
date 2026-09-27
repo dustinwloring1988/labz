@@ -14,6 +14,8 @@ import {
   Image03Icon,
   MoreHorizontalIcon,
   PencilEdit02Icon,
+  RankingIcon,
+  TestTubeIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Reorder, useDragControls } from "motion/react";
@@ -43,6 +45,10 @@ const ITEM_META: Record<
   // reorder UI, and a row showing one icon there and another in the sidebar
   // reads as a bug.
   nanochat: { icon: CpuIcon, labelKey: "shell.navigation.nanochat" },
+  // Same glyph as the sidebar row, for the same reason.
+  autoresearch: { icon: TestTubeIcon, labelKey: "shell.navigation.autoresearch" },
+  // Same glyph as the sidebar row, for the same reason.
+  benchmarks: { icon: RankingIcon, labelKey: "shell.navigation.benchmarks" },
   video: { icon: FlimSlateIcon, labelKey: "shell.navigation.video" },
   audio: { icon: AudioWave01Icon, labelKey: "shell.navigation.audio" },
   recipes: { icon: ChefHatIcon, labelKey: "shell.navigation.recipes" },

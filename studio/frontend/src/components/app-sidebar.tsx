@@ -79,6 +79,14 @@ import {
   isNanochatRunActive,
   useNanochatRuntimeStore,
 } from "@/features/nanochat/stores/nanochat-runtime-store";
+import {
+  isAutoresearchRunActive,
+  useAutoresearchRuntimeStore,
+} from "@/features/autoresearch/stores/autoresearch-runtime-store";
+import {
+  isBenchmarkRunActive,
+  useBenchmarkRuntimeStore,
+} from "@/features/benchmarks/stores/benchmark-runtime-store";
 /* eslint-enable no-restricted-imports */
 import { cn } from "@/lib/utils";
 import { copyToClipboardFrom } from "@/lib/copy-to-clipboard";
@@ -117,8 +125,10 @@ import {
   PowerIcon,
   PencilEdit02Icon,
   LayoutAlignLeftIcon,
+  RankingIcon,
   Settings02Icon,
   Sun03Icon,
+  TestTubeIcon,
   UserCircleIcon,
   ViewIcon,
   ViewOffSlashIcon,
@@ -2126,6 +2136,12 @@ export function AppSidebar() {
 // module is tiny, and pulling in the page would defeat the row's onIntent
 // preloading.
 const nanochatRunActive = useNanochatRuntimeStore(isNanochatRunActive);
+// Same reasoning again: the autoresearch row spins while an experiment loop is
+// going, and reading the store directly keeps the page out of the sidebar chunk.
+const autoresearchRunActive = useAutoresearchRuntimeStore(isAutoresearchRunActive);
+// Same reasoning as the nanochat store above: a direct read of a tiny store
+// module, so the sidebar does not pull the benchmarks page into its chunk.
+const benchmarkRunActive = useBenchmarkRuntimeStore(isBenchmarkRunActive);
   // Export runs in the background; reflect it on the Export nav item from any tab.
   const exportInProgress = useExportRuntimeStore((s) => s.isExporting);
   // On any non-chat tab, offer a way back to the live chat instead of starting a new one
@@ -2301,6 +2317,41 @@ const nanochatRunActive = useNanochatRuntimeStore(isNanochatRunActive);
       },
       onIntent: () => {
         preloadSilently(router.preloadRoute({ to: "/nanochat" }));
+      },
+    },
+    // autoresearch runs nanochat's pipeline under an agent loop, several times
+    // over. Like nanochat it is not gated on the chat-only verdict: it sizes a run
+    // for whatever it finds and the tab explains a missing environment itself.
+    autoresearch: {
+      icon: TestTubeIcon,
+      label: t("shell.navigation.autoresearch"),
+      active: pathname === "/autoresearch" || pathname.startsWith("/autoresearch/"),
+      disabled: false,
+      spinner: autoresearchRunActive,
+      onClick: () => {
+        navigate({ to: "/autoresearch" });
+        closeMobileIfOpen();
+      },
+      onIntent: () => {
+        preloadSilently(router.preloadRoute({ to: "/autoresearch" }));
+      },
+    },
+    // Benchmarks measure a model rather than change one, so the row is not gated
+    // on the training verdict the way Train is: a host with no usable GPU can
+    // still run a small model, slowly. The tab explains a missing nanochat
+    // environment itself, which is the only thing that actually stops a run.
+    benchmarks: {
+      icon: RankingIcon,
+      label: t("shell.navigation.benchmarks"),
+      active: pathname === "/benchmarks" || pathname.startsWith("/benchmarks/"),
+      disabled: false,
+      spinner: benchmarkRunActive,
+      onClick: () => {
+        navigate({ to: "/benchmarks" });
+        closeMobileIfOpen();
+      },
+      onIntent: () => {
+        preloadSilently(router.preloadRoute({ to: "/benchmarks" }));
       },
     },
     // A host with no video device at all is disabled with a hint instead of bouncing off the root guard.
@@ -4097,11 +4148,11 @@ const nanochatRunActive = useNanochatRuntimeStore(isNanochatRunActive);
                       base + (root scale - 1) * 8px. Exact base sizes at 16px. */}
                   <img
                     src="/circle-logo-small.png"
-                    alt="Unsloth"
+                    alt={t("shell.product")}
                     className="relative top-px h-[calc(22px+0.5rem*var(--ui-font-scale,1))] w-[calc(22px+0.5rem*var(--ui-font-scale,1))] shrink-0 rounded-full object-cover"
                   />
                   <span className="relative -top-px truncate font-heading text-[calc(13px+0.5rem*var(--ui-font-scale,1))] font-semibold tracking-[0em] leading-tight text-black dark:text-foreground dark:tracking-[0.02em]">
-                    unsloth
+                    {t("shell.brand")}
                   </span>
                   <span className="nav-badge ml-0.5 inline-flex shrink-0 items-center justify-center rounded-full border border-nav-beta-border px-[calc(5px*var(--ui-space-scale,1))] pt-[calc(3px*var(--ui-space-scale,1))] pb-[calc(2px*var(--ui-space-scale,1))] text-[calc(0.5rem*var(--ui-font-scale,1))] font-medium leading-none tracking-[0.04em] text-nav-fg-muted antialiased subpixel-antialiased shadow-[0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_2px_var(--background)]">
                     {t("shell.beta")}
@@ -4942,8 +4993,8 @@ const nanochatRunActive = useNanochatRuntimeStore(isNanochatRunActive);
                   {/* min-w-0 so long names truncate instead of overflowing;
                       pr on the button reserves room for the settings cog */}
                   <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="truncate font-heading text-ui-13p5 tracking-[0.025em] dark:tracking-[0.04em] font-semibold text-nav-fg">{displayTitle}</span>
-                    <span className="truncate text-ui-11p5 tracking-nav text-muted-foreground">Unsloth</span>
+                      <span className="truncate font-heading text-ui-13p5 tracking-[0.025em] dark:tracking-[0.04em] font-semibold text-nav-fg">{displayTitle}</span>
+                      <span className="truncate text-ui-11p5 tracking-nav text-muted-foreground">{t("shell.product")}</span>
                   </div>
                 </SidebarMenuButton>
               )}

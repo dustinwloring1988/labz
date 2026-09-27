@@ -51,9 +51,9 @@ fn unavailable_script_message(script: &Path) -> Option<String> {
         .unwrap_or_else(|| script.display().to_string());
     warn!("[install] cannot open {}: {err}", script.display());
     Some(format!(
-        "Installation failed: {name}, which Unsloth needs to finish setting up, is missing or \
+        "Installation failed: {name}, which LABZ needs to finish setting up, is missing or \
          cannot be read. Security software may have quarantined or blocked it. Restore it from \
-         quarantine or reinstall Unsloth, then try again."
+         quarantine or reinstall LABZ, then try again."
     ))
 }
 
@@ -93,12 +93,12 @@ const POWERSHELL_ERROR_ID_FIELD: &str = "FullyQualifiedErrorId";
 /// can sit in a user-writable directory.
 const AMSI_MALWARE_GUIDANCE_PRE_START: &str = "Security software blocked the installer before it \
      started, so no installation steps ran; only diagnostic logs may have been written. This is \
-     usually a false positive: reinstall from an official Unsloth package, and if an unmodified \
+     usually a false positive: reinstall from an official LABZ package, and if an unmodified \
      copy is still blocked, update your security product's definitions or report it to your \
      vendor. Do not disable endpoint protection.";
 const AMSI_MALWARE_GUIDANCE_IN_PROGRESS: &str = "Security software blocked part of the installer, \
      so setup did not finish and some components may already be installed. This is usually a \
-     false positive: reinstall from an official Unsloth package, and if an unmodified copy is \
+     false positive: reinstall from an official LABZ package, and if an unmodified copy is \
      still blocked, update your security product's definitions or report it to your vendor. Do \
      not disable endpoint protection.";
 const AMSI_ADMIN_BLOCK_GUIDANCE_PRE_START: &str = "This machine's security policy blocked the \
@@ -1592,7 +1592,7 @@ mod tests {
         assert!(context.message(1).contains("Copyright (C) Microsoft"));
 
         let message = failure_message(&context, 1, &script);
-        assert!(message.contains("install.ps1, which Unsloth needs"), "{message}");
+        assert!(message.contains("install.ps1, which LABZ needs"), "{message}");
         assert!(message.contains("quarantined"), "{message}");
         assert!(!message.contains("Copyright"), "{message}");
         assert_eq!(Some(message), unavailable_script_message(&script));
@@ -1664,7 +1664,7 @@ mod tests {
         }
         let message = failure_message(&context, output.status.code().unwrap_or(-1), &script);
         assert!(
-            message.contains("install.ps1, which Unsloth needs"),
+            message.contains("install.ps1, which LABZ needs"),
             "{message}\nstdout: {}\nstderr: {}",
             String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)

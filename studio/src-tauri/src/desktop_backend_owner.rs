@@ -332,7 +332,7 @@ fn ensure_studio_root_id_at_with_blank_observer(
     match read_studio_root_id_file(path)? {
         Some(winner) => Ok(Some(winner)),
         None => Err(format!(
-            "could not create the desktop ownership id at {}; delete that file and reopen Unsloth",
+            "could not create the desktop ownership id at {}; delete that file and reopen LABZ",
             path.display()
         )),
     }
@@ -418,7 +418,7 @@ fn read_studio_root_id_file(path: &Path) -> Result<Option<String>, String> {
     // the previous value.
     parse_studio_root_id(&raw).map(Some).ok_or_else(|| {
         format!(
-            "the desktop ownership id at {} is not 64 lowercase hex characters; delete that file and reopen Unsloth",
+            "the desktop ownership id at {} is not 64 lowercase hex characters; delete that file and reopen LABZ",
             path.display()
         )
     })
@@ -841,7 +841,7 @@ fn liveness_verifies_metadata(
     metadata: &DesktopBackendMetadata,
 ) -> bool {
     let alive = matches!(liveness.status.as_deref(), Some("alive") | Some("healthy"))
-        && liveness.service.as_deref() == Some("Unsloth UI Backend");
+        && liveness.service.as_deref() == Some(crate::preflight::EXPECTED_BACKEND_SERVICE);
     let Some(owner) = liveness.desktop_owner.as_ref() else {
         return false;
     };
@@ -1630,7 +1630,7 @@ mod tests {
             ("200 OK", r#"{"access_token":"test-access-token"}"#),
             (
                 "200 OK",
-                r#"{"status":"healthy","service":"Unsloth UI Backend","supports_desktop_auth":true}"#,
+                r#"{"status":"healthy","service":"LABZ Backend","supports_desktop_auth":true}"#,
             ),
         ])
         .await;
@@ -1673,7 +1673,7 @@ mod tests {
     fn owned_liveness(manageability: u16) -> DesktopLiveness {
         DesktopLiveness {
             status: Some("alive".to_string()),
-            service: Some("Unsloth UI Backend".to_string()),
+            service: Some("LABZ Backend".to_string()),
             desktop_protocol_version: Some(1),
             desktop_manageability_version: Some(manageability),
             supports_desktop_auth: Some(true),
@@ -1696,7 +1696,7 @@ mod tests {
         let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
         let port = listener.local_addr().unwrap().port();
         let body = format!(
-            r#"{{"status":"alive","service":"Unsloth UI Backend","desktop_protocol_version":{},"desktop_manageability_version":{},"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{}","desktop_owner":{{"kind":"{}","token_sha256":"{}"}},"inference_active":true}}"#,
+            r#"{{"status":"alive","service":"LABZ Backend","desktop_protocol_version":{},"desktop_manageability_version":{},"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{}","desktop_owner":{{"kind":"{}","token_sha256":"{}"}},"inference_active":true}}"#,
             crate::preflight::DESKTOP_PROTOCOL_VERSION,
             crate::preflight::DESKTOP_MANAGEABILITY_VERSION,
             ROOT_ID,
@@ -1772,9 +1772,9 @@ mod tests {
         // token hash. Both are takeovers.
         for body in [
             // Same install, so the root id matches; no desktop owner at all.
-            r#"{"status":"alive","service":"Unsloth UI Backend","studio_root_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","supports_desktop_auth":true,"supports_desktop_backend_ownership":true}"#,
+            r#"{"status":"alive","service":"LABZ Backend","studio_root_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","supports_desktop_auth":true,"supports_desktop_backend_ownership":true}"#,
             // A desktop-owned backend, but not the one this app is holding.
-            r#"{"status":"alive","service":"Unsloth UI Backend","studio_root_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"desktop_owner":{"kind":"tauri","token_sha256":"0000000000000000000000000000000000000000000000000000000000000000"}}"#,
+            r#"{"status":"alive","service":"LABZ Backend","studio_root_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"desktop_owner":{"kind":"tauri","token_sha256":"0000000000000000000000000000000000000000000000000000000000000000"}}"#,
         ] {
             let (port, _, server) = http_sequence_server(vec![("200 OK", body)]).await;
             let owner = BackendOwnerState::from_metadata(

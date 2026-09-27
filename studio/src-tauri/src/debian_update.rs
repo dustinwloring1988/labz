@@ -143,7 +143,7 @@ fn install_verified_package(bytes: Vec<u8>, signature: &str, version: &str) -> R
         ]
     {
         return Err(
-            "The package manager did not finish installing the requested Unsloth version.".into(),
+            "The package manager did not finish installing the requested LABZ version.".into(),
         );
     }
     Ok(())
@@ -223,11 +223,11 @@ fn validate_identity(
         || installed.len() != 3
         || architecture != installed[2]
     {
-        return Err("The signed update does not match the installed Unsloth package, version, or architecture.".into());
+        return Err("The signed update does not match the installed LABZ package, version, or architecture.".into());
     }
     if installed[0] != "install ok installed" {
         return Err(
-            "Repair the existing Unsloth package with the system package manager before updating."
+            "Repair the existing LABZ package with the system package manager before updating."
                 .into(),
         );
     }
@@ -252,7 +252,7 @@ fn installed_version_guard(installed_version: &str) -> String {
     // the version has passed semver parsing, which excludes shell metacharacters.
     format!(
         "test \"$(/usr/bin/dpkg-query --show --showformat='${{Version}}' unsloth)\" = '{installed_version}' || \
-         {{ echo 'Installed Unsloth changed during the update. Retry the update.' >&2; exit 1; }}"
+         {{ echo 'Installed LABZ changed during the update. Retry the update.' >&2; exit 1; }}"
     )
 }
 
@@ -260,7 +260,7 @@ fn needs_debian_version_override(version: &str, installed: &str) -> Result<bool,
     let next = semver::Version::parse(version).map_err(|error| error.to_string())?;
     let current = semver::Version::parse(installed).map_err(|error| error.to_string())?;
     if !next.cmp_precedence(&current).is_gt() {
-        return Err("The Debian update must be newer than the installed Unsloth package.".into());
+        return Err("The Debian update must be newer than the installed LABZ package.".into());
     }
     let status = system_command("/usr/bin/dpkg")
         .args(["--compare-versions", version, "lt", installed])
@@ -306,7 +306,7 @@ mod tests {
             assert_eq!(output.status.success(), accepted);
             if !accepted {
                 assert!(String::from_utf8_lossy(&output.stderr)
-                    .contains("Installed Unsloth changed during the update"));
+                    .contains("Installed LABZ changed during the update"));
             }
         }
     }

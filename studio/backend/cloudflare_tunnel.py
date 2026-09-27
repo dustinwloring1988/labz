@@ -43,7 +43,8 @@ _DOWNLOAD_TIMEOUT = 60
 # A registered edge connection does not mean the hostname resolves yet, so the URL is fetched once before it is
 # advertised.
 _PUBLIC_PROBE_PATH = "/api/health"
-_PUBLIC_PROBE_MARKER = "Unsloth UI Backend"
+# Lockstep with the `service` field of /api/health and the FastAPI `title` in main.py.
+_PUBLIC_PROBE_MARKER = "LABZ Backend"
 # One deadline for DNS propagation + the health probe, bounding the startup stall.
 _PUBLIC_PROBE_TIMEOUT = 45.0
 _PUBLIC_PROBE_ATTEMPT_TIMEOUT = 5.0

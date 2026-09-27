@@ -128,8 +128,8 @@ export const ko = {
       truncated: "이 페이지는 너무 길어 전체를 검색할 수 없습니다.",
     },
     beta: "BETA",
-    brand: "unsloth",
-    product: "Unsloth",
+    brand: "LABZ",
+    product: "LABZ",
     accountMenu: "{name} 계정 메뉴",
     updateAvailable: "업데이트 사용 가능",
     resize: {
@@ -138,7 +138,7 @@ export const ko = {
       drag: "드래그하여 크기 조절",
     },
     aria: {
-      home: "Unsloth 홈",
+      home: "LABZ 홈",
       closeSidebar: "사이드바 닫기",
       openSidebar: "사이드바 열기",
       resizeSidebar: "사이드바 크기 조절 또는 접기",
@@ -158,6 +158,8 @@ export const ko = {
       projects: "프로젝트",
       train: "학습",
       nanochat: "nanochat",
+      autoresearch: "autoresearch",
+      benchmarks: "벤치마크",
       recipes: "레시피",
       images: "이미지",
       video: "동영상",
@@ -259,7 +261,7 @@ export const ko = {
   settings: {
     accounts: {
       title: "계정",
-      description: "개별 Unsloth 계정을 만듭니다. 새 사용자는 일회용 설정 코드로 로그인한 뒤 비밀번호를 정합니다.",
+      description: "개별 LABZ 계정을 만듭니다. 새 사용자는 일회용 설정 코드로 로그인한 뒤 비밀번호를 정합니다.",
       username: "사용자 이름",
       create: "계정 만들기",
       createDescription: "설정 코드를 전달하면 본인이 비밀번호를 정할 수 있습니다.",
@@ -298,7 +300,7 @@ export const ko = {
     title: "설정",
     dialog: {
       title: "설정",
-      description: "Unsloth 환경설정을 관리합니다.",
+      description: "LABZ 환경설정을 관리합니다.",
       closeAriaLabel: "설정 닫기",
       searchPlaceholder: "설정 검색…",
       searchNoResults: "설정을 찾을 수 없습니다.",
@@ -476,6 +478,10 @@ export const ko = {
           label: "학습으로 전환",
           description: "학습 작업 공간으로 이동합니다",
         },
+        switchToBenchmarks: {
+          label: "벤치마크로 전환",
+          description: "벤치마크 작업 공간으로 이동",
+        },
         switchToRecipes: {
           label: "Recipes로 전환",
           description: "Data Recipes로 이동합니다",
@@ -606,8 +612,8 @@ export const ko = {
       openLogsFolder: "로그 폴더 열기",
       openLogsFolderFailed: "로그 폴더를 열 수 없습니다.",
       exportFailed: "로그를 다운로드할 수 없습니다.",
-      exportTooOld: "실행 중인 Unsloth 백엔드가 너무 오래되어 로그를 내보낼 수 없습니다. 해당 백엔드를 업데이트한 뒤 다시 시작하세요.",
-      exportForbidden: "모든 로그를 다운로드하려면 로그인된 Unsloth 세션이 필요합니다. API 키만으로는 할 수 없습니다.",
+      exportTooOld: "실행 중인 LABZ 백엔드가 너무 오래되어 로그를 내보낼 수 없습니다. 해당 백엔드를 업데이트한 뒤 다시 시작하세요.",
+      exportForbidden: "모든 로그를 다운로드하려면 로그인된 LABZ 세션이 필요합니다. API 키만으로는 할 수 없습니다.",
       keywords: "디버그 디버깅 로그 오류 에러 충돌 스택 추적 진단 문제 해결 debug log logs error",
     },
     voice: {
@@ -711,7 +717,7 @@ export const ko = {
           "장치 이름을 표시하려면 마이크 접근을 허용하세요",
         allowMicrophone: "마이크 허용",
         micAccessBlocked:
-          "마이크 접근이 차단되었습니다. 이 Unsloth 페이지에 마이크 접근을 허용한 뒤 다시 시도하세요.",
+          "마이크 접근이 차단되었습니다. 이 LABZ 페이지에 마이크 접근을 허용한 뒤 다시 시도하세요.",
         micAccessBlockedDesktop:
           "마이크 접근이 차단되었습니다. 다시 시도하여 허용을 선택하거나 시스템 개인 정보 보호 설정에서 마이크를 켜세요.",
         micAccessUnsupported:
@@ -825,7 +831,7 @@ export const ko = {
       checkingToken: "토큰 확인 중...",
       tokenValidated: "토큰이 확인되었습니다",
       password: "비밀번호",
-      passwordDescription: "이 Unsloth 계정의 비밀번호를 변경합니다.",
+      passwordDescription: "이 LABZ 계정의 비밀번호를 변경합니다.",
       passwordDialog: {
         trigger: "비밀번호 변경",
         title: "비밀번호 변경",
@@ -834,7 +840,7 @@ export const ko = {
         setTrigger: "원격 비밀번호 설정",
         setTitle: "원격 비밀번호 설정",
         setDescription:
-          "원격 브라우저가 unsloth 계정으로 로그인할 때 사용할 비밀번호를 선택하세요(최소 {minLength}자). Unsloth 데스크톱 앱은 계속 자동으로 로그인합니다.",
+          "원격 브라우저가 unsloth 계정으로 로그인할 때 사용할 비밀번호를 선택하세요(최소 {minLength}자). LABZ 데스크톱 앱은 계속 자동으로 로그인합니다.",
         setSubmit: "비밀번호 설정",
         setting: "설정 중...",
         setDone: "비밀번호가 설정되었습니다.",
@@ -944,7 +950,7 @@ export const ko = {
       },
       startup: {
         sectionTitle: "시작",
-        launchAtLogin: "로그인 시 Unsloth 실행",
+        launchAtLogin: "로그인 시 LABZ 실행",
         launchAtLoginDescription:
           "로그인하면 Unsloth를 백그라운드에서 시작합니다. 열기 전까지 메뉴 막대 또는 시스템 트레이에 남아 있습니다.",
 
@@ -1087,7 +1093,7 @@ export const ko = {
           "아래 내용은 모두 본인의 기록을 바탕으로 계산됩니다. 아무것도 수집하거나 Unsloth로 전송하지 않습니다.",
         retry: "다시 시도",
         privacyNote:
-          "통계는 Unsloth 설치에 저장된 로컬 채팅, API 사용 및 학습 기록을 바탕으로 계산됩니다. 통계를 위해 API 프롬프트, 응답 또는 키를 저장하지 않습니다. Unsloth나 제3자에게 아무것도 전송하지 않습니다.",
+          "통계는 LABZ 설치에 저장된 로컬 채팅, API 사용 및 학습 기록을 바탕으로 계산됩니다. 통계를 위해 API 프롬프트, 응답 또는 키를 저장하지 않습니다. Unsloth나 제3자에게 아무것도 전송하지 않습니다.",
         emptyChats:
           "아직 채팅 또는 API 사용 기록이 없습니다. 대화를 시작하거나 인증된 로컬 API 요청을 보내세요.",
         lifetimeTokens: "누적 토큰",
@@ -1116,7 +1122,7 @@ export const ko = {
         tokensIn: "보낸 토큰",
         tokensOut: "생성된 토큰",
         totalTokens: "전체 토큰",
-        studioChatTokens: "Unsloth Chat 토큰",
+        studioChatTokens: "LABZ Chat 토큰",
         apiTokens: "API 토큰",
         cachedTokens: "캐시된 토큰",
         cachedValue: "{tokens}(입력의 {percent}%)",
@@ -1158,7 +1164,7 @@ export const ko = {
       },
       palette: {
         label: "색상 팔레트",
-        description: "라이트 모드와 다크 모드에서 Unsloth 전반에 쓰이는 색상입니다.",
+        description: "라이트 모드와 다크 모드에서 LABZ 전반에 쓰이는 색상입니다.",
         standard: "표준",
         classic: "클래식",
         minimal: "미니멀",
@@ -1227,7 +1233,7 @@ export const ko = {
         },
         uiFontSize: {
           label: "UI 글꼴 크기",
-          description: "Unsloth UI에 쓰이는 기본 크기를 조정합니다.",
+          description: "LABZ UI에 쓰이는 기본 크기를 조정합니다.",
         },
         codeFontSize: {
           label: "코드 글꼴 크기",
@@ -1283,7 +1289,7 @@ export const ko = {
     },
     resources: {
       title: "시스템",
-      description: "이 Unsloth 서버의 하드웨어와 저장소를 모니터링합니다.",
+      description: "이 LABZ 서버의 하드웨어와 저장소를 모니터링합니다.",
       liveUpdates: "실시간 업데이트",
       floatingWindow: "플로팅 창",
       disableOverlay: "오버레이 비활성화",
@@ -1457,7 +1463,7 @@ export const ko = {
             numba: "Numba 컴파일 캐시",
             matplotlib: "Matplotlib 폰트 캐시",
             vllm: "vLLM 캐시",
-            unslothCompiled: "Unsloth 컴파일된 모듈",
+            unslothCompiled: "LABZ 컴파일된 모듈",
             hfXet: "Hugging Face 전송 캐시",
             hfAssets: "Hugging Face 에셋 캐시",
             hfDatasets: "Hugging Face 데이터셋 캐시",
@@ -1526,7 +1532,7 @@ export const ko = {
       // English is the baseline until translated: the three-part sentence is assembled around an
       // inline link and needs restructuring first.
       automaticSettingsNote:
-        "Unsloth automatically applies the model’s recommended settings if you have not set any flags.",
+        "LABZ automatically applies the model’s recommended settings if you have not set any flags.",
       configurationNote:
         "You can also adjust any configuration. See further below or",
       configurationDocs: "docs",
@@ -1536,7 +1542,7 @@ export const ko = {
       subagent: {
         title: "로컬 모델을 서브에이전트로 사용",
         description:
-          "{agent}는 현재 모델을 유지한 채, 선택한 작업만 이 로컬 Unsloth 모델에 위임합니다.",
+          "{agent}는 현재 모델을 유지한 채, 선택한 작업만 이 로컬 LABZ 모델에 위임합니다.",
         setupCommand: "설정 명령",
         copySetupCommand: "서브에이전트 설정 명령 복사",
         usagePrompt: "그런 다음 {agent}에서 다음과 같이 입력하세요:",
@@ -1566,7 +1572,7 @@ export const ko = {
       options: {
         title: "주요 옵션",
         description:
-          "Unsloth 플래그가 먼저 처리되고, 인식되지 않은 값은 그대로 에이전트에 전달됩니다.",
+          "LABZ 플래그가 먼저 처리되고, 인식되지 않은 값은 그대로 에이전트에 전달됩니다.",
         model:
           "모델을 선택합니다. --model이 없으면 unsloth start는 Unsloth에 현재 로드된 모델을 사용하며, 로드된 모델이 없으면 오류가 납니다.",
         contextLength:
@@ -1581,7 +1587,7 @@ export const ko = {
         asSubagent:
           "상위 에이전트는 현재 모델을 유지하고 Unsloth를 로컬 서브에이전트로 등록합니다(Claude Code, Codex, OpenCode).",
         apiKey:
-          "Unsloth API 키를 지정합니다(또는 UNSLOTH_API_KEY 환경 변수를 설정합니다).",
+          "LABZ API 키를 지정합니다(또는 UNSLOTH_API_KEY 환경 변수를 설정합니다).",
         reasoning:
           "채팅에서 추론 사용 여부: on, off, auto. auto는 모델의 채팅 템플릿을 따르며 보통 on입니다.",
         reasoningEffort:
@@ -1596,7 +1602,7 @@ export const ko = {
       passthrough: {
         title: "에이전트에 인자 전달",
         description:
-          "Unsloth 플래그 뒤의 인자는 에이전트 자체로 전달되므로 resume 같은 기본 명령도 그대로 동작합니다:",
+          "LABZ 플래그 뒤의 인자는 에이전트 자체로 전달되므로 resume 같은 기본 명령도 그대로 동작합니다:",
       },
       dryRun: {
         title: "실행하지 않고 미리 보기",
@@ -2043,7 +2049,7 @@ export const ko = {
     about: {
       title: "정보",
       description: "문서, 릴리스 노트, 피드백 및 빌드 정보입니다.",
-      studioVersion: "Unsloth 버전",
+      studioVersion: "LABZ 버전",
       packageVersion: "패키지 버전",
       desktopAppVersion: "데스크톱 앱 버전",
       desktopAppVersionUnavailable: "확인할 수 없음",
@@ -2062,26 +2068,26 @@ export const ko = {
       reportIssue: "문제 보고",
       license: {
         sectionTitle: "라이선스",
-        studioLabel: "Unsloth",
+        studioLabel: "LABZ",
         studioLicense: "AGPL-3.0",
         studioDescription: "GNU AGPL v3.0에 따라 공개된 오픈 소스입니다.",
-        libraryLabel: "Unsloth Core",
+        libraryLabel: "LABZ Core",
         libraryLicense: "Apache-2.0",
         libraryDescription: "Apache 2.0 라이선스에 따라 배포됩니다.",
       },
       dangerZone: "위험 구역",
-      shutDownStudio: "Unsloth 종료",
+      shutDownStudio: "LABZ 종료",
       shutDownStudioDescription:
-        "Unsloth 서버를 중지하고 세션을 종료합니다.",
+        "LABZ 서버를 중지하고 세션을 종료합니다.",
       shutDown: "종료",
       update: {
-        title: "Unsloth 업데이트",
+        title: "LABZ 업데이트",
         commandText: "{label} 텍스트",
         copied: "복사됨",
         copyCommand: "명령 복사",
         commandCopied: "{label} 복사됨",
         copyNamedCommand: "{label} 복사",
-        checkingInstall: "Unsloth 설치 방식을 확인하는 중...",
+        checkingInstall: "LABZ 설치 방식을 확인하는 중...",
         installIntro: "Unsloth를 설치하거나 업데이트하려면:",
         localUpdateHeading: "로컬 업데이트",
         installCommandUnix: "macOS/Linux 설치 명령",
@@ -2123,7 +2129,7 @@ export const ko = {
         updateNow: "지금 업데이트",
         openReleasePage: "릴리스 페이지 열기",
         unknownInstall:
-          "Unsloth 설치 방식을 감지할 수 없습니다. 설치 프로그램 또는 PyPI 설치의 경우 위 명령을 사용하세요.",
+          "LABZ 설치 방식을 감지할 수 없습니다. 설치 프로그램 또는 PyPI 설치의 경우 위 명령을 사용하세요.",
         localCheckout:
           "로컬 체크아웃 설치의 경우 해당 체크아웃에서 로컬 설치 프로그램을 실행하세요:",
         docs: "설치 문서:",

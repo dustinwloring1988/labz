@@ -232,7 +232,7 @@ test("menu chords follow the user's bindings and never steal a web shortcut's ch
     "CmdOrCtrl+KeyJ",
   );
   // The list matches what the native menu actually holds: Tauri's default items plus our Quit.
-  assert.match(MAIN_RS, /MenuItemBuilder::with_id\(APP_QUIT_MENU_ID, "Quit Unsloth"\)\s*\.accelerator\("CmdOrCtrl\+Q"\)/);
+  assert.match(MAIN_RS, /MenuItemBuilder::with_id\(APP_QUIT_MENU_ID, "Quit LABZ"\)\s*\.accelerator\("CmdOrCtrl\+Q"\)/);
   const { MENU_CHORDS, NATIVE_MENU_CHORDS } = await import("../src/app/app-menu-chords.ts");
   for (const { chord } of Object.values(MENU_CHORDS)) {
     assert.ok(!NATIVE_MENU_CHORDS.has(chord), `${chord} is not a native chord`);

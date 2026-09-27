@@ -38,9 +38,10 @@ const PUSH_DEBOUNCE_MS = 800;
 // Version 2 payloads store the language preference ("auto" or a pinned locale). Version 1 always
 // serialized the resolved locale, so its "en" is usually the old default rather than an explicit
 // pick. Version 3 migrates untouched sidebar layouts to keep Video under More. Version 4 pins Video
-// under Images. Without this bump a synced profile rehydrates its stored layout over the local
-// migration.
-const PERSONALIZATION_VERSION = 4;
+// under Images. Version 5 adds the Benchmarks row below nanochat. Version 6 adds autoresearch between
+// nanochat and Benchmarks. Without this bump a synced profile rehydrates its stored layout over the
+// local migration.
+const PERSONALIZATION_VERSION = 6;
 
 type ProfileSnapshot = {
   displayName: string;

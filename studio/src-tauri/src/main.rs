@@ -497,7 +497,7 @@ fn restore_missing_autostart_entry(app: &tauri::AppHandle) -> bool {
         );
         if restore {
             info!(
-                "The \"Run Unsloth at login\" entry is gone but was last set to on; restoring it."
+                "The \"Run LABZ at login\" entry is gone but was last set to on; restoring it."
             );
         }
         restore
@@ -1108,7 +1108,7 @@ fn confirm_quit_during_install(app: &tauri::AppHandle) -> bool {
     }
     app.dialog()
         .message(
-            "Unsloth is still installing. Quitting now stops it part-way and \
+            "LABZ is still installing. Quitting now stops it part-way and \
              leaves the installation incomplete, so it will need to be repaired before \
              it can start.",
         )
@@ -1134,7 +1134,7 @@ fn confirm_quit_during_update(app: &tauri::AppHandle) -> bool {
     }
     app.dialog()
         .message(
-            "Unsloth is still updating. Quitting now stops it part-way and \
+            "LABZ is still updating. Quitting now stops it part-way and \
              leaves the installation incomplete, so it will need to be repaired before \
              it can start.",
         )
@@ -1607,7 +1607,7 @@ fn setup_quit_menu(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(quit) = app_menu.items()?.last() {
         app_menu.remove(quit)?;
     }
-    let quit = MenuItemBuilder::with_id(APP_QUIT_MENU_ID, "Quit Unsloth")
+    let quit = MenuItemBuilder::with_id(APP_QUIT_MENU_ID, "Quit LABZ")
         .accelerator("CmdOrCtrl+Q")
         .build(app)?;
     app_menu.append(&quit)?;
@@ -1730,7 +1730,7 @@ fn set_tray_server_status(app: tauri::AppHandle, status: String) {
 }
 
 fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
-    let open = MenuItemBuilder::with_id("open", "Open Unsloth").build(app)?;
+    let open = MenuItemBuilder::with_id("open", "Open LABZ").build(app)?;
     let toggle = MenuItemBuilder::with_id("toggle", "Start/Stop Server").build(app)?;
     let quit = MenuItemBuilder::with_id("quit", "Quit").build(app)?;
     let menu = MenuBuilder::new(app)
@@ -1747,7 +1747,7 @@ fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     let tray = TrayIconBuilder::new()
         .menu(&menu)
-        .tooltip("Unsloth")
+        .tooltip("LABZ")
         .icon(tray_icon)
         .icon_as_template(cfg!(target_os = "macos"))
         .on_menu_event(move |app, event| match event.id().as_ref() {
@@ -2080,7 +2080,7 @@ fn main() {
     let _ = fix_path_env::fix();
 
     setup_logging();
-    info!("Unsloth desktop app starting");
+    info!("LABZ desktop app starting");
 
     #[cfg(target_os = "linux")]
     if let Some((variables, reason)) = webkit_rendering_workaround {
@@ -2641,7 +2641,7 @@ media-src 'self' https:"
     }
 
     #[cfg(target_os = "linux")]
-    const BID: &str = "ai.unsloth.studio";
+    const BID: &str = "ai.labz.studio";
 
     // Only XDG_DATA_HOME is swapped, and it is read elsewhere now (a relocated CLI
     // child pins it), so the swap holds the crate-wide env lock and readers take it

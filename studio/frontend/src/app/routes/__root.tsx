@@ -257,6 +257,11 @@ const CHAT_ONLY_ALLOWED = new Set([
   // Chat-only hosts serve the API like any other, so the monitor must be reachable there
   // or the overlay's "Expand" and the Settings API card redirect to /chat.
   "/api-monitor",
+  // Benchmarks load a model and run inference, both of which a chat-only host can
+  // do; what they cannot do is fetch benchmark datasets, and the page says so and
+  // offers the install rather than redirecting. Allowed for the same reason Export
+  // is: the tab explains an unsupported host itself instead of being unreachable.
+  "/benchmarks",
 ]);
 
 // Paths that render their own "still checking" state and self-gate once the verdict lands.
@@ -308,7 +313,7 @@ export const Route = createRootRoute({
 const HIDDEN_NAVBAR_ROUTES = ["/login", "/change-password"];
 
 // Fallback when no matched route declares a `staticData.title`.
-const DEFAULT_DOCUMENT_TITLE = "Unsloth";
+const DEFAULT_DOCUMENT_TITLE = "LABZ";
 
 function RootLayout() {
   const t = useT();
@@ -575,6 +580,12 @@ function RootLayout() {
     enabled: routeShortcutEnabled && !chatOnlyMeasured,
   });
   useShortcut("switchToRecipes", goTo("/data-recipes"), {
+    enabled: routeShortcutEnabled,
+  });
+  // Ungated, like Chat and Export: /benchmarks is allowed on a chat-only host and
+  // self-gates on the datasets being present, so there is nothing to measure here
+  // that would bounce the user away from whatever they had open.
+  useShortcut("switchToBenchmarks", goTo("/benchmarks"), {
     enabled: routeShortcutEnabled,
   });
   useShortcut("switchToImages", goTo("/images"), {

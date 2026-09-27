@@ -1,6 +1,6 @@
 {
-  "productName": "Unsloth",
-  "identifier": "ai.unsloth.studio",
+  "productName": "LABZ",
+  "identifier": "ai.labz.studio",
   "build": {
     "beforeDevCommand": {
       "cwd": "../frontend",
@@ -21,7 +21,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Unsloth",
+        "title": "LABZ",
         "width": 760,
         "height": 560,
         "center": true,
@@ -37,13 +37,13 @@
   "plugins": {
     "deep-link": {
       "desktop": {
-        "schemes": ["unsloth"]
+        "schemes": ["labz"]
       }
     },
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFBQzA4RjczODM0RjE1QjcKUldTM0ZVK0RjNC9BR2t4R0RVaFR5cTkyUlRVQ1FwaGV0Nk04eWNwWXBhZnlzalJydllmZm1QTS8K",
+      "pubkey": "RWQmno39Ei6VXr2tbyOimS7hyfwEg5GU+/KYi6QAPaya5ogKZeVF3p/S",
       "endpoints": [
-        "https://github.com/unslothai/unsloth/releases/latest/download/latest.json"
+        "https://github.com/dustinwloring1988/labz/releases/latest/download/latest.json"
       ],
       "windows": {
         "installMode": "passive"
@@ -53,9 +53,9 @@
   "bundle": {
     "active": true,
     "createUpdaterArtifacts": true,
-    "publisher": "Unsloth AI",
-    "homepage": "https://unsloth.ai/",
-    "copyright": "© 2026 Unsloth AI. All rights reserved.",
+    "publisher": "LABZ",
+    "homepage": "https://github.com/dustinwloring1988/labz",
+    "copyright": "© 2026 LABZ. Licensed under AGPL-3.0-only; see studio/LICENSE.AGPL-3.0.",
     "license": "AGPL-3.0-only",
     "targets": ["app", "appimage", "deb", "dmg", "nsis"],
     "icon": [
@@ -88,13 +88,13 @@
         }
       },
       "deb": {
-        "desktopTemplate": "./linux/unsloth.desktop",
+        "desktopTemplate": "./linux/labz.desktop",
         "files": {
-          "/usr/share/polkit-1/actions/ai.unsloth.studio.update.policy": "./linux/ai.unsloth.studio.update.policy"
+          "/usr/share/polkit-1/actions/ai.labz.studio.update.policy": "./linux/ai.labz.studio.update.policy"
         },
-        "provides": ["unsloth-studio-desktop"],
-        "conflicts": ["unsloth-studio-desktop"],
-        "replaces": ["unsloth-studio-desktop"],
+        "provides": ["labz-studio-desktop"],
+        "conflicts": ["labz-studio-desktop", "unsloth-studio-desktop"],
+        "replaces": ["labz-studio-desktop", "unsloth-studio-desktop"],
         "postRemoveScript": "./linux/postremove.sh"
       }
     }

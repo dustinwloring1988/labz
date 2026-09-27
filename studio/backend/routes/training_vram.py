@@ -417,6 +417,130 @@ def _free_nanochat_for_training(reason: str) -> List[str]:
     return []
 
 
+def _free_autoresearch_for_training(reason: str) -> List[str]:
+    """Release the autoresearch chat worker, if one is loaded.
+
+    Unconditional rather than capacity-gated, unlike a chat model below. A worker
+    holds a CUDA context of its own alongside whatever else is resident, and the
+    experiments are about to run an agent that starts a *second* process for each
+    attempt; three or four CUDA contexts on a consumer card is how the driver
+    starts refusing allocations. The weights are only tens of megabytes, so the
+    cost of releasing one is that the user re-picks it afterwards.
+    """
+    try:
+        from core.autoresearch import chat_sidecar
+
+        if chat_sidecar.free_for_training(reason):
+            resident = chat_sidecar.resident()
+            return [f"autoresearch:{resident['model'] if resident else 'checkpoint'}"]
+    except Exception:
+        logger.warning("could not free the autoresearch chat worker", exc_info = True)
+    return []
+
+
+def can_keep_chat_during_autoresearch(
+    *,
+    peak_bytes: Optional[int] = None,
+) -> Tuple[bool, Dict[str, Any]]:
+    """Whether a resident chat model can stay loaded while experiments run.
+
+    The question is the same one ``can_keep_chat_during_nanochat`` answers, asked
+    with a measured number instead of an estimate.
+
+    autoresearch's own peak is measured rather than modelled, because the whole
+    design of the project is that the peak is not known in advance: ``train.py``
+    autotunes its batch size against whatever VRAM it finds, so a model of its
+    memory use would be a model of something that measures itself. The caller
+    passes the peak from the most recent experiment when it has one, and on a
+    first run there is nothing measured, so nothing is kept.
+
+    The keep threshold is this module's, not a new one: the estimate is a model of
+    memory use, so it carries the same margin and the same headroom floor as every
+    other probe here. Holding a chat model into an OOM costs the whole overnight
+    loop, so an unavailable probe answers "do not keep".
+    """
+    if peak_bytes is None:
+        return False, {"reason": "no_measured_peak"}
+    required_gb = peak_bytes / 1e9
+
+    resident_chat = summarize_resident_chat()
+    if not resident_chat.get("any"):
+        return False, {"reason": "no_resident_chat", "required_gb": required_gb}
+    if resident_chat.get("loading"):
+        # A load in flight holds VRAM it has not published a name for yet, so
+        # there is nothing to reason about and nothing safe to keep.
+        return False, {"reason": "chat_model_loading", "required_gb": required_gb}
+
+    try:
+        from utils.hardware import DeviceType, get_device, get_visible_gpu_utilization
+
+        if get_device() not in (DeviceType.CUDA, DeviceType.XPU):
+            return False, {"reason": "non_accelerator", "required_gb": required_gb}
+        # Same probe and same derivation as the rest of this module, so the free
+        # number here is the same number the other decisions were made on.
+        free_by_index = _free_vram_by_index(
+            get_visible_gpu_utilization().get("devices", [])
+        )
+    except Exception as exc:
+        logger.warning("autoresearch VRAM probe failed; not keeping chat resident: %s", exc)
+        return False, {"reason": "probe_error", "required_gb": required_gb}
+
+    needed_gb = round(required_gb * SAFETY_MARGIN + KEEP_FLOOR_GB, 3)
+    free_vals = list(free_by_index.values())
+    if not free_vals:
+        return False, {"reason": "no_devices", "required_gb": required_gb}
+    ranked = sorted(free_vals, reverse = True)
+    usable_gb = ranked[0] + sum(f * _MULTI_GPU_OVERHEAD for f in ranked[1:])
+    # A per-device floor for the same reason the multi-GPU path has one: a
+    # single device reporting 0 must not pass on the sum of nothing.
+    min_free_gb = min(free_vals)
+    fits = usable_gb >= needed_gb and min_free_gb >= needed_gb
+    return fits, {
+        "required_gb": round(required_gb, 3),
+        "needed_gb": needed_gb,
+        "usable_gb": round(usable_gb, 3),
+        "min_free_gb": round(min_free_gb, 3),
+        "resident": resident_chat,
+    }
+
+
+def coordinate_models_for_autoresearch(
+    *,
+    peak_bytes: Optional[int] = None,
+) -> List[str]:
+    """Free VRAM for an autoresearch experiment.
+
+    Always releases this feature's own chat worker, then asks whether a resident
+    chat model can stay. Releasing the worker first is the ordering that matters:
+    it is unconditional, and it is the thing whose presence is invisible to
+    ``summarize_resident_chat``, so a capacity probe alone would never notice it.
+    """
+    freed = _free_autoresearch_for_training("autoresearch experiment")
+    freed += _free_nanochat_for_training("autoresearch experiment")
+
+    resident_chat = summarize_resident_chat()
+    if not resident_chat.get("any"):
+        return freed
+    if resident_chat.get("loading"):
+        freed += free_stt_model_for_training(reason = "chat model still loading")
+        freed += free_chat_models_for_training(reason = "chat model still loading")
+        return freed
+
+    keep, info = can_keep_chat_during_autoresearch(peak_bytes = peak_bytes)
+    if keep:
+        logger.info(
+            "Keeping resident chat model loaded during autoresearch experiments "
+            "(free ~%s GB, needs ~%s GB)",
+            info.get("free_gb"),
+            info.get("required_gb"),
+        )
+        return freed
+    freed += free_chat_models_for_training(
+        reason = "insufficient VRAM to run autoresearch alongside chat",
+    )
+    return freed
+
+
 def can_keep_chat_during_nanochat(
     *,
     depth: int,

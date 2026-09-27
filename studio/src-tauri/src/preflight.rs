@@ -14,6 +14,11 @@ use managed::probe_managed_install;
 use std::path::PathBuf;
 use types::{BackendProbe, ManagedProbe};
 pub use types::{DesktopPreflightDisposition, DesktopPreflightResult, ExternalBackendConflict};
+// Re-exported so every site that recognises the backend by its reported service
+// name reads one constant. The string has to equal the FastAPI `title` in
+// studio/backend/main.py; three call sites each holding their own copy is how a
+// rebrand breaks startup in a way that names neither side.
+pub(crate) use backend::EXPECTED_BACKEND_SERVICE;
 #[cfg(test)]
 pub(crate) use version::DESKTOP_MANAGEABILITY_VERSION;
 pub(crate) use version::{
@@ -1051,7 +1056,7 @@ exit 1
             ""
         };
         format!(
-            r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,{leases}"studio_root_id":"{root_id}"{owner}}}"#
+            r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,{leases}"studio_root_id":"{root_id}"{owner}}}"#
         )
     }
 
@@ -1098,7 +1103,7 @@ exit 1
     #[tokio::test]
     async fn backend_health_without_desktop_capability_fields_is_still_candidate() {
         let port = backend_server(
-            r#"{"status":"healthy","service":"Unsloth UI Backend"}"#,
+            r#"{"status":"healthy","service":"LABZ Backend"}"#,
             "401 Unauthorized",
         )
         .await;
@@ -1111,7 +1116,7 @@ exit 1
     async fn backend_with_auth_support_but_missing_protocol_is_old() {
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
                 desktop_owner_json(true)
             ),
             "401 Unauthorized",
@@ -1137,7 +1142,7 @@ exit 1
         // protocol-compatible backend into a conflict the user has to kill.
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
                 desktop_owner_json(true)
             ),
             "401 Unauthorized",
@@ -1151,7 +1156,7 @@ exit 1
     async fn backend_without_any_manageability_field_is_old() {
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
                 desktop_owner_json(true)
             ),
             "401 Unauthorized",
@@ -1183,7 +1188,7 @@ exit 1
         // greys out from the same capability.
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
             ),
             "401 Unauthorized",
         )
@@ -1198,7 +1203,7 @@ exit 1
         // Option<bool> makes that indistinguishable from `false` untested.
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
             ),
             "401 Unauthorized",
         )
@@ -1213,7 +1218,7 @@ exit 1
         // rather than a conflict the user has to resolve by hand.
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
                 desktop_owner_json(true)
             ),
             "401 Unauthorized",
@@ -1232,7 +1237,7 @@ exit 1
         // really needed an update reported the wrong cause to diagnostics.
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.5.1","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.5.1","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"native_path_leases_supported":false,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
             ),
             "401 Unauthorized",
         )
@@ -1249,7 +1254,7 @@ exit 1
     async fn stale_same_root_without_desktop_owner_is_external_conflict() {
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.5.1","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.5.1","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":true,"supports_desktop_backend_ownership":true,"studio_root_id":"{EXPECTED_ROOT_ID}"}}"#,
             ),
             "401 Unauthorized",
         )
@@ -1281,7 +1286,7 @@ exit 1
     #[tokio::test]
     async fn backend_missing_root_id_is_unrelated_before_auth_probe() {
         let probe = probe_test_backend(
-            r#"{"status":"healthy","service":"Unsloth UI Backend","desktop_protocol_version":1,"supports_desktop_auth":true}"#,
+            r#"{"status":"healthy","service":"LABZ Backend","desktop_protocol_version":1,"supports_desktop_auth":true}"#,
             "401 Unauthorized",
         )
         .await;
@@ -1405,7 +1410,7 @@ exit 1
     async fn backend_capability_false_is_old_even_when_route_401() {
         let probe = probe_test_backend(
             format!(
-                r#"{{"status":"healthy","service":"Unsloth UI Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":false,"supports_desktop_backend_ownership":true,"desktop_auth_stale_reason":"cap_false","studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
+                r#"{{"status":"healthy","service":"LABZ Backend","version":"2026.8.4","desktop_protocol_version":1,"desktop_manageability_version":2,"supports_desktop_auth":false,"supports_desktop_backend_ownership":true,"desktop_auth_stale_reason":"cap_false","studio_root_id":"{EXPECTED_ROOT_ID}"{}}}"#,
                 desktop_owner_json(true)
             ),
             "401 Unauthorized",

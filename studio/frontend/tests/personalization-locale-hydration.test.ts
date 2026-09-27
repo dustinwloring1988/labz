@@ -7,6 +7,7 @@
 // save gate for the whole signed-in session.
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { loadWithStubs } from "./helpers/module-stubs.ts";
@@ -160,9 +161,31 @@ function settle(): Promise<void> {
   return new Promise((resolve) => setImmediate(resolve));
 }
 
+/**
+ * The personalization version the client currently writes.
+ *
+ * Read from the module rather than pinned, because a version behind the client's
+ * is not a neutral fixture: it makes the client run a layout migration on load and
+ * persist the result, and the tests below assert that a hydration writes *no*
+ * save. Pinning a literal here would quietly turn a version bump into three
+ * unrelated failures.
+ */
+const CURRENT_VERSION = (() => {
+  const source = readFileSync(
+    new URL(
+      "../src/features/profile/hooks/use-personalization-sync.ts",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  const match = /PERSONALIZATION_VERSION = (\d+)/.exec(source);
+  if (!match) throw new Error("no PERSONALIZATION_VERSION in the sync module");
+  return Number(match[1]);
+})();
+
 function remotePersonalization(language: string) {
   return {
-    version: 3,
+    version: CURRENT_VERSION,
     profile: {
       displayName: "",
       nickname: "",
@@ -365,7 +388,10 @@ function widthRemote(chatWidthSaved?: boolean, chatWidth?: string) {
   const remote = remotePersonalization("auto");
   return {
     ...remote,
-    version: 4,
+    // The same reason as remotePersonalization: a version behind the client's
+    // makes hydration migrate the sidebar layout and persist it, and the tests
+    // using this fixture assert that it writes nothing.
+    version: CURRENT_VERSION,
     chatWidthSaved,
     appearance: {
       ...remote.appearance,

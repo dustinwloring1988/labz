@@ -398,7 +398,7 @@ def _is_studio_healthy(port: int, timeout: float = 2.0) -> bool:
     import json, urllib.request
     try:
         with urllib.request.urlopen(f"http://localhost:{port}/api/health", timeout = timeout) as r:
-            return json.loads(r.read()).get("service") == "Unsloth UI Backend"
+            return json.loads(r.read()).get("service") == "LABZ Backend"
     except Exception:
         return False
 

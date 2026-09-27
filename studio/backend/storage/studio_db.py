@@ -367,8 +367,7 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
         """
     )
     conn.execute(
-        "CREATE INDEX IF NOT EXISTS idx_api_usage_events_created_at "
-        "ON api_usage_events(created_at)"
+        "CREATE INDEX IF NOT EXISTS idx_api_usage_events_created_at ON api_usage_events(created_at)"
     )
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_api_usage_events_subject_created_at "
@@ -1022,6 +1021,113 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     ):
         _rebuild_chat_attachment_inventory(conn)
         _mark_chat_attachment_inventory_clean(conn)
+    conn.commit()
+
+    # Benchmark runs and their scores.
+    #
+    # Scores live in their own table rather than as a JSON column on the run
+    # because the leaderboard ranks on them: a per-benchmark column is what makes
+    # "every model that ran MMLU, best first" a query instead of a full scan with
+    # a JSON parse per row.
+    #
+    # A benchmark is identified by its nanochat registry key, not by an integer
+    # id, because that key is what the rest of the feature speaks in. A CHECK on
+    # status keeps a typo from becoming a row the board silently skips.
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS benchmark_runs (
+            id TEXT NOT NULL PRIMARY KEY,
+            owner_subject TEXT,
+            model_id TEXT NOT NULL,
+            model_label TEXT NOT NULL,
+            model_format TEXT NOT NULL DEFAULT 'safetensors',
+            lora_path TEXT,
+            load_in_4bit INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL CHECK(status IN (
+                'running', 'completed', 'error', 'stopped'
+            )),
+            -- Which measurement produced these scores. 'logits' and 'generated'
+            -- are not interchangeable, so the board sorts within a mode rather
+            -- than pretending one number can be compared to the other.
+            scoring_mode TEXT,
+            benchmarks_json TEXT NOT NULL DEFAULT '[]',
+            max_problems INTEGER,
+            composite REAL,
+            error TEXT,
+            created_at REAL NOT NULL,
+            duration_seconds REAL NOT NULL DEFAULT 0
+        )
+        """
+    )
+    # Nullable so a row written before the field existed still loads; the
+    # accessor falls back to the owner it is read under.
+    benchmark_run_cols = {
+        row[1] for row in conn.execute("PRAGMA table_info(benchmark_runs)").fetchall()
+    }
+    if "owner_subject" not in benchmark_run_cols:
+        conn.execute("ALTER TABLE benchmark_runs ADD COLUMN owner_subject TEXT")
+    if "scoring_mode" not in benchmark_run_cols:
+        conn.execute("ALTER TABLE benchmark_runs ADD COLUMN scoring_mode TEXT")
+    if "composite" not in benchmark_run_cols:
+        conn.execute("ALTER TABLE benchmark_runs ADD COLUMN composite REAL")
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS benchmark_scores (
+            run_id TEXT NOT NULL REFERENCES benchmark_runs(id) ON DELETE CASCADE,
+            benchmark_key TEXT NOT NULL,
+            label TEXT NOT NULL DEFAULT '',
+            kind TEXT NOT NULL DEFAULT 'categorical',
+            status TEXT NOT NULL DEFAULT 'pending',
+            accuracy REAL,
+            baseline REAL NOT NULL DEFAULT 0,
+            centered REAL,
+            correct INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0,
+            elapsed_seconds REAL NOT NULL DEFAULT 0,
+            -- True when the run's problem cap cut the benchmark short, which
+            -- makes the figure an estimate from a sample rather than the
+            -- published-set score. Excluded from composites and said about in
+            -- the UI.
+            truncated INTEGER NOT NULL DEFAULT 0,
+            scoring_mode TEXT,
+            error TEXT,
+            PRIMARY KEY(run_id, benchmark_key)
+        ) WITHOUT ROWID
+        """
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_benchmark_runs_owner_created "
+        "ON benchmark_runs(owner_subject, created_at DESC)"
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_benchmark_scores_key_accuracy "
+        "ON benchmark_scores(benchmark_key, accuracy DESC)"
+    )
+    # A judge is a second model scoring the generative answers, and its verdict is
+    # kept beside nanochat's own rather than in place of it: the exact verdict is
+    # the definition and is deterministic, and the whole point of running a judge
+    # is that the two can differ. Nullable throughout, so a run with no judge and
+    # a run that predates the column behave the same.
+    benchmark_score_cols = {
+        row[1] for row in conn.execute("PRAGMA table_info(benchmark_scores)").fetchall()
+    }
+    for column, ddl in (
+        ("judge_model", "TEXT"),
+        ("exact_accuracy", "REAL"),
+        ("judge_accuracy", "REAL"),
+        ("judge_judged", "INTEGER NOT NULL DEFAULT 0"),
+        ("judge_unreadable", "INTEGER NOT NULL DEFAULT 0"),
+        ("disagreements", "INTEGER NOT NULL DEFAULT 0"),
+        ("judge_raised", "INTEGER NOT NULL DEFAULT 0"),
+    ):
+        if column not in benchmark_score_cols:
+            conn.execute(f"ALTER TABLE benchmark_scores ADD COLUMN {column} {ddl}")
+    benchmark_run_judge_cols = {
+        row[1] for row in conn.execute("PRAGMA table_info(benchmark_runs)").fetchall()
+    }
+    for column in ("judge_model_id", "judge_model_label"):
+        if column not in benchmark_run_judge_cols:
+            conn.execute(f"ALTER TABLE benchmark_runs ADD COLUMN {column} TEXT")
     conn.commit()
 
 

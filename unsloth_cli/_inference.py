@@ -684,7 +684,9 @@ def _loopback_candidate_bases(base: str) -> list:
     return bases or [base]
 
 
-_STUDIO_SERVICE_MARKER = "Unsloth UI Backend"
+# Lockstep with the `service` field of /api/health and the FastAPI `title` in
+# studio/backend/main.py.
+_STUDIO_SERVICE_MARKER = "LABZ Backend"
 
 
 def _recorded_loopback_bases(address: Optional[str], port: str) -> list:

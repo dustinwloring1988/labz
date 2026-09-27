@@ -60,7 +60,7 @@ def print_studio_stop_hint() -> None:
             [
                 "",
                 style(
-                    "  To stop Unsloth Studio: press Ctrl+C "
+                    "  To stop LABZ: press Ctrl+C "
                     "(Control+C, not Command+C, on macOS).",
                     stop_hint_style,
                 ),
@@ -128,7 +128,7 @@ def print_studio_access_banner(
 
     lines: list[str] = [
         "",
-        style("🦥 Unsloth Studio is running", title),
+        style("🦥 LABZ is running", title),
         style("─" * 52, dim),
         style("  On this machine -- open this in your browser:", dim),
         style(f"    {primary_url}", local_url_style),
@@ -193,7 +193,7 @@ def print_studio_access_banner(
             )
         lines.append(
             style(
-                "  Only on trusted networks -- anyone who reaches this machine can use Unsloth.",
+                "  Only on trusted networks -- anyone who reaches this machine can use LABZ.",
                 secondary,
             )
         )
@@ -203,7 +203,7 @@ def print_studio_access_banner(
             [
                 "",
                 style(
-                    "  To stop Unsloth Studio: press Ctrl+C "
+                    "  To stop LABZ: press Ctrl+C "
                     "(Control+C, not Command+C, on macOS).",
                     stop_hint_style,
                 ),

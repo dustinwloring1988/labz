@@ -125,7 +125,7 @@ test("the browser message still points at the page permission", () => {
   const en = readSrc("i18n/locales/en.ts");
   const blocked = en.match(/micAccessBlocked:\s*\n?\s*"([^"]+)"/);
   assert.ok(blocked, "micAccessBlocked is missing");
-  assert.match(blocked[1], /for this Unsloth page/);
+  assert.match(blocked[1], /for this LABZ page/);
 });
 
 test("every locale carries both blocked messages", () => {

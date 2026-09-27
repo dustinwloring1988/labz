@@ -8,7 +8,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const CHECK = fileURLToPath(
@@ -43,7 +43,14 @@ test("the whole network pass is bounded, not just each request", () => {
   );
 });
 
-test("the overall budget leaves room inside the workflow timeout", () => {
+test("the overall budget leaves room inside the workflow timeout", (t) => {
+  // This checkout has no .github/ directory and git history has never held one, so the workflow
+  // the arithmetic is cross-checked against is not on disk. Skipping says "nothing to compare
+  // to"; reading it unconditionally turns a missing CI file into a red suite.
+  if (!existsSync(WORKFLOW)) {
+    t.skip(`network-check workflow is not in this checkout: ${WORKFLOW}`);
+    return;
+  }
   const workflow = readFileSync(WORKFLOW, "utf8");
   const timeout = workflow.match(/timeout-minutes:\s*(\d+)/);
   assert.ok(timeout, "the network-check workflow no longer declares timeout-minutes");

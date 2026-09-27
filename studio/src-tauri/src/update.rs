@@ -299,7 +299,7 @@ fn run_update(
     let bin = match crate::process::find_unsloth_binary() {
         Some(bin) => bin,
         None => {
-            let msg = "Unsloth binary not found. Cannot run update.".to_string();
+            let msg = "LABZ binary not found. Cannot run update.".to_string();
             diagnostics::finish_attempt(&diagnostics, &attempt, None, false, Some(msg.clone()));
             clear_current_attempt(&state);
             return Err(msg);

@@ -34,6 +34,7 @@ export type ShortcutId =
   | "switchToProjects"
   | "switchToHub"
   | "switchToTrain"
+  | "switchToBenchmarks"
   | "switchToRecipes"
   | "switchToImages"
   | "switchToVideo"
@@ -127,6 +128,10 @@ const WORKSPACE_IDS = [
   "switchToProjects",
   "switchToHub",
   "switchToTrain",
+  // Benchmarks sits after Train because it consumes what Train produces, which is
+  // also the order the sidebar rows read in. Appended rather than inserted so the
+  // existing chords keep the digits they shipped with.
+  "switchToBenchmarks",
   "switchToRecipes",
   "switchToImages",
   "switchToVideo",

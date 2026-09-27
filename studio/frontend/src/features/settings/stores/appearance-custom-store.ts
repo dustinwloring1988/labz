@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+﻿// SPDX-License-Identifier: AGPL-3.0-only
 // Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
 import { create } from "zustand";
@@ -99,6 +99,13 @@ export const SIDEBAR_NAV_ITEM_IDS = [
   "train",
   // nanochat trains a model from scratch, so it sits beside Train.
   "nanochat",
+  // autoresearch is nanochat's experiment loop: same from-scratch training, but
+  // run repeatedly by an agent and judged on one number. It goes right after
+  // nanochat because that is the pipeline it is iterating on.
+  "autoresearch",
+  // Benchmarks measure a model rather than change one, so they follow the two
+  // tabs that produce something to measure.
+  "benchmarks",
   "recipes",
   "export",
   "api",
@@ -148,75 +155,43 @@ export const SIDEBAR_NAV_DEFAULT_PINNED: Record<SidebarNavItemId, boolean> = {
   audio: false,
   train: true,
   nanochat: true,
+  autoresearch: true,
+  benchmarks: true,
   recipes: false,
   export: false,
   api: false,
 };
 
-/** Every previously shipped layout, so a migration can tell an untouched install from one the
- *  user arranged themselves. v3 pinned Video under Images; v4 moved Model hub above Projects;
- *  v5 put Video back under "More" and later added API before Audio shipped; v6 added Audio;
- *  v7 pins Video under Images again; v8 adds nanochat beside Train. */
+/** The layouts that have shipped, so a migration can tell an untouched install from one
+ *  the user arranged.
+ *
+ *  One entry, and deliberately not a history. Every version of this list existed to
+ *  let an install recognise a layout written by an earlier release, and the list had
+ *  grown to eight of them -- a chain where each new row needed both a new entry and a
+ *  version bump, and where forgetting the bump left exactly the installs the row was
+ *  meant for silently missing it. The history bought compatibility that was never
+ *  needed: nothing outside this machine had ever loaded one of these payloads.
+ *
+ *  v2 is the baseline, and the next change is v3. From here a new row appends to
+ *  this one entry and bumps the version beside it, which is the pairing the bug came
+ *  from. An install still holding a pre-consolidation layout is recognised by
+ *  `isUntouchedSidebarNav`'s trailing-run rule and adopts this one. */
 const SHIPPED_SIDEBAR_NAV_DEFAULTS: SidebarNavItemPref[][] = [
   [
-    { id: "projects", pinned: true },
-    { id: "hub", pinned: true },
-    { id: "images", pinned: true },
-    { id: "train", pinned: true },
-    { id: "video", pinned: false },
-    { id: "recipes", pinned: false },
-    { id: "export", pinned: false },
-  ],
-  [
-    { id: "projects", pinned: true },
-    { id: "hub", pinned: true },
-    { id: "images", pinned: true },
-    { id: "video", pinned: true },
-    { id: "train", pinned: true },
-    { id: "recipes", pinned: false },
-    { id: "export", pinned: false },
-  ],
-  [
     { id: "hub", pinned: true },
     { id: "projects", pinned: true },
     { id: "images", pinned: true },
     { id: "video", pinned: true },
-    { id: "train", pinned: true },
-    { id: "recipes", pinned: false },
-    { id: "export", pinned: false },
-  ],
-  [
-    { id: "hub", pinned: true },
-    { id: "projects", pinned: true },
-    { id: "images", pinned: true },
-    { id: "video", pinned: false },
-    { id: "train", pinned: true },
-    { id: "recipes", pinned: false },
-    { id: "export", pinned: false },
-    { id: "api", pinned: false },
-  ],
-  [
-    { id: "hub", pinned: true },
-    { id: "projects", pinned: true },
-    { id: "images", pinned: true },
-    { id: "video", pinned: false },
-    { id: "audio", pinned: false },
-    { id: "train", pinned: true },
-    { id: "recipes", pinned: false },
-    { id: "export", pinned: false },
-    { id: "api", pinned: false },
-  ],
-  // v8: nanochat beside Train. The earlier entries are left exactly as they
-  // shipped, because that history is what tells an untouched install from one
-  // the user arranged; editing them would make older layouts unreachable.
-  [
-    { id: "hub", pinned: true },
-    { id: "projects", pinned: true },
-    { id: "images", pinned: true },
-    { id: "video", pinned: false },
     { id: "audio", pinned: false },
     { id: "train", pinned: true },
     { id: "nanochat", pinned: true },
+    // autoresearch is nanochat's pipeline under an agent loop, so it reads as a
+    // sibling of nanochat rather than a new kind of thing.
+    { id: "autoresearch", pinned: true },
+    // Benchmarks measure a model rather than change one, so they follow the two
+    // training rows. Pinned because a leaderboard with nothing in it is the first
+    // thing a new tab looks like.
+    { id: "benchmarks", pinned: true },
     { id: "recipes", pinned: false },
     { id: "export", pinned: false },
     { id: "api", pinned: false },
@@ -542,9 +517,15 @@ export function migrateShippedSidebarNavDefault(
   storedVersion: number,
   migrationVersion: number,
 ): AppearanceCustomization {
-  // Once this migration version has been persisted, the same layout may be a
-  // deliberate user choice and must never be adopted again.
-  if (storedVersion >= migrationVersion) return customization;
+  // The version has to differ, not merely be older. A `>=` guard reads a stored
+  // version above this one as "already migrated" and skips, which is exactly what
+  // happens when the counter is consolidated downwards: this install is on 10 and
+  // the store is at 2, so 10 >= 2 would strand it on the layout it already had --
+  // the row it was supposed to pick up never arriving, with nothing to say why.
+  // Going forward the versions only rise, so the two forms agree; the difference
+  // only ever shows on a downgrade or a reset, where adopting the shipped layout
+  // is the wanted answer anyway.
+  if (storedVersion === migrationVersion) return customization;
   return isUntouchedSidebarNav(customization.sidebarNav)
     ? {
         ...customization,
@@ -627,17 +608,22 @@ export const useAppearanceCustomStore = create<AppearanceCustomState>()(
     }),
     {
       name: "unsloth_appearance_customization",
-      // 8: nanochat was added beside Train. The version has to move with the
-      // shipped-layout list, or an install on the version-7 default would be
-      // read as a deliberate arrangement and never pick the new row up.
-      version: 8,
+      // v2 is the consolidated baseline: one shipped layout, the history dropped.
+      // The next change that moves a row is v3, and it moves this number in the
+      // same edit that appends to SHIPPED_SIDEBAR_NAV_DEFAULTS.
+      //
+      // Deliberately not a continuation of the old 9/10 numbering. Those versions
+      // only ever existed to recognise layouts on this machine, and keeping the
+      // chain is what made the autoresearch row miss every install already sitting
+      // on the version before it.
+      version: 2,
       storage: createJSONStorage(() => guardedLocalStorage),
       migrate: (persisted, version) => {
         const state = (persisted ?? {}) as Partial<AppearanceCustomState>;
         const customization = migrateShippedSidebarNavDefault(
           sanitizeCustomization(state.customization),
           version,
-          8,
+          2,
         );
         return { customization } as AppearanceCustomState;
       },

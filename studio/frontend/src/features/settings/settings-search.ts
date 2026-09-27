@@ -214,6 +214,7 @@ export const SETTINGS_SEARCH_INDEX: Record<SettingsTab, TranslationKey[]> = {
     "settings.keyboardShortcuts.actions.switchToProjects.label",
     "settings.keyboardShortcuts.actions.switchToHub.label",
     "settings.keyboardShortcuts.actions.switchToTrain.label",
+    "settings.keyboardShortcuts.actions.switchToBenchmarks.label",
     "settings.keyboardShortcuts.actions.switchToRecipes.label",
     "settings.keyboardShortcuts.actions.switchToImages.label",
     "settings.keyboardShortcuts.actions.switchToVideo.label",

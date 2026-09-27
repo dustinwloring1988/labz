@@ -52,7 +52,7 @@ function Logo() {
         className="text-ui-50 font-semibold leading-none tracking-[-0.02em] text-foreground"
         style={{ fontFamily: '"Hellix", sans-serif' }}
       >
-        unsloth
+        LABZ
       </span>
     </div>
   );
@@ -87,7 +87,7 @@ function NotInstalledContent({ onInstall }: { onInstall: () => void }) {
           className="text-ui-13 font-semibold tracking-[-0.01em] text-muted-foreground"
           style={{ fontFamily: '"Hellix", sans-serif' }}
         >
-          To install Unsloth, click Get Started.
+          To install LABZ, click Get Started.
         </p>
         <Button size="hero" onClick={onInstall}>
           Get Started
@@ -178,7 +178,7 @@ function ClosingContent() {
       <div className="mb-10 flex w-full flex-col items-center gap-2">
         <Spinner className="size-6 text-primary" />
         <p className="text-sm font-bold text-foreground" aria-live="polite">
-          Closing Unsloth Desktop...
+          Closing LABZ...
         </p>
         <p className="text-sm text-muted-foreground">Shutting down the backend.</p>
       </div>

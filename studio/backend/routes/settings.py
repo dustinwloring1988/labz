@@ -3764,6 +3764,12 @@ SIDEBAR_NAV_ITEM_DEFAULTS = {
     # sidebarNav is served this list, so it has to match the frontend's
     # SIDEBAR_NAV_ITEM_IDS order exactly or the two drift.
     "nanochat": True,
+    # autoresearch is nanochat's pipeline under an agent loop, so it sits between
+    # nanochat and the tabs that measure the result.
+    "autoresearch": True,
+    # Benchmarks measure a model rather than change one, so they follow the tabs
+    # that produce something to measure.
+    "benchmarks": True,
     "recipes": False,
     "export": False,
     "api": False,
@@ -3806,6 +3812,8 @@ SidebarNavItemId = Literal[
     "audio",
     "train",
     "nanochat",
+    "autoresearch",
+    "benchmarks",
     "recipes",
     "export",
     "api",

@@ -370,7 +370,7 @@ pub async fn save_native_file(
     let (tx, rx) = tokio::sync::oneshot::channel();
     app.dialog()
         .file()
-        .set_title("Save Unsloth export")
+        .set_title("Save LABZ export")
         .set_file_name(file_name)
         .add_filter(filter_name, &extension_refs)
         .save_file(move |path| {
@@ -404,7 +404,7 @@ pub async fn save_native_file_from_url(
     let (tx, rx) = tokio::sync::oneshot::channel();
     app.dialog()
         .file()
-        .set_title("Save Unsloth export")
+        .set_title("Save LABZ export")
         .set_file_name(file_name)
         .add_filter(filter_name, &extension_refs)
         .save_file(move |path| {
@@ -564,7 +564,7 @@ const NOT_THE_LOG_EXPORT: &str = "Only the local log export endpoint can be down
 /// token of its own. A fixed sentence, matched structurally on the TypeScript side
 /// (`DESKTOP_LOGIN_REQUIRED` in features/settings/api/debug-logs.ts) so the tab can
 /// say "sign in" instead of showing a generic failure. Keep the two in step.
-const LOGIN_REQUIRED: &str = "Log export requires a signed-in Unsloth session.";
+const LOGIN_REQUIRED: &str = "Log export requires a signed-in LABZ session.";
 
 /// Which bearer token the export is made with: a minted desktop session where one
 /// exists, otherwise the tab's own.

@@ -21,7 +21,9 @@ import { Route as projectsRoute } from "./routes/projects";
 import { Route as changePasswordRoute } from "./routes/change-password";
 import { Route as settingsRoute } from "./routes/settings";
 import { Route as studioRoute } from "./routes/studio";
+import { Route as benchmarksRoute } from "./routes/benchmarks";
 import { Route as nanochatRoute } from "./routes/nanochat";
+import { Route as autoresearchRoute } from "./routes/autoresearch";
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -31,7 +33,9 @@ const routeTree = rootRoute.addChildren([
   settingsRoute,
   studioRoute,
   chatRoute,
+  benchmarksRoute,
   nanochatRoute,
+  autoresearchRoute,
   projectsRoute,
   exportRoute,
   imagesRoute,

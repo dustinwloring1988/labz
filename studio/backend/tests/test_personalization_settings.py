@@ -192,6 +192,8 @@ FRONTEND_SHIPPED_SIDEBAR_NAV = [
     ("audio", False),
     ("train", True),
     ("nanochat", True),
+    ("autoresearch", True),
+    ("benchmarks", True),
     ("recipes", False),
     ("export", False),
     ("api", False),
@@ -225,6 +227,9 @@ def test_customization_sidebar_nav_preserves_order_and_normalizes():
         )
     )
     # Client order survives; duplicates keep the first, unsent ids are appended.
+    # The appended run follows SIDEBAR_NAV_ITEM_DEFAULTS' own order, so a client
+    # that omits rows gets them back in the layout the frontend ships rather than
+    # in whatever order this dict happens to be written in.
     assert [(i.id, i.pinned) for i in p.appearance.customization.sidebarNav] == [
         ("video", True),
         ("hub", False),
@@ -233,6 +238,8 @@ def test_customization_sidebar_nav_preserves_order_and_normalizes():
         ("audio", False),
         ("train", True),
         ("nanochat", True),
+        ("autoresearch", True),
+        ("benchmarks", True),
         ("recipes", False),
         ("export", False),
         ("api", False),
@@ -528,6 +535,8 @@ def test_personalization_route_roundtrip_real_shape(monkeypatch):
                     {"id": "hub", "pinned": True},
                     {"id": "train", "pinned": True},
                     {"id": "nanochat", "pinned": True},
+                    {"id": "autoresearch", "pinned": True},
+                    {"id": "benchmarks", "pinned": True},
                     {"id": "projects", "pinned": False},
                     {"id": "recipes", "pinned": False},
                     {"id": "export", "pinned": False},

@@ -8,6 +8,15 @@ use log::info;
 use std::time::Duration;
 use std::time::Instant;
 
+/// The `service` string the backend reports in its health payload.
+///
+/// This is an identity check, not a cosmetic one: the port is probed before the
+/// app trusts whatever answers on it, so a stale build left on the port, or an
+/// unrelated service, is rejected rather than adopted. It therefore has to match
+/// the FastAPI `title` in studio/backend/main.py exactly. Change one without the
+/// other and startup fails with a preflight error that names neither.
+pub(crate) const EXPECTED_BACKEND_SERVICE: &str = "LABZ Backend";
+
 #[derive(Debug, Deserialize)]
 struct DesktopOwnerHealth {
     kind: Option<String>,
@@ -43,7 +52,7 @@ pub(super) async fn backend_health(client: &reqwest::Client, port: u16) -> Optio
     let service = json
         .get("service")
         .and_then(|v| v.as_str())
-        .map(|s| s == "Unsloth UI Backend")
+        .map(|s| s == EXPECTED_BACKEND_SERVICE)
         .unwrap_or(false);
     info!(
         "Desktop preflight: health probe on port {} healthy={} service={} in {}ms",
