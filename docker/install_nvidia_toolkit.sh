@@ -168,12 +168,12 @@ if [[ -z "$NVSMI" ]] || ! grep -q '^GPU' <<<"$gpu_list"; then
     if grep -qi microsoft "$PROC_VERSION" 2>/dev/null; then
         fail "no NVIDIA GPU is visible in this WSL 2 distro. Install a current NVIDIA Windows driver
        from nvidia.com (never a Linux driver inside WSL), restart WSL (wsl --shutdown), then run
-       this again. Unsloth images need driver 570.26 or newer." 2
+       this again. LABZ images need driver 570.26 or newer." 2
     fi
     fail "no NVIDIA driver found (nvidia-smi lists no GPU). Install the driver first, with your
        distribution's packages (Ubuntu: 'sudo ubuntu-drivers install'; RHEL/Fedora: the
        nvidia-driver module from the CUDA repository), reboot, then run this again.
-       Unsloth images need driver 570.26 or newer." 2
+       LABZ images need driver 570.26 or newer." 2
 fi
 MIN_DRIVER=570.26
 # `sed -n 1p`, not `head -1`: head closes the pipe after one line, and nvidia-smi prints one per GPU,
@@ -188,7 +188,7 @@ driver_ok() {
 case "$(uname -m)" in
     aarch64|arm64) PLATFORM=linux/arm64 ;;
     x86_64|amd64)  PLATFORM=linux/amd64 ;;
-    *) fail "unsupported architecture $(uname -m): the Unsloth images are built for linux/amd64 and linux/arm64 only." 2 ;;
+    *) fail "unsupported architecture $(uname -m): the LABZ images are built for linux/amd64 and linux/arm64 only." 2 ;;
 esac
 
 configured() {
@@ -276,7 +276,7 @@ if grep -qi microsoft "$PROC_VERSION" 2>/dev/null; then
 fi
 if ! driver_ok; then
     fail "the toolkit works, but NVIDIA driver ${DRIVER:-unknown} is below ${MIN_DRIVER}, the minimum for
-       the Unsloth images. Update the driver, reboot, then run: docker run --rm --gpus all --platform ${PLATFORM} ubuntu:24.04 nvidia-smi -L" 3
+       the LABZ images. Update the driver, reboot, then run: docker run --rm --gpus all --platform ${PLATFORM} ubuntu:24.04 nvidia-smi -L" 3
 fi
 say "Driver ${DRIVER} meets the ${MIN_DRIVER} minimum."
 say "Done. Run: docker run -d --gpus all -p 8000:8000 -p 8888:8888 unsloth/unsloth"

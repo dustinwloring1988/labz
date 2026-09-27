@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
-"""Per-notebook transformers version activation for the Unsloth Docker image.
+"""Per-notebook transformers version activation for the LABZ Docker image.
 
 The image bakes coherent transformers "sidecars" and prepends one to sys.path before
 transformers is imported. Mirrors studio/backend/utils/transformers_version.py.

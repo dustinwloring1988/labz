@@ -1,8 +1,8 @@
 #!/opt/unsloth-venv/bin/python
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
-"""pip / uv shim for the Unsloth Docker notebook environment.
+"""pip / uv shim for the LABZ Docker notebook environment.
 
 Sits ahead of the real tools on PATH so a notebook `!pip install` cell cannot clobber
 the baked cu128 stack: `transformers==X` is recorded for the unsloth_nb_compat sidecar

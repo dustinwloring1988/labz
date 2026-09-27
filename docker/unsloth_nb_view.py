@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
-# Build a categorized, Colab-like folder VIEW of the Unsloth notebooks: a disposable
+# Build a categorized, Colab-like folder VIEW of the LABZ notebooks: a disposable
 # sibling of DEST holding relative SYMLINKS, so real files never move and the sync
 # state machine skips them. Section = nearest preceding markdown header, folders
 # numbered `NN ` by first appearance so JupyterLab's sort keeps README order.

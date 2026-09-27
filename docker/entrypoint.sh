@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Container startup checks for Unsloth. Fails fast with actionable errors when the
+# Container startup checks for LABZ. Fails fast with actionable errors when the
 # host GPU isn't reachable, catching the three modes behind ~95% of tickets:
 #   1. nvidia-smi sees no GPU (missing --gpus all or nvidia-container-toolkit)
 #   2. nvidia-smi works but torch.cuda.is_available() is False (driver too old)
-#   3. GPU older than Ampere (sm < 80; Unsloth requires sm_80+)
+#   3. GPU older than Ampere (sm < 80; LABZ requires sm_80+)
 # Bypass for offline tooling/docs/CI: docker run -e UNSLOTH_SKIP_GPU_CHECK=1 ...
 set -euo pipefail
 
@@ -11,7 +11,7 @@ set -euo pipefail
 # CUDA tool selection reads the venv. Fatal on failure (a half-linked home); no-op on the base image.
 if [[ -x /usr/local/bin/unsloth-studio-home ]]; then
     /usr/local/bin/unsloth-studio-home || {
-        echo "ERROR: could not link Unsloth Studio's code into ${UNSLOTH_STUDIO_HOME:-/opt/unsloth-studio}; see the messages above" >&2
+        echo "ERROR: could not link LABZ Studio's code into ${UNSLOTH_STUDIO_HOME:-/opt/unsloth-studio}; see the messages above" >&2
         exit 1
     }
 fi
@@ -100,7 +100,7 @@ fi
 
 if [[ "${has_gpu}" == "0" && "${allow_cpu}" == "1" ]]; then
     warn "UNSLOTH_ALLOW_CPU=1 and no GPU visible -- continuing on CPU."
-    warn "CPU mode covers Jupyter, GGUF tooling and llama.cpp (GGUF) Unsloth Studio chat."
+    warn "CPU mode covers Jupyter, GGUF tooling and llama.cpp (GGUF) LABZ Studio chat."
     warn "Training and loading Unsloth models (FastLanguageModel) still require an NVIDIA GPU."
     sync_notebooks
     exec "$@"
@@ -133,7 +133,7 @@ Likely causes (in order of frequency):
 
   5. This host has no NVIDIA GPU at all (Docker Desktop on macOS, Windows
      without WSL2 GPU support, CPU-only Linux). Training and loading Unsloth
-     models need a GPU, but Jupyter, GGUF tooling and llama.cpp (GGUF) Unsloth Studio
+     models need a GPU, but Jupyter, GGUF tooling and llama.cpp (GGUF) LABZ Studio
      chat work on CPU:
        docker run -e UNSLOTH_ALLOW_CPU=1 ...
 
@@ -168,7 +168,7 @@ import torch
 major, minor = torch.cuda.get_device_capability(0)
 name = torch.cuda.get_device_name(0)
 n = torch.cuda.device_count()
-print(f"Unsloth container: {n} GPU(s). Primary: {name}  sm_{major}{minor}  bf16={torch.cuda.is_bf16_supported()}")
+print(f"LABZ container: {n} GPU(s). Primary: {name}  sm_{major}{minor}  bf16={torch.cuda.is_bf16_supported()}")
 
 SUPPORTED = (
     ("sm_75",  "Turing",       "T4, RTX 20-series, Quadro RTX"),
@@ -183,7 +183,7 @@ SUPPORTED = (
 )
 if major < 7 or (major == 7 and minor < 5):
     print()
-    print(f"ERROR: Unsloth image requires Turing or newer (sm_75+). Got {name} sm_{major}{minor}.")
+    print(f"ERROR: LABZ image requires Turing or newer (sm_75+). Got {name} sm_{major}{minor}.")
     print()
     print("Supported architectures in this image:")
     for arch, fam, ex in SUPPORTED:
@@ -214,7 +214,7 @@ if [ "$(uname -m)" = "aarch64" ]; then
             if [ "$_drv_major" -lt 580 ]; then
                 echo "WARNING: this arm64 image bakes a CUDA 13 llama.cpp (upstream ships no CUDA 12 arm64 build)." >&2
                 echo "         Host driver $_drv is < 580, which cannot load CUDA 13 binaries:" >&2
-                echo "         training (torch cu128) works, but GGUF export / Unsloth Studio chat will fail" >&2
+                echo "         training (torch cu128) works, but GGUF export / LABZ Studio chat will fail" >&2
                 echo "         until the host driver is upgraded to >= 580." >&2
             fi
             ;;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Default CMD of the full Unsloth image (Dockerfile.studio).
+# Default CMD of the full LABZ image (Dockerfile.studio).
 #
 # Bootstraps the three services managed by supervisord:
 #   studio   port UNSLOTH_STUDIO_PORT (8000)   user unsloth; password from UNSLOTH_STUDIO_PASSWORD, or
@@ -38,7 +38,7 @@ fi
 jupyter_port_digits="${JUPYTER_PORT//[[:space:]_]/}"
 jupyter_port_digits="${jupyter_port_digits#+}"
 if [[ "$jupyter_port_digits" =~ ^[0-9]+$ ]] && (( 10#$jupyter_port_digits == UNSLOTH_STUDIO_PORT )); then
-    printf "\033[1;31mERROR:\033[0m JUPYTER_PORT=%s is Unsloth Studio's port inside the container (UNSLOTH_STUDIO_PORT).\n" "$UNSLOTH_STUDIO_PORT" >&2
+    printf "\033[1;31mERROR:\033[0m JUPYTER_PORT=%s is LABZ Studio's port inside the container (UNSLOTH_STUDIO_PORT).\n" "$UNSLOTH_STUDIO_PORT" >&2
     printf "       Leave JupyterLab on 8888 and map the host side instead: -p 9000:8888\n" >&2
     exit 1
 fi
@@ -137,7 +137,7 @@ fi
 
 mkdir -p /workspace
 
-# AGPLv3: refuse to start if the Unsloth attribution is stripped. The same checker
+# AGPLv3: refuse to start if the LABZ branding is stripped. The same checker
 # runs at build time and as a jupyter_server extension.
 if [[ "${UNSLOTH_SKIP_BRANDING_CHECK:-0}" != "1" ]]; then
     if ! /opt/unsloth-venv/bin/python -m labz_branding --verify; then
@@ -162,12 +162,12 @@ elif [[ -n "${UNSLOTH_STUDIO_PASSWORD:-}" ]]; then
     STUDIO_NOTE="user unsloth, password from UNSLOTH_STUDIO_PASSWORD env"
     UNSLOTH_STUDIO_PASSWORD_STATE=initial
 else
-    STUDIO_NOTE="user unsloth, generated password printed below once Unsloth Studio is up"
+    STUDIO_NOTE="user unsloth, generated password printed below once LABZ Studio is up"
     UNSLOTH_STUDIO_PASSWORD_STATE=generated
 fi
 unset UNSLOTH_STUDIO_PASSWORD
 export UNSLOTH_STUDIO_PASSWORD_STATE  # read by unsloth-studio-password
-echo "Unsloth Studio  -> http://localhost:${UNSLOTH_STUDIO_PORT}   (${STUDIO_NOTE})"
+echo "LABZ Studio  -> http://localhost:${UNSLOTH_STUDIO_PORT}   (${STUDIO_NOTE})"
 echo "JupyterLab      -> http://localhost:${JUPYTER_PORT}   (${JUPYTER_NOTE})"
 if [[ "${UNSLOTH_JUPYTER_CLOUDFLARE}" == "1" ]]; then
     echo "JupyterLab tunnel-> enabled; public trycloudflare URL appears below once it is up"

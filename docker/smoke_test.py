@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 """Smoke test for the unsloth-blackwell image: GPU + arch list, compute capability,
 the xformers / bitsandbytes / triton imports, unsloth, and a 5-step LoRA train.

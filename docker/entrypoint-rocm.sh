@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Container startup checks for Unsloth (AMD ROCm build).
+# Container startup checks for LABZ (AMD ROCm build).
 #
 # Fails fast with actionable messages when the host GPU is not reachable, in
 # the order the failures tend to bite:
@@ -18,7 +18,7 @@ set -euo pipefail
 # (a half-linked home); no-op on the base image, which has no linker.
 if [[ -x /usr/local/bin/unsloth-studio-home ]]; then
     /usr/local/bin/unsloth-studio-home || {
-        echo "ERROR: could not link Unsloth Studio's code into ${UNSLOTH_STUDIO_HOME:-/opt/unsloth-studio}; see the messages above" >&2
+        echo "ERROR: could not link LABZ Studio's code into ${UNSLOTH_STUDIO_HOME:-/opt/unsloth-studio}; see the messages above" >&2
         exit 1
     }
 fi

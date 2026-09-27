@@ -18,8 +18,8 @@ elif [[ -n "${UNSLOTH_STUDIO_PASSWORD:-}" ]]; then
     (umask 077 && printf '%s' "$UNSLOTH_STUDIO_PASSWORD" > "$INITIAL_FILE")
     NOTE="password from UNSLOTH_STUDIO_PASSWORD env"
 else
-    NOTE="password generated on first boot; Unsloth Studio names the file it wrote in its log below"
+    NOTE="password generated on first boot; LABZ Studio names the file it wrote in its log below"
 fi
 unset UNSLOTH_STUDIO_PASSWORD
-echo "Unsloth Studio -> http://localhost:${UNSLOTH_STUDIO_PORT:-8000}   (user unsloth, ${NOTE})"
+echo "LABZ Studio -> http://localhost:${UNSLOTH_STUDIO_PORT:-8000}   (user unsloth, ${NOTE})"
 exec unsloth-studio-run

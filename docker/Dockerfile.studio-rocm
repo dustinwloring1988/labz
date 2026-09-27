@@ -1,5 +1,5 @@
-# Unsloth Studio + JupyterLab on AMD (ROCm): the ROCm training image, Studio's web
-# UI and JupyterLab with the Unsloth notebooks, run by supervisord.
+# LABZ Studio + JupyterLab on AMD (ROCm): the ROCm training image, Studio's web
+# UI and JupyterLab with the LABZ notebooks, run by supervisord.
 #
 # The AMD counterpart to Dockerfile.studio, which layers the same services on the
 # CUDA core image. Kept as its own file rather than a branch in that one: the CUDA
@@ -188,7 +188,7 @@ COPY unsloth_jupyter_tunnel.sh /usr/local/bin/unsloth-jupyter-tunnel
 # prebuilt labextension from labext-builder above.
 COPY jupyter/overrides.json /opt/unsloth-venv/share/jupyter/lab/settings/overrides.json
 COPY --from=labext-builder /opt/labext-src/labz-jupyterlab/labextension /opt/unsloth-venv/share/jupyter/labextensions/labz-jupyterlab
-# Unsloth branding (applied to jupyter_server's site-packages): replace favicon +
+# LABZ branding (applied to jupyter_server's site-packages): replace favicon +
 # logo, brand login.html, disable+lock the stock top-left logo. Only the
 # sloth-sticker install is fail-soft (`|| echo`); the copies above stay fatal.
 COPY jupyter/favicon.ico /tmp/unsloth-branding/favicon.ico
@@ -204,7 +204,7 @@ RUN JS="$(/opt/unsloth-venv/bin/python -c 'import os, jupyter_server; print(os.p
  && { /opt/unsloth-venv/bin/python /tmp/unsloth-branding/install_sloth_stickers.py \
         --src "${UNSLOTH_STUDIO_HOME}/src/studio/frontend/public/Sloth emojis" \
         --dest "${JS}/static/sloth" \
-      || echo ">> sloth stickers not installed (login falls back to the Unsloth logo)"; } \
+      || echo ">> sloth stickers not installed (login falls back to the LABZ logo)"; } \
  && rm -rf /tmp/unsloth-branding \
  && /opt/unsloth-venv/bin/jupyter labextension disable @jupyterlab/application-extension:logo \
  && /opt/unsloth-venv/bin/jupyter labextension lock @jupyterlab/application-extension:logo \

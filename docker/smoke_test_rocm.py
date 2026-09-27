@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 """
-Smoke test for the Unsloth ROCm image (AMD GPU build).
+Smoke test for the LABZ ROCm image (AMD GPU build).
 
 What this checks (in order, fail-fast):
   1. torch is a ROCm build (torch.version.hip is not None).

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ---------------------------------------------------------------------------
-# Unsloth for AMD GPUs (ROCm).
+# LABZ for AMD GPUs (ROCm).
 #
 # Default build: ROCm 7.2.4 base + the pytorch.org rocm7.2 wheels, which carry
 # RDNA2 (gfx1030), RDNA3 (gfx1100-1102), RDNA4 (gfx1200/1201) and CDNA
@@ -46,8 +46,8 @@ ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/rocm7.2
 # per-arch AMD wheels; TORCH_INDEX_URL is then ignored.
 ARG ROCM_GFX=
 
-LABEL org.opencontainers.image.title="Unsloth (AMD ROCm)" \
-      org.opencontainers.image.description="Unsloth fine-tuning for AMD RDNA2/RDNA3/RDNA4 and CDNA GPUs"
+LABEL org.opencontainers.image.title="LABZ (AMD ROCm)" \
+      org.opencontainers.image.description="LABZ fine-tuning for AMD RDNA2/RDNA3/RDNA4 and CDNA GPUs"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_NO_CACHE_DIR=1 \

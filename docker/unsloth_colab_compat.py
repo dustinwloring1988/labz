@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
-"""Colab cell-magic compatibility for the Unsloth Docker notebooks.
+"""Colab cell-magic compatibility for the LABZ Docker notebooks.
 
 IPython recognises a cell magic only on the VERY FIRST line, so a leading Colab
 `#@title` form pushes `%%capture` to line 2 and the cell dies. An
