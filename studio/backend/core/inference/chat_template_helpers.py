@@ -920,7 +920,7 @@ def _neutralize_replayed_tool_call(
     Gemma-4 renders "<|tool_call>call:NAME{key:<|\"|>value<|\"|>}<tool_call|>", so a name or
     argument echoing pasted text can close the call block and open a "<|tool_response>" or
     "<|turn>model" of its own (#7066). The rewrite is the identity on every dispatchable name
-    (Unsloth composes ^[a-zA-Z0-9_-]{1,64}$), and a tool result's "name" takes the same rewrite, so
+    (LABZ composes ^[a-zA-Z0-9_-]{1,64}$), and a tool result's "name" takes the same rewrite, so
     the two still agree when Gemma-4 pairs them by name.
 
     Both replay shapes are swept, the OpenAI nested one and the flat {"id", "name", "arguments"}
@@ -1134,7 +1134,7 @@ def neutralize_control_markup_in_messages(
                 new_content = _neutralize_leaves(content, rewrite)
             elif isinstance(content, list):
                 # A media part is only opaque where something RESOLVES it, and nothing does inside a tool result:
-                # Unsloth's vision and audio paths build from the last user message, while Llama-3.1's tool branch
+                # LABZ's vision and audio paths build from the last user message, while Llama-3.1's tool branch
                 # serializes the whole content iterable with tojson, so an exempt URL there lands in the prompt as
                 # live structure. That branch keys on "tool" OR "ipython", so both roles count (#7066).
                 is_tool_result = role in _TOOL_RESULT_ROLES
@@ -2236,7 +2236,7 @@ def _atem_block_pieces(block: str, *, complete: bool) -> Optional[list[tuple[boo
 
 class ReasoningChannelNormalizer:
     """Incrementally convert one native reasoning channel to ``<think>``. The parser follows
-    mlx-vlm's streaming boundary behavior but emits Unsloth's canonical text contract. Only the
+    mlx-vlm's streaming boundary behavior but emits LABZ's canonical text contract. Only the
     configured opening and closing markers are consumed; tool-call and other control markers
     remain available to downstream parsers."""
 
@@ -3299,7 +3299,7 @@ def render_native_template(
 ):
     """Render ``messages`` + ``tools`` with the model's NATIVE chat template.
 
-    Some Unsloth override templates (e.g. ``mistral``, ``gemma-4``) do not emit the ``tools``
+    Some LABZ override templates (e.g. ``mistral``, ``gemma-4``) do not emit the ``tools``
     schema, so a tool-calling turn silently stops advertising tools. The native template ships in
     the model repo and carries the family's tool-calling syntax; it is loaded straight from the repo
     (bypassing any override on the live tokenizer) and cached on ``model_info``. Returns the
@@ -3430,7 +3430,7 @@ def render_with_native_template_fallback(
         return prompt
 
     if not tools:
-        # Gemma 4 can emit its native reasoning protocol even when a generation-time Unsloth override rendered a
+        # Gemma 4 can emit its native reasoning protocol even when a generation-time LABZ override rendered a
         # marker-free prompt. Preserve the live-verified no-tools thinking behavior without letting cached native
         # metadata describe unrelated tool prompts that kept the active override.
         markers = live_markers

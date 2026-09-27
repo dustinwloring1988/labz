@@ -139,12 +139,12 @@ class InstallInterrupted(RuntimeError):
 
 
 PEER_INSTALL_MESSAGE = (
-    "Another Unsloth install or update is still changing this environment after "
-    f"{_REPAIR_TIMEOUT_S}s. Start Unsloth Studio again once it has finished."
+    "Another LABZ install or update is still changing this environment after "
+    f"{_REPAIR_TIMEOUT_S}s. Start LABZ Studio again once it has finished."
 )
 INTERRUPTED_MESSAGE = (
     "Installing the pinned Diffusers build was stopped part way, so this environment may be "
-    "half updated. Start Unsloth Studio again to finish it, or run `unsloth studio update`."
+    "half updated. Start LABZ Studio again to finish it, or run `unsloth studio update`."
 )
 
 
@@ -293,7 +293,7 @@ def repair_diffusers_before_imports(echo: Callable[[str], None] = lambda _line: 
         echo("  - installing the pinned Diffusers build (first start after an update)...")
         prefetch = True
     elif _peer_holds_pass():
-        echo("  - waiting for another Unsloth install or update to finish...")
+        echo("  - waiting for another LABZ install or update to finish...")
         prefetch = False
     else:
         return False

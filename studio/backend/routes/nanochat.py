@@ -4,7 +4,7 @@
 """HTTP surface for the nanochat tab.
 
 The live view is driven by an SSE stream on ``/progress``, mirroring the shape
-the Unsloth train tab already uses so the frontend can reuse its stream
+the LABZ train tab already uses so the frontend can reuse its stream
 plumbing: ``Last-Event-ID`` resume, a heartbeat while a stage is preparing, and
 an ``event_id`` that is a monotonically increasing integer.
 

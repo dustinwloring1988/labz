@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Free Cloudflare quick tunnel for Unsloth's 0.0.0.0 launches.
+"""Free Cloudflare quick tunnel for LABZ's 0.0.0.0 launches.
 
 The raw http://<ip>:<port> is often unreachable (https-vs-http, blocked ports, closed security groups); a
 cloudflared quick tunnel gives a free https://*.trycloudflare.com URL that works anywhere, with no account or
-domain. Best-effort throughout: any failure collapses to "no URL" and Unsloth keeps running. Stdlib only
+domain. Best-effort throughout: any failure collapses to "no URL" and LABZ keeps running. Stdlib only
 (back-end imports are lazy) so it is safe to import early.
 """
 
@@ -152,7 +152,7 @@ def _cache_path() -> Optional[Path]:
 
 
 def find_cloudflared() -> Optional[str]:
-    """Locate an existing cloudflared: PATH first, then the Unsloth bin cache."""
+    """Locate an existing cloudflared: PATH first, then the LABZ bin cache."""
     on_path = shutil.which("cloudflared")
     if on_path:
         return on_path
@@ -650,7 +650,7 @@ class CloudflareTunnel:
             return running
 
 
-# Single serving process per Unsloth launch, so one module-level tunnel handle is enough; the lock guards the
+# Single serving process per LABZ launch, so one module-level tunnel handle is enough; the lock guards the
 # start/stop/shutdown races.
 _active_tunnel: Optional[CloudflareTunnel] = None
 _active_lock = threading.Lock()

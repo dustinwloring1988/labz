@@ -72,7 +72,7 @@ def spawn_download(
         cwd = str(cwd),
         stdout = subprocess.DEVNULL,
         stderr = subprocess.PIPE,
-        # Die with Unsloth: a detached worker would keep pulling gigabytes after
+        # Die with LABZ: a detached worker would keep pulling gigabytes after
         # the app closed, with nothing left able to stop it.
         **child_popen_kwargs(),
     )
@@ -85,7 +85,7 @@ def terminate_download(process: subprocess.Popen) -> None:
 
     The canceller holds the repository reservation until the reap returns, so a
     worker that ignores SIGTERM would lock every Model Hub write on that repo
-    until Unsloth restarts.
+    until LABZ restarts.
     """
     try:
         process.terminate()

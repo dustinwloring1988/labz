@@ -178,7 +178,7 @@ async def list_subscription_models(
         )
     except (codex_auth.CodexAuthError, codex_client.CodexReauthorizationError) as exc:
         # Say it in the answer rather than through a 401: the client's authFetch reads every 401 as an expired
-        # Unsloth session and retries, and the retry looks healthy. resolve_access has already marked the connection
+        # LABZ session and retries, and the retry looks healthy. resolve_access has already marked the connection
         # as needing reauthorization, so a source the picker does not treat as authoritative carries the signal.
         logger.info(
             "openai_codex.model_list_reauthorization_required",

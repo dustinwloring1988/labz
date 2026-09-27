@@ -404,7 +404,7 @@ def create_data_designer(recipe: dict[str, Any], *, artifact_path: str | None = 
     from data_designer.interface.data_designer import DataDesigner  # pyright: ignore[reportMissingImports]
 
     if artifact_path is None:
-        # DataDesigner defaults to cwd/artifacts and packaged Unsloth can run with cwd=/, so pin the
+        # DataDesigner defaults to cwd/artifacts and packaged LABZ can run with cwd=/, so pin the
         # writable recipe artifact root.
         artifact_path = str(recipe_datasets_root())
 

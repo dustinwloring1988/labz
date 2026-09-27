@@ -604,7 +604,7 @@ def compute_profile_stats(
     *,
     subject: str = "",
 ) -> dict[str, Any]:
-    """Aggregate profile statistics, subject-scoping only external API usage. Legacy Unsloth chat and
+    """Aggregate profile statistics, subject-scoping only external API usage. Legacy LABZ chat and
     training history is install-wide because those rows have no authenticated owner. An empty
     subject intentionally sees no API receipts, keeping non-route callers fail-closed."""
     days = max(1, min(int(days), MAX_DAILY_DAYS))

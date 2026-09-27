@@ -14,7 +14,7 @@ from typing import Any, Optional
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 # Pin GPU index ordering to PCI bus id before any torch import creates a CUDA context. Otherwise torch/CUDA
-# default to FASTEST_FIRST while nvidia-smi (and Unsloth's VRAM probes) use PCI-bus order, so an index chosen
+# default to FASTEST_FIRST while nvidia-smi (and LABZ's VRAM probes) use PCI-bus order, so an index chosen
 # from nvidia-smi can resolve to a different card. setdefault so an override wins; see utils/hardware/hardware.py.
 os.environ.setdefault("CUDA_DEVICE_ORDER", "PCI_BUS_ID")
 
@@ -104,7 +104,7 @@ if sys.platform == "win32":
 
     # Windows AMD ROCm: make hipInfo.exe resolvable for subprocess probes. bitsandbytes' get_rocm_gpu_arch()
     # runs `hipinfo.exe` via PATH at import time; the AMD torch wheel ships it in the venv Scripts dir, which is
-    # on PATH only when the venv is activated, and Unsloth launches python directly. Gated on the file existing,
+    # on PATH only when the venv is activated, and LABZ launches python directly. Gated on the file existing,
     # so non-AMD hosts are untouched; subprocess PATH ignores DLL dirs.
     _scripts_dir = os.path.dirname(sys.executable)
     if os.path.isfile(os.path.join(_scripts_dir, "hipInfo.exe")):
@@ -244,7 +244,7 @@ if _STUDIO_ROOT_RESOLVED != _LEGACY_STUDIO_ROOT or _MASTER_ROOT is not None:
     _MANAGED_LLAMA_CPP_PATH = _MANAGED_ROOT / "llama.cpp"
     if not os.environ.get("UNSLOTH_LLAMA_CPP_PATH"):
         os.environ["UNSLOTH_LLAMA_CPP_PATH"] = str(_MANAGED_LLAMA_CPP_PATH)
-    # A CLI/desktop launcher may already have exported Unsloth's own install path.
+    # A CLI/desktop launcher may already have exported LABZ's own install path.
     # Classify by the canonical value so that inherited default remains editable.
     from utils.llama_cpp_path_settings import mark_managed_llama_cpp_path
 
@@ -288,7 +288,7 @@ _STUDIO_INSTALL_ID_RE = _re.compile(r"^[0-9a-f]{64}$")
 def _read_studio_install_id() -> str:
     """Per-install opaque id at $STUDIO_HOME/share/studio_install_id. Returns "" when absent or not a 64-char
     lowercase-hex token; then /api/health emits "" and the launcher accepts any healthy backend. Carries no
-    install-path info (matters when Unsloth runs -H 0.0.0.0)."""
+    install-path info (matters when LABZ runs -H 0.0.0.0)."""
     try:
         token = (
             (_STUDIO_ROOT_RESOLVED / "share" / "studio_install_id")
@@ -711,7 +711,7 @@ def bootstrap_banner_lines(
     else:
         lines.append(f"    password: {password}")
         lines.append(f"    also saved to: {bootstrap_path}")
-    lines.append("    Open the Unsloth UI to sign in and change it.")
+    lines.append("    Open the LABZ UI to sign in and change it.")
     lines.append("=" * 60)
     return lines
 
@@ -1210,7 +1210,7 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 # Swagger UI and ReDoc, on FastAPI's own paths but served entirely from this origin. FastAPI's built-in pages
 # load ~2.3 MB of JavaScript from cdn.jsdelivr.net and start it with an inline script, and localStorage is
-# origin-scoped, not path-scoped, so anything running on /docs can read the Unsloth tokens session.ts keeps
+# origin-scoped, not path-scoped, so anything running on /docs can read the LABZ tokens session.ts keeps
 # there and call the API as that user. The bundles are vendored under assets/docs_ui (pinned + digest-checked by
 # tests/test_docs_ui_assets.py) and the inline init runs off the same per-response nonce as the bootstrap script.
 import secrets as _secrets_for_docs  # noqa: E402
@@ -1629,7 +1629,7 @@ app.include_router(
 )
 app.include_router(training_router, prefix = "/api/train", tags = ["training"])
 # nanochat is a second, independent training path (its own virtualenv, its own
-# pipeline), mounted separately so it cannot be confused with the Unsloth trainer.
+# pipeline), mounted separately so it cannot be confused with the LABZ trainer.
 app.include_router(nanochat_router, prefix = "/api/nanochat", tags = ["nanochat"])
 # Benchmarks evaluate a model rather than training one, but they reuse nanochat's
 # task definitions and datasets, and they are mutually exclusive with training
@@ -1649,10 +1649,10 @@ app.include_router(
     tags = ["inference"],
 )
 app.include_router(inference_router, prefix = "/api/inference", tags = ["inference"])
-# Unsloth-only inference endpoints (cancel, etc.) are not on the /v1 OpenAI-compat prefix.
+# LABZ-only inference endpoints (cancel, etc.) are not on the /v1 OpenAI-compat prefix.
 app.include_router(inference_studio_router, prefix = "/api/inference", tags = ["inference"])
 
-# Unsloth-only text-to-video endpoints; not exposed on the /v1 OpenAI-compat prefix.
+# LABZ-only text-to-video endpoints; not exposed on the /v1 OpenAI-compat prefix.
 app.include_router(video_router, prefix = "/api/inference", tags = ["inference"])
 app.include_router(video_openai_router, prefix = "/api/inference", tags = ["inference"])
 app.include_router(video_openai_router, prefix = "/v1", tags = ["openai-compat"])
@@ -1962,7 +1962,7 @@ async def health_check(request: Request):
         "desktop_manageability_version": 2,
         "supports_desktop_auth": True,
         "supports_desktop_backend_ownership": True,
-        # Opaque per-install id; launchers reject sibling Unsloth instances on the same port.
+        # Opaque per-install id; launchers reject sibling LABZ instances on the same port.
         "studio_root_id": _studio_root_id(),
         "native_path_leases_supported": native_path_leases_supported(),
         # Unauthenticated on purpose: an endpoint URL is not a host fingerprint,
@@ -2064,7 +2064,7 @@ def studio_install_source(_current_subject: str = Depends(get_current_subject)):
 
 @app.get("/api/studio/update-status")
 def studio_update_status(_current_subject: str = Depends(get_current_subject)):
-    """Return source-aware manual update status for browser-served Unsloth."""
+    """Return source-aware manual update status for browser-served LABZ."""
     return get_studio_update_status(UNSLOTH_VERSION)
 
 
@@ -2096,7 +2096,7 @@ def studio_download_transport_capabilities(
     dependencies = [Depends(get_current_subject), Depends(auth_policy.require_owner)],
 )
 async def shutdown_server(request: Request, current_subject: str = Depends(get_current_subject)):
-    """Gracefully shut down the Unsloth Studio server.
+    """Gracefully shut down the LABZ Studio server.
 
     Called by the frontend quit dialog so users can stop the server from the UI
     without the CLI or killing the process manually.

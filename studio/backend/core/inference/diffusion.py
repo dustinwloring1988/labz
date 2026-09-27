@@ -295,7 +295,7 @@ def _gated_in_chain(exc: BaseException) -> Optional[BaseException]:
 
 
 def _hf_token_in_play(hf_token: Optional[str]) -> bool:
-    """Whether the failing Hub call carried ANY credential, not just Unsloth's own: with token=None
+    """Whether the failing Hub call carried ANY credential, not just LABZ's own: with token=None
     huggingface_hub still falls back to HF_TOKEN or the cached CLI login, so keying off the
     request token alone loops an already-authenticated user."""
     if hf_token:
@@ -330,7 +330,7 @@ def dynamo_partial_init_message(exc: BaseException) -> Optional[str]:
         if _DYNAMO_PARTIAL_RE.search(str(exc)):
             return (
                 "PyTorch's compiler module (torch._dynamo) ended up half-initialised in this "
-                "process, so the image model could not finish loading. Restart Unsloth and load "
+                "process, so the image model could not finish loading. Restart LABZ and load "
                 "it again; this state does not clear on its own."
             )
         # Same walk as _gated_in_chain: `raise ... from None` means the raiser deliberately hid
@@ -776,12 +776,12 @@ def _repo_access_message(repo: str, *, gated: bool) -> str:
         return (
             f"'{repo}' is gated on Hugging Face and this model cannot be downloaded without it. "
             f"Accept its licence at {url}, then add a Hugging Face token that has access in "
-            "Unsloth settings and try again."
+            "LABZ settings and try again."
         )
     return (
         f"'{repo}' could not be read from Hugging Face (private, renamed or removed) and this "
         f"model cannot be downloaded without it. Check {url}, then add a Hugging Face token that "
-        "has access in Unsloth settings and try again."
+        "has access in LABZ settings and try again."
     )
 
 
@@ -840,7 +840,7 @@ def _assert_base_repo_accessible(
     # pointer, which is how a downloaded gated base still loads once the token is cleared or expires. Excuses an
     # ACCESS verdict only, never a 404: a renamed or removed repo cannot be un-renamed by a stale copy.
     def _already_downloaded() -> bool:
-        """True when ``probe_file`` is on disk under EITHER root (Unsloth pins its live setting, the
+        """True when ``probe_file`` is on disk under EITHER root (LABZ pins its live setting, the
         prefetch writes under huggingface_hub's import-time constant). Never raises. Exact for
         the native plan, which probes an asset it stages; a proxy for the diffusers plan, which
         probes the manifest, so a manifest-cached base with missing shards still dies
@@ -2849,7 +2849,7 @@ class DiffusionBackend:
             except Exception:  # noqa: BLE001
                 pass
             # Rewrite a gated-repo 403 into the step that unblocks the user, then redact native paths: this text is
-            # surfaced verbatim and Unsloth can be shared. Guarded because on this daemon thread anything escaping
+            # surfaced verbatim and LABZ can be shared. Guarded because on this daemon thread anything escaping
             # leaves _loading.error unset and load_progress() stuck forever.
             from utils.native_path_leases import redact_native_paths
 

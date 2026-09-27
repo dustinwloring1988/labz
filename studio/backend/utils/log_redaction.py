@@ -91,7 +91,7 @@ _SECRET_KEYS = (
     "authorization|x-api-key|api[-_]?key|apikey|hf[-_]?token|access[-_]?token|"
     "refresh[-_]?token|auth[-_]?token|bearer[-_]?token|client[-_]?secret|"
     "aws_secret_access_key|aws_session_token|wandb[-_]?token|hub[-_]?token|"
-    # Unsloth's own S3 field (models/training.py:60) and its camelCase alias: neither is reachable through the bare "secret" alternative, and an AWS secret key has no prefix of its own for a shape rule to catch.
+    # LABZ's own S3 field (models/training.py:60) and its camelCase alias: neither is reachable through the bare "secret" alternative, and an AWS secret key has no prefix of its own for a shape rule to catch.
     "secret[-_]?access[-_]?key|"
     "password|passwd|secret"
 )
@@ -144,7 +144,7 @@ _FLAG_RE = re.compile(
     r"(?P<val>(?(q)" + _QUOTED_VALUE + r"|[^\s\"']{6,}))"
 )
 
-# An Authorization value whatever the scheme: the key/value rule captures only "Basic" and leaves the credential behind it. Same for a Cookie, which for Unsloth is the UI session.
+# An Authorization value whatever the scheme: the key/value rule captures only "Basic" and leaves the credential behind it. Same for a Cookie, which for LABZ is the UI session.
 _SCHEMES = ("bearer", "basic", "digest", "token", "apikey")
 # A scheme word only introduces a credential when an Authorization header put it there, and the credential stops at a quote or structural delimiter, since \S+ swallowed the rest of the dict. Bare "digest sha256:..." and "token hf_..." are ordinary log content, and firing on the word alone blanked the digest a user came here to read.
 _CREDENTIAL = r"[^\s\"',}\]]+"

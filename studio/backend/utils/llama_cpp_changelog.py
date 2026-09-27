@@ -173,7 +173,7 @@ def _entry(markdown: str) -> dict:
 
 
 def _identities(markdown: str) -> set[str]:
-    """Stable aliases for one carried change: a patch migrated to an Unsloth carry PR links that PR but still says ``ggml-org#24423``, and both must match."""
+    """Stable aliases for one carried change: a patch migrated to an LABZ carry PR links that PR but still says ``ggml-org#24423``, and both must match."""
     identities = set()
     # One namespace: GitHub numbers issues and PRs together, so ``/issues/900``, ``/pull/900`` and ``repo#900`` are the same object. Separate prefixes only miss.
     for _label, url in _LINK.findall(markdown):

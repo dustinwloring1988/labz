@@ -144,7 +144,7 @@ DISABLE_PUBLIC_CHECK_ENV = "UNSLOTH_STUDIO_DISABLE_PUBLIC_CHECK"
 
 
 def public_check_disabled() -> bool:
-    """True when the operator has turned off the third-party startup lookups. On a wildcard bind Unsloth
+    """True when the operator has turned off the third-party startup lookups. On a wildcard bind LABZ
     asks ifconfig.me for the public IP and check-host.net whether the port is reachable; both tell an
     outside service this machine is running one, which lab and privacy-sensitive deployments do not
     want (#7307 Problem 8)."""
@@ -213,7 +213,7 @@ def _resolve_external_ip() -> str:
 
 def _install_uvicorn_startup_log_rewrite(bind_host: str) -> None:
     """Rewrite Uvicorn's startup log line: swap a wildcard bind for the address this machine answers on, use
-    our Mac-aware stop hint, and rename the prefix to "Unsloth Studio running on". The line is a claim
+    our Mac-aware stop hint, and rename the prefix to "LABZ Studio running on". The line is a claim
     about where the server is reachable, so the address is _network_share_host_for_bind's, resolved here
     rather than passed in so no caller can hand it the internet-facing one (#8868)."""
     import logging
@@ -224,7 +224,7 @@ def _install_uvicorn_startup_log_rewrite(bind_host: str) -> None:
     new_suffix = "(To stop: press Ctrl+C -- on macOS, Control+C not Command+C)"
     old_suffix_re = re.compile(r"\(Press CTRL\+C to quit\)")
     old_prefix = "Uvicorn running on "
-    new_prefix = "Unsloth Studio running on "
+    new_prefix = "LABZ Studio running on "
 
     def _rewrite(text: str) -> str:
         if text.startswith(old_prefix):
@@ -284,7 +284,7 @@ def _working_local_url(port: int) -> "str | None":
 
 
 def _localhost_ipv6_mismatch_url(bind_host: str, port: int) -> "str | None":
-    """The IPv4 loopback URL when localhost will not reach 127.0.0.1. Local Unsloth binds to 127.0.0.1,
+    """The IPv4 loopback URL when localhost will not reach 127.0.0.1. Local LABZ binds to 127.0.0.1,
     and where localhost resolves to IPv6 only (::1), http://localhost:<port> fails or hits a different
     process even though the IPv4 URL works."""
     import socket
@@ -294,7 +294,7 @@ def _localhost_ipv6_mismatch_url(bind_host: str, port: int) -> "str | None":
 
     ipv4_url = f"http://127.0.0.1:{port}"
 
-    # Only warn once Unsloth is confirmed answering on IPv4 loopback.
+    # Only warn once LABZ is confirmed answering on IPv4 loopback.
     if _working_local_url(port) != ipv4_url:
         return None
 
@@ -316,7 +316,7 @@ def _localhost_ipv6_mismatch_url(bind_host: str, port: int) -> "str | None":
             if host == "::1":
                 has_ipv6_loopback = True
 
-    # A connection to ::1 is NOT evidence Unsloth is reachable there: Unsloth binds 127.0.0.1 only, so
+    # A connection to ::1 is NOT evidence LABZ is reachable there: LABZ binds 127.0.0.1 only, so
     # anything on ::1 is a different process. Dual-stack localhost is fine (browsers fall back to
     # 127.0.0.1), so only the IPv6-only case strands the user.
     if has_ipv6_loopback and not has_ipv4_loopback:
@@ -341,8 +341,8 @@ def _print_localhost_ipv6_mismatch_warning(local_url: str, port: int) -> None:
     reset = "\033[0m" if use_color else ""
 
     print(
-        f"{warn_c}  Warning: localhost resolves to IPv6 (::1), but Unsloth "
-        f"Unsloth is listening on 127.0.0.1 only. Open {local_url} instead of "
+        f"{warn_c}  Warning: localhost resolves to IPv6 (::1), but LABZ "
+        f"LABZ is listening on 127.0.0.1 only. Open {local_url} instead of "
         f"http://localhost:{port}.{reset}",
         flush = True,
     )
@@ -351,7 +351,7 @@ def _print_localhost_ipv6_mismatch_warning(local_url: str, port: int) -> None:
 def _verify_global_reachability(display_host: str, port: int) -> None:
     """Probe check-host.net to confirm display_host:port is reachable from the public internet. Synchronous so
     output lands between the banner URLs and the stop hint. Bounded at ~15s; failures swallowed (verifier
-    failing is not Unsloth failing). Only meaningful for a wildcard bind, and skipped entirely by
+    failing is not LABZ failing). Only meaningful for a wildcard bind, and skipped entirely by
     UNSLOTH_STUDIO_DISABLE_PUBLIC_CHECK."""
     global _public_reachable
     # Reset to "unknown" each run; set True/False only when the probe decides.
@@ -487,7 +487,7 @@ def _verify_global_reachability(display_host: str, port: int) -> None:
             local_url = _working_local_url(port)
             if local_url:
                 print(
-                    f"{local_url_c}  You can access Unsloth Studio locally "
+                    f"{local_url_c}  You can access LABZ Studio locally "
                     f"in the meantime: {local_url}{reset}",
                     flush = True,
                 )
@@ -560,7 +560,7 @@ def _tool_policy_notice(host: str, secure: bool, enable_tools: "Optional[bool]")
         return "Server-side tools are DISABLED (--disable-tools)."
     if enable_tools is None:
         return (
-            "Server-side tools follow each request's enable_tools; the Unsloth UI's "
+            "Server-side tools follow each request's enable_tools; the LABZ UI's "
             "tool toggles decide. Pass --enable-tools to force them on for every "
             "request."
         )
@@ -589,7 +589,7 @@ def _emit_tool_policy_notice(host: str, secure: bool, enable_tools: "Optional[bo
 def _emit_secure_startup_output(port: int, enable_tools: "Optional[bool]" = None) -> None:
     """Secure-mode banner: only the Cloudflare link (loopback has no public raw URL)."""
     print("")
-    print("🦥 Unsloth Studio is running (secure)")
+    print("🦥 LABZ Studio is running (secure)")
     print("─" * 52)
     _print_cloudflare_line(secure = True)
     print(f"  On this machine only: http://127.0.0.1:{port}/")
@@ -656,15 +656,15 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
                     "  Cloudflare tunnel: ON. This Cloudflare URL is PUBLIC, and the "
                     "raw port is also publicly reachable. --no-cloudflare disables "
                     f"only the Cloudflare URL; bind {loopback_host} or close firewall "
-                    "access to keep Unsloth private.",
+                    "access to keep LABZ private.",
                     warn,
                 )
             else:
                 _emit(
                     "  Cloudflare tunnel: ON. This is a PUBLIC internet URL: anyone "
-                    "who has it can reach this Unsloth. Relaunch with --no-cloudflare "
+                    "who has it can reach this LABZ. Relaunch with --no-cloudflare "
                     f"to disable the Cloudflare URL; bind {loopback_host} or close "
-                    "firewall access to keep Unsloth private.",
+                    "firewall access to keep LABZ private.",
                     warn,
                 )
         return
@@ -673,12 +673,12 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
             _emit(
                 "  Cloudflare tunnel: requested but failed to start. The raw port is "
                 "still reachable from the public internet (see the reachability check "
-                "above): anyone who can reach it can access this Unsloth.",
+                "above): anyone who can reach it can access this LABZ.",
                 warn,
             )
         elif _public_reachable is False:
             _emit(
-                "  Cloudflare tunnel: requested but failed to start. Unsloth is reachable "
+                "  Cloudflare tunnel: requested but failed to start. LABZ is reachable "
                 "on your local network only (no public link).",
                 warn,
             )
@@ -686,7 +686,7 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
             _emit(
                 "  Cloudflare tunnel: requested but failed to start. There is no "
                 "Cloudflare public link. Raw port reachability was not verified; "
-                f"bind {loopback_host} or close firewall access to keep Unsloth private.",
+                f"bind {loopback_host} or close firewall access to keep LABZ private.",
                 warn,
             )
     elif _cloudflare_flag:
@@ -694,19 +694,19 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
             _emit(
                 "  Cloudflare tunnel: OFF for this mode. The raw port is still "
                 "reachable from the public internet (see the reachability check above): "
-                "anyone who can reach it can access this Unsloth.",
+                "anyone who can reach it can access this LABZ.",
                 warn,
             )
         elif _public_reachable is False:
             _emit(
-                "  Cloudflare tunnel: OFF for this mode. Unsloth is reachable on your "
+                "  Cloudflare tunnel: OFF for this mode. LABZ is reachable on your "
                 "local network only (no public link)."
             )
         else:
             _emit(
                 "  Cloudflare tunnel: OFF for this mode. There is no Cloudflare public "
                 "link. Raw port reachability was not verified; "
-                f"bind {loopback_host} or close firewall access to keep Unsloth private.",
+                f"bind {loopback_host} or close firewall access to keep LABZ private.",
                 warn,
             )
     elif _cloudflare_flag is False or _cloudflare_flag is None:
@@ -717,12 +717,12 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
                 f"  Cloudflare tunnel: OFF ({_reason}). The raw port is still "
                 "reachable from the public internet (see the reachability check above): "
                 "pass --cloudflare to also expose a public Cloudflare HTTPS link, or "
-                f"bind {loopback_host} to keep Unsloth private.",
+                f"bind {loopback_host} to keep LABZ private.",
                 warn,
             )
         elif _public_reachable is False:
             _emit(
-                f"  Cloudflare tunnel: OFF ({_reason}). Unsloth is reachable on your "
+                f"  Cloudflare tunnel: OFF ({_reason}). LABZ is reachable on your "
                 "local network only. Pass --cloudflare to expose a public "
                 "Cloudflare HTTPS link."
             )
@@ -731,7 +731,7 @@ def _print_cloudflare_line(secure: bool = False, loopback_host: str = "127.0.0.1
                 f"  Cloudflare tunnel: OFF ({_reason}). There is no Cloudflare "
                 "public link. Raw port reachability was not verified; pass --cloudflare "
                 "to expose a public Cloudflare HTTPS link, or "
-                f"bind {loopback_host} or close firewall access to keep Unsloth private.",
+                f"bind {loopback_host} or close firewall access to keep LABZ private.",
                 warn,
             )
 
@@ -786,7 +786,7 @@ def _addresses_collide(recorded: "str | None", host: str, port: int) -> bool:
 def _is_port_free(host: str, port: int) -> bool:
     """Check if a port is available for binding. For a ``0.0.0.0`` wildcard host, also check whether anything
     is listening on ``127.0.0.1`` (and ``::1`` when IPv6 exists): an SSH tunnel may hold loopback while the
-    wildcard bind succeeds, making Unsloth unreachable via ``localhost``."""
+    wildcard bind succeeds, making LABZ unreachable via ``localhost``."""
     import socket
 
     sockets = []
@@ -1186,7 +1186,7 @@ def _live_sibling(records: "list", me: int, timed: "list") -> "int | None":
 
 
 def live_sibling_backend() -> "int | None":
-    """PID of another live Unsloth backend of this install, or None. Two of ours at once is a supported
+    """PID of another live LABZ backend of this install, or None. Two of ours at once is a supported
     configuration, and they share an install-tree compiled cache, so the second must not wipe it out from
     under the first. All three records are read, because a sibling can be in a state where only one exists:
     a startup marker while it is still binding, a per-port record once it has bound, and `studio.pid` alone
@@ -1224,7 +1224,7 @@ def _resolve_port(
 
 def _abort_already_running(pid: int, port: int) -> "NoReturn":
     print(
-        f"Error: Unsloth Studio is already running on port {port} (PID {pid}). Run "
+        f"Error: LABZ Studio is already running on port {port} (PID {pid}). Run "
         "`unsloth studio stop` first, or start this one on a different --port.",
         file = sys.stderr,
         flush = True,
@@ -1802,7 +1802,7 @@ def _is_missing_watch_fd_thread(exc):
 
 
 def _harden_console_close(stream):
-    """Stop a displaced console stream's close() from aborting Unsloth startup.
+    """Stop a displaced console stream's close() from aborting LABZ startup.
     ``_setup_server_disk_logging`` replaces ``sys.stdout``/``sys.stderr`` with a tee, changing the
     object identity of the console stream, so a third-party logging handler that captured the
     ORIGINAL stream (notably Colab's ``absl`` handler, whose ``close()`` skips
@@ -2016,7 +2016,7 @@ def _terminal_password_gate(
 ) -> Tuple[bool, bool]:
     """Force a terminal password change before the public tunnel goes up.
 
-    When the tunnel is about to publish Unsloth and the seeded admin password was
+    When the tunnel is about to publish LABZ and the seeded admin password was
     never changed, ask for a new one (masked, confirmed) before any public URL
     exists. The CLI normally does this before re-exec'ing the backend; this is
     the backstop for direct `python run.py` launches and older-CLI installs.
@@ -2114,7 +2114,7 @@ def _terminal_password_gate(
         )
         if not deadline_arms:
             print(
-                "Refusing to publish Unsloth on a public Cloudflare URL: the "
+                "Refusing to publish LABZ on a public Cloudflare URL: the "
                 "default admin password was never changed, no terminal is "
                 "attached to change it here, and the bootstrap shutdown "
                 "deadline does not apply to this launch (api-only, or "
@@ -2133,11 +2133,11 @@ def _terminal_password_gate(
 
         print(
             "  WARNING: the default admin password is still active while "
-            "Unsloth is about to be published on a public Cloudflare URL, and "
+            "LABZ is about to be published on a public Cloudflare URL, and "
             "no terminal is attached to change it here. The public page will "
             "NOT auto-fill the bootstrap credential. Set a new password by "
             "running `unsloth studio` locally with a terminal attached, or "
-            f"`{_reset_password_command()}`. Unsloth shuts down after the "
+            f"`{_reset_password_command()}`. LABZ shuts down after the "
             "bootstrap deadline (UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT, default 1h) "
             "unless the password is changed.",
             file = sys.stderr,
@@ -2191,7 +2191,7 @@ def _terminal_password_gate(
     )
     if deadline_arms:
         tail = (
-            "Unsloth shuts down after the bootstrap deadline "
+            "LABZ shuts down after the bootstrap deadline "
             "(UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT, default 1h) unless the password "
             "is changed."
         )
@@ -2234,7 +2234,7 @@ def _apply_supplied_password(password_value: "Optional[str]") -> None:
     _auth_storage.ensure_default_admin()
     if not _auth_storage.requires_password_change(_admin):
         print(
-            "Error: an Unsloth admin password is already set; --password only sets "
+            "Error: an LABZ admin password is already set; --password only sets "
             "the initial password. Change it in the UI, or run `unsloth studio "
             "reset-password` for a new one.",
             file = sys.stderr,
@@ -2432,12 +2432,12 @@ def run_server(
     from utils.process_lifetime import initialize_parent_lifetime, reap_recorded_children
 
     initialize_parent_lifetime()
-    # macOS has neither PR_SET_PDEATHSIG nor job objects, so an Unsloth that crashed left its sidecars running.
+    # macOS has neither PR_SET_PDEATHSIG nor job objects, so an LABZ that crashed left its sidecars running.
     # Sweep before spawning anything: a leftover holds VRAM, a port, and the files an update has to replace.
     try:
         reaped = reap_recorded_children()
         if reaped:
-            logger.warning("Reaped %d orphan(s) from a previous Unsloth: %s", len(reaped), reaped)
+            logger.warning("Reaped %d orphan(s) from a previous LABZ: %s", len(reaped), reaped)
     except Exception as e:
         logger.warning("Could not sweep orphans from a previous run: %s", e)
 
@@ -2480,14 +2480,14 @@ def run_server(
     # flushed heads-up (piped stdout is block-buffered).
     if not silent:
         print(
-            "Loading Unsloth Studio, please wait... (this can take a few minutes)",
+            "Loading LABZ Studio, please wait... (this can take a few minutes)",
             flush = True,
         )
 
     _repair_pinned_diffusers(silent)
 
     if not silent:
-        print("  - loading PyTorch, Unsloth and Transformers...", flush = True)
+        print("  - loading PyTorch, LABZ and Transformers...", flush = True)
 
     import_started = time.perf_counter()
 
@@ -2527,7 +2527,7 @@ def run_server(
     ensure_studio_directories()
 
     logger.info(
-        "Ensured Unsloth directories in %.1fms",
+        "Ensured LABZ directories in %.1fms",
         (time.perf_counter() - boot_started) * 1000,
     )
 
@@ -2548,7 +2548,7 @@ def run_server(
                 print(f"Port {original_port} is already in use by {name} (PID {pid}).")
             else:
                 print(f"Port {original_port} is already in use.")
-            print(f"Unsloth Studio will use port {port} instead.")
+            print(f"LABZ Studio will use port {port} instead.")
             print(f"Open http://localhost:{port} in your browser.")
             print("=" * 50)
             print("")
@@ -2594,7 +2594,7 @@ def run_server(
                 installer_bin = home / "unsloth_studio" / "bin" / "unsloth"
             tried_lines = "\n".join(f"  - {p}" for p in attempted) or "  (none)"
             raise SystemExit(
-                "[ERROR] Unsloth frontend build not found.\n"
+                "[ERROR] LABZ frontend build not found.\n"
                 f"Tried:\n{tried_lines}\n"
                 "\n"
                 "Likely cause: another 'unsloth' on PATH is shadowing the "
@@ -2741,12 +2741,12 @@ def run_server(
     if not _pw_proceed:
         # A raw bind passed neither flag, so naming them is a no-op for it.
         print(
-            "Not starting Unsloth; set a new admin password first, or pass one "
+            "Not starting LABZ; set a new admin password first, or pass one "
             "non-interactively with --password / UNSLOTH_STUDIO_PASSWORD. "
             + (
                 "Launch without --secure/--cloudflare to stay off the public internet."
                 if _launch_tunnel_managed
-                else "Launch with -H 127.0.0.1 to keep Unsloth off the network."
+                else "Launch with -H 127.0.0.1 to keep LABZ off the network."
             ),
             file = sys.stderr,
             flush = True,
@@ -2946,7 +2946,7 @@ def run_server(
                 logger = logger,
             )
             logger.info(
-                "Unsloth will shut down in %ds unless the default admin password is changed.",
+                "LABZ will shut down in %ds unless the default admin password is changed.",
                 _bootstrap_timeout,
             )
     except Exception as e:  # best-effort: never block startup on the timeout
@@ -2982,7 +2982,7 @@ def _build_arg_parser():
     (notably the --secure/--no-secure polarity and its --not-secure alias) stays unit-testable."""
     import argparse
 
-    parser = argparse.ArgumentParser(description = "Run Unsloth UI Backend server")
+    parser = argparse.ArgumentParser(description = "Run LABZ UI Backend server")
     parser.add_argument(
         "--host",
         default = "127.0.0.1",
@@ -3015,11 +3015,11 @@ def _build_arg_parser():
         "--cloudflare",
         action = argparse.BooleanOptionalAction,
         default = None,
-        help = "Expose Unsloth on a PUBLIC internet URL via a free Cloudflare HTTPS "
+        help = "Expose LABZ on a PUBLIC internet URL via a free Cloudflare HTTPS "
         "tunnel, for non-api-only wildcard binds (0.0.0.0 or ::). Off by default; "
         "pass --cloudflare to enable it (--secure implies it), --no-cloudflare to "
         "force it off. It does not change a raw wildcard bind. If the admin "
-        "password was never changed, Unsloth asks for a new one in the terminal "
+        "password was never changed, LABZ asks for a new one in the terminal "
         "before publishing the URL.",
     )
     parser.add_argument(
@@ -3029,7 +3029,7 @@ def _build_arg_parser():
         help = "Expose ONLY a Cloudflare HTTPS link: bind localhost and fail closed "
         "if the tunnel can't start. Without it, --no-secure also serves the raw "
         "0.0.0.0 port, which is reachable from anywhere on the network. If the "
-        "admin password was never changed, Unsloth asks for a new one in the "
+        "admin password was never changed, LABZ asks for a new one in the "
         "terminal before publishing the URL.",
     )
     # Back-compat: accept --not-secure as a hidden alias for --no-secure.
@@ -3075,7 +3075,7 @@ def _build_arg_parser():
         default = _PARALLEL_DEFAULT_PLAIN,
         help = (
             f"llama-server parallel decode slots ({_PARALLEL_MIN}..{_PARALLEL_MAX}). "
-            f"Default {_PARALLEL_DEFAULT_PLAIN}. The Unsloth run settings "
+            f"Default {_PARALLEL_DEFAULT_PLAIN}. The LABZ run settings "
             "(Parallel Slots) override it per load."
         ),
     )
@@ -3130,7 +3130,7 @@ if __name__ == "__main__":
     except Exception:
         sys.stderr.write("\n")
         sys.stderr.write("=" * 60 + "\n")
-        sys.stderr.write("ERROR: Unsloth Studio failed to start.\n")
+        sys.stderr.write("ERROR: LABZ Studio failed to start.\n")
         sys.stderr.write("=" * 60 + "\n")
         traceback.print_exc(file = sys.stderr)
         sys.stderr.write("\n")

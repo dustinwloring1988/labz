@@ -190,9 +190,9 @@ def _coerce_optional_nonneg_float(name: str, value):
     try:
         coerced = float(value)
     except (TypeError, ValueError):
-        raise ValueError(f"Unsloth: {name}={value!r} must be a non-negative float or None.")
+        raise ValueError(f"LABZ: {name}={value!r} must be a non-negative float or None.")
     if coerced < 0 or not math.isfinite(coerced):
-        raise ValueError(f"Unsloth: {name}={coerced} must be finite and >= 0.")
+        raise ValueError(f"LABZ: {name}={coerced} must be finite and >= 0.")
     return coerced
 
 
@@ -227,7 +227,7 @@ def normalize_training_optimizer_for_device(optimizer: Any, *, device_backend: s
 
 
 def _build_training_worker_config(values: dict[str, Any]) -> dict[str, Any]:
-    """Build the normalized worker config shared by Unsloth and the CLI adapter."""
+    """Build the normalized worker config shared by LABZ and the CLI adapter."""
     device_backend = get_device().value
     optimizer = normalize_training_optimizer_for_device(
         values.get("optim", DEFAULT_TRAINING_OPTIMIZER),
@@ -672,7 +672,7 @@ PLOT_HEIGHT = 3.5
 
 @dataclass
 class TrainingProgress:
-    """Shared training progress payload for Unsloth and backend-aware trainers."""
+    """Shared training progress payload for LABZ and backend-aware trainers."""
 
     epoch: float = 0
     step: int = 0
@@ -702,7 +702,7 @@ _UNSET = object()
 
 
 class _MLXTrainerAdapter:
-    """Adapts the legacy UnslothTrainer API to the shared Unsloth MLX worker path."""
+    """Adapts the legacy UnslothTrainer API to the shared LABZ MLX worker path."""
 
     def __init__(self):
         self.model = None
@@ -1873,7 +1873,7 @@ class TrainingBackend:
                         # the worker would then train on past it holding the GPU.
                         if is_process_shutting_down():
                             logger.info(
-                                "Unsloth is shutting down; not starting training worker for %s",
+                                "LABZ is shutting down; not starting training worker for %s",
                                 start_request_id,
                             )
                             return False
@@ -1890,7 +1890,7 @@ class TrainingBackend:
                         # adoption ran first, so the worker is in the sweep record for as
                         # long as it exists.
                         if is_process_shutting_down():
-                            raise RuntimeError("Unsloth is shutting down")
+                            raise RuntimeError("LABZ is shutting down")
                     except Exception:
                         logger.error(
                             "Could not keep the training subprocess; terminating it",
@@ -2629,7 +2629,7 @@ class TrainingBackend:
                         # this respawn after the shutdown sweep has taken its snapshot.
                         if is_process_shutting_down():
                             raise RuntimeError(
-                                "Unsloth is shutting down; not respawning the training worker"
+                                "LABZ is shutting down; not respawning the training worker"
                             )
                         new_proc.start()
                         adopt_pid(new_proc.pid)
@@ -2652,7 +2652,7 @@ class TrainingBackend:
                                     "could not reap the new training worker", exc_info = True
                                 )
                             raise RuntimeError(
-                                "Unsloth is shutting down; not respawning the training worker"
+                                "LABZ is shutting down; not respawning the training worker"
                             )
                 except Exception:
                     logger.error("Failed to respawn training subprocess", exc_info = True)

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""llama.cpp multimodal (mtmd) speech-to-text sidecar for Unsloth dictation.
+"""llama.cpp multimodal (mtmd) speech-to-text sidecar for LABZ dictation.
 
 whisper.cpp loads only the Whisper architecture, so newer ASR models run through
 llama.cpp instead: a text model plus an audio mmproj, served by `llama-server`
@@ -173,7 +173,7 @@ def _reap(process: Optional[subprocess.Popen]) -> None:
     """Stop a child and wait for it, so its port and VRAM are actually free.
 
     terminate() alone returns before the process has gone, and a child that
-    ignores SIGTERM would hold both until Unsloth exits.
+    ignores SIGTERM would hold both until LABZ exits.
     """
     if process is None:
         return
@@ -938,7 +938,7 @@ class MtmdSttSidecar:
             # step-7 sweep has already passed by.
             if is_process_shutting_down():
                 raise SttLoadCancelledError(
-                    "Unsloth is shutting down; not starting the MTMD server."
+                    "LABZ is shutting down; not starting the MTMD server."
                 )
             process = subprocess.Popen(
                 cmd,
@@ -950,7 +950,7 @@ class MtmdSttSidecar:
                 # bundled libs and pip CUDA runtimes on the loader path, secrets scrubbed, as the chat backend spawns
                 # the same binary
                 env = _llama_server_child_env(binary),
-                # Die with Unsloth, so a crash never orphans a server on the GPU.
+                # Die with LABZ, so a crash never orphans a server on the GPU.
                 **child_popen_kwargs(),
             )
             # Published before the wait, so training can preempt a startup that is already allocating; _process is not
@@ -963,7 +963,7 @@ class MtmdSttSidecar:
             if is_process_shutting_down():
                 _reap(process)
                 raise SttLoadCancelledError(
-                    "Unsloth is shutting down; not starting the MTMD server."
+                    "LABZ is shutting down; not starting the MTMD server."
                 )
             if not self._wait_for_server(process, port, cancel_event):
                 # Reap it here: _process was never assigned, so unload() cannot reach a child that ignores SIGTERM and

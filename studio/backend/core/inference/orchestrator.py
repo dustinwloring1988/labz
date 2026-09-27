@@ -563,7 +563,7 @@ class InferenceOrchestrator:
         from utils.process_lifetime import is_process_shutting_down
 
         if is_process_shutting_down():
-            raise RuntimeError("Unsloth is shutting down; not starting an inference subprocess")
+            raise RuntimeError("LABZ is shutting down; not starting an inference subprocess")
         from utils.native_path_leases import (
             native_path_secret_removed_for_child_start,
             run_without_native_path_secret,
@@ -661,7 +661,7 @@ class InferenceOrchestrator:
                     )
             except Exception as exc:
                 logger.debug("Could not reap the raced inference worker: %s", exc)
-            raise RuntimeError("Unsloth is shutting down; not starting an inference subprocess")
+            raise RuntimeError("LABZ is shutting down; not starting an inference subprocess")
         logger.info("Inference subprocess started (pid=%s)", _spawned_proc.pid)
 
     def _cancel_generation(self) -> None:

@@ -67,10 +67,10 @@ def test_several_bars_in_one_chunk_collapse_per_line():
 
 
 def test_unterminated_prompt_after_a_bar_is_not_withheld():
-    # "Start Unsloth Studio now? [Y/n]: " never gets a newline; it must still reach the file,
+    # "Start LABZ Studio now? [Y/n]: " never gets a newline; it must still reach the file,
     # and on its own line rather than glued to the frame that was being held.
-    log, _console = _tee(["\rbar 40%", "Start Unsloth Studio now? [Y/n]: "])
-    assert log == "bar 40%\nStart Unsloth Studio now? [Y/n]: "
+    log, _console = _tee(["\rbar 40%", "Start LABZ Studio now? [Y/n]: "])
+    assert log == "bar 40%\nStart LABZ Studio now? [Y/n]: "
 
 
 def test_record_after_a_held_frame_stays_parseable():

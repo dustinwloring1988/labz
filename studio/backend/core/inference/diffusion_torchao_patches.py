@@ -122,7 +122,7 @@ def _patch_torchao_intmm_module(mod):
     if missing:
         if "input.__repr__()" not in missing:
             logger.warning(
-                "Unsloth: torchao's safe_int_mm still probes input.__repr__() but its body "
+                "LABZ: torchao's safe_int_mm still probes input.__repr__() but its body "
                 "changed (%s missing), so the capture-safe replacement was not installed. "
                 "Eager int8 keeps syncing the device on every linear.",
                 ", ".join(missing),

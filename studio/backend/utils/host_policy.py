@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Bind-host trust policy for the Unsloth backend. Stdlib only, so it is safe to import without the rest of the backend. `is_external_host` mirrors the CLI's `unsloth_cli/_tool_policy.py`: a loopback bind is the user's own machine, any other address is network-reachable. The logic is duplicated rather than shared because the backend is self-contained (see run.py: "can be moved to any directory") and runs from a venv that may not have `unsloth_cli` on sys.path. Keep the two in sync."""
+"""Bind-host trust policy for the LABZ backend. Stdlib only, so it is safe to import without the rest of the backend. `is_external_host` mirrors the CLI's `unsloth_cli/_tool_policy.py`: a loopback bind is the user's own machine, any other address is network-reachable. The logic is duplicated rather than shared because the backend is self-contained (see run.py: "can be moved to any directory") and runs from a venv that may not have `unsloth_cli` on sys.path. Keep the two in sync."""
 
 from __future__ import annotations
 

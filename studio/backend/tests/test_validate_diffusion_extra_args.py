@@ -395,7 +395,7 @@ class TestValidateRefusesWhatLoadWouldRefuse(unittest.TestCase):
         with self.assertRaises(Exception) as caught:
             self._validate(route, extra_args = ["--agent"])
         self.assertEqual(getattr(caught.exception, "status_code", None), 400)
-        self.assertIn("managed by Unsloth Studio", str(caught.exception.detail))
+        self.assertIn("managed by LABZ Studio", str(caught.exception.detail))
 
     def test_a_batch_below_the_slot_floor_is_refused_before_the_switch(self):
         route = _load_route_module("inf_route_validate_denies_2")

@@ -5,7 +5,7 @@
 
 Same pattern as studio_db.py (module-level functions, raw sqlite3, WAL, per-function connections). API keys are
 NOT stored here: they live only in the browser (localStorage) and are sent encrypted per-request. Enabled model
-selections and discovered catalog IDs are stored server-side so remote Unsloth clients see the same connection
+selections and discovered catalog IDs are stored server-side so remote LABZ clients see the same connection
 state (#7281).
 """
 

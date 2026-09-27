@@ -305,7 +305,7 @@ def _health_is_forced(health) -> bool:
 
 
 def _memory_pressure_reason() -> Optional[str]:
-    """Free-RAM verdict for an API caller that sends "auto". The Unsloth UI never reaches here: it resolves Auto through the capabilities probe and submits the concrete xet/http, so that probe applies the same rule. Shared helper, so the two agree."""
+    """Free-RAM verdict for an API caller that sends "auto". The LABZ UI never reaches here: it resolves Auto through the capabilities probe and submits the concrete xet/http, so that probe applies the same rule. Shared helper, so the two agree."""
     try:
         from utils.hf_xet_fallback import free_ram_pressure_reason
         return free_ram_pressure_reason()

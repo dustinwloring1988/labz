@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Auto-shutdown for an exposed first-run Unsloth whose admin password is unchanged.
+"""Auto-shutdown for an exposed first-run LABZ whose admin password is unchanged.
 
 On a fresh install the seeded bootstrap admin password stays a valid login credential until first login changes
 it. When the web UI is put on the network (``--secure`` / ``0.0.0.0``) and nobody completes that first-login
-change within a deadline, tear Unsloth down so a fresh, unconfigured instance does not stay publicly reachable
-indefinitely. If the password was changed, Unsloth keeps running.
+change within a deadline, tear LABZ down so a fresh, unconfigured instance does not stay publicly reachable
+indefinitely. If the password was changed, LABZ keeps running.
 
 Scope: web UI launches only (never ``--api-only``, which authenticates by API key rather than the admin
 password, and never Colab). Configurable via ``UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT`` (seconds; default 3600; ``0``
@@ -117,7 +117,7 @@ def enforce_bootstrap_password_deadline(
     logger = None,
 ) -> bool:
     """Deadline handler: shut down iff the seeded admin password is still unchanged. Returns True if it
-    shut Unsloth down, False if it left it running (the password was changed in time)."""
+    shut LABZ down, False if it left it running (the password was changed in time)."""
     try:
         still_default = storage.requires_password_change(storage.DEFAULT_ADMIN_USERNAME)
     except Exception:

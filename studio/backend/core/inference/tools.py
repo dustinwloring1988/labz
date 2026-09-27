@@ -38,7 +38,7 @@ from contextvars import ContextVar
 from .context_window import _RESULT_NOTICE_RESERVE
 
 # The window of the model THIS request is served by, set by execute_tool for the call's duration. Left unset it falls
-# back to the process-global probe, which is wrong for an external-provider request: that runs Unsloth's tool loop
+# back to the process-global probe, which is wrong for an external-provider request: that runs LABZ's tool loop
 # without touching a resident GGUF, so a small resident model truncated pages for a large cloud model.
 _UNSET_CONTEXT_TOKENS = object()
 _REQUEST_CONTEXT_TOKENS: ContextVar = ContextVar(
@@ -3092,7 +3092,7 @@ def _studio_auth_dir_markers() -> tuple:
 
 # Names neither the path nor the value: this string goes back to the model.
 _STUDIO_CREDENTIAL_BLOCKED = (
-    "Blocked for safety: Unsloth Studio's authentication directory holds this install's own "
+    "Blocked for safety: LABZ Studio's authentication directory holds this install's own "
     "credentials and is not readable by tools."
 )
 
@@ -3342,7 +3342,7 @@ def _quoted_words(text: str) -> "list[str]":
     """Split on whitespace, honouring quotes but NOT backslash escapes.
 
     `shlex.split(posix = True)` eats the separators of a Windows path, so
-    `find "C:\\Users\\me\\Unsloth Studio" ...` came back as one mangled word and matched no root.
+    `find "C:\\Users\\me\\LABZ Studio" ...` came back as one mangled word and matched no root.
     """
     lexer = shlex.shlex(text, posix = True)
     lexer.whitespace_split = True
@@ -9192,12 +9192,12 @@ def _build_safe_env(workdir: str) -> dict[str, str]:
     at _sandbox_temp_dir just inside it. PYTHONPATH carries only the sandbox sitecustomize shim
     directory.
 
-    PATH starts with the Unsloth interpreter / venv and OS system dirs so ``python``/``pip`` stay
+    PATH starts with the LABZ interpreter / venv and OS system dirs so ``python``/``pip`` stay
     pinned. On Windows only, Git-for-Windows install dirs from the host PATH are appended so bare
     ``git`` resolves (#7317). User-writable host PATH entries are never inherited: they could shadow
     auto-safe terminal commands.
     """
-    # Start from the running interpreter's dir so 'python'/'pip' resolve to the same environment the Unsloth server
+    # Start from the running interpreter's dir so 'python'/'pip' resolve to the same environment the LABZ server
     # runs in.
     exe_dir = os.path.dirname(sys.executable)
     path_entries = [exe_dir] if exe_dir else []
@@ -9529,20 +9529,20 @@ def _apply_confinement(confinement, popen_kwargs: dict, argv: list) -> list:
 def _bypass_preexec():
     """Minimal pre-exec for bypass exec: os.setsid() only. Required, not a restriction:
     _kill_process_tree does killpg(getpgid(child)), so without a new session a timeout/cancel
-    would kill the Unsloth server too."""
+    would kill the LABZ server too."""
     try:
         os.setsid()
     except OSError:
         pass
 
 
-# Hardening the Unsloth parent is done once (PR_SET_DUMPABLE is process-global and sticky); guarded so repeated bypass
+# Hardening the LABZ parent is done once (PR_SET_DUMPABLE is process-global and sticky); guarded so repeated bypass
 # calls do not re-issue the prctl.
 _parent_proc_hardened = False
 
 
 def _harden_parent_against_proc_env_leak() -> bool:
-    """Make the Unsloth process's /proc/<pid>/environ unreadable to its children.
+    """Make the LABZ process's /proc/<pid>/environ unreadable to its children.
 
     Stripping the child env is not enough on Linux: a bypassed same-UID child can read
     /proc/<getppid()>/environ to recover the parent's unfiltered secrets. Clearing PR_SET_DUMPABLE
@@ -11267,7 +11267,7 @@ def _holds_no_user_files(target: str, owner: "str | None" = None) -> bool:
                 marker = _marker_owner(target)
                 if marker is not None and owner in (None, marker):
                     continue
-            # Unsloth's own, like the marker above: a spill is truncated tool output this process wrote and
+            # LABZ's own, like the marker above: a spill is truncated tool output this process wrote and
             # deliberately kept off the file cards, so counting one as the user's content leaves an unreachable
             # sandbox behind, reported as holding files the user never created. Only the artifacts themselves, by the
             # name `_spill_full_output` generates: the directory is writable, tool code can create anything in it, and
@@ -12104,15 +12104,15 @@ _FULL_ACCESS_SUBSTITUTIONS = (
     # where the code runs, so it is added here; Windows already has one.
     (
         "; absolute paths like /mnt/data or /tmp/outputs do not exist.",
-        ". This runs wherever Unsloth Studio is running, which may be a remote host "
+        ". This runs wherever LABZ Studio is running, which may be a remote host "
         "or a container with only some paths mounted.{clause}",
     ),
     # Windows already says where the code runs and never denies absolute paths, so there is nothing false to remove;
     # state the capability instead. the user's own machine is narrowed at the same time: --secure and -H 0.0.0.0 are
-    # documented remote modes (README), and the tools run on the host serving Unsloth, which is then not the device
+    # documented remote modes (README), and the tools run on the host serving LABZ, which is then not the device
     # the user is looking at.
     # _TERMINAL_SHELL_NOTE is carried through unchanged except here: its Git Bash branch promises a detached program's
-    # window appears on the user's desktop, which only holds while Unsloth is local.
+    # window appears on the user's desktop, which only holds while LABZ is local.
     (
         "opens a window on the user's desktop.",
         "opens a window on that machine's desktop, which the user sees only if "
@@ -12120,7 +12120,7 @@ _FULL_ACCESS_SUBSTITUTIONS = (
     ),
     (
         " You are on Windows, and this runs on the user's own machine.",
-        " You are on Windows, and this runs wherever Unsloth Studio is running, "
+        " You are on Windows, and this runs wherever LABZ Studio is running, "
         "which may be a remote host or a container with only some paths "
         "mounted.{clause}",
     ),
@@ -12374,7 +12374,7 @@ EDIT_FILE_TOOL = {
 # rewrite.
 _EDIT_FILE_FULL_ACCESS_CLAUSE = (
     " The code sandbox is disabled, so an absolute path resolves as written and "
-    "edits the real file there, anywhere the Unsloth Studio process can reach."
+    "edits the real file there, anywhere the LABZ Studio process can reach."
 )
 
 EDIT_FILE_TOOL_FULL_ACCESS = {
@@ -15035,7 +15035,7 @@ _MAX_PROBE_CHARS_PER_TOKEN = 256
 # llama-server calls over a fresh connection. So the framing baseline, one number for EVERY result the process
 # truncates, is worth remembering, and so is any prefix already priced.
 # Keyed on the resident llama-server process, because the count depends on the EFFECTIVE chat template and the managed
-# fields cannot reconstruct it: user pass-through args are appended verbatim after Unsloth's own flags and llama.cpp
+# fields cannot reconstruct it: user pass-through args are appended verbatim after LABZ's own flags and llama.cpp
 # is last-wins, so `--chat-template` in extra args renders through a template `_chat_template_override` never sees.
 # Reload the same GGUF into the same window with only those args changed and every managed field matches while the
 # rendering does not, which would price a prefix by a template no longer serving it. `is_loaded` is `self._process is
@@ -17984,7 +17984,7 @@ def _killpg_captured(pgid) -> None:
             return
         _tag, pid, identity = pgid
         # Fail closed: this runs long after the capture, so without a verified identity the pid may be someone else's
-        # now. The job object still takes the whole tree when Unsloth exits, which is the safe half to keep.
+        # now. The job object still takes the whole tree when LABZ exits, which is the safe half to keep.
         if identity is not None:
             _windows_taskkill_tree(pid, identity)
         return
@@ -18268,7 +18268,7 @@ def _digest_and_head(text: str, max_bytes: int) -> "tuple[str, int, bytes]":
 _SPILL_MAX_TOTAL_BYTES = 64 * 1024 * 1024
 # Exactly the names `_spill_full_output` generates: twelve hex characters of a content digest. The prune below deletes
 # what it matches, and the sandbox is the user's own directory: a session may open on one that already holds a folder
-# of this name, and anything in it that Unsloth did not write is not Unsloth's to remove.
+# of this name, and anything in it that LABZ did not write is not LABZ's to remove.
 _SPILL_NAME_RE = re.compile(r"[0-9a-f]{12}\.txt")
 # Written once, when this process creates the spill directory. Ownership is RECORDED rather than inferred from the
 # names inside: a sandbox can be a project the user opened, a directory of this name in it may be theirs, and a file
@@ -18276,7 +18276,7 @@ _SPILL_NAME_RE = re.compile(r"[0-9a-f]{12}\.txt")
 _SPILL_RECORD_HEADER = "unsloth-studio tool output "
 # One lock per spill root. Appending a spill and rewriting the manifest after a prune are a read-modify-write over one
 # shared file, and a project's chats share a sandbox: two calls spilling at once could otherwise have the pruner drop
-# the entry the other just appended, leaving a file nothing counts, prunes, or recognises as Unsloth's.
+# the entry the other just appended, leaving a file nothing counts, prunes, or recognises as LABZ's.
 _SPILL_LOCKS: "dict[str, threading.Lock]" = {}
 _SPILL_LOCKS_GUARD = threading.Lock()
 
@@ -18288,10 +18288,10 @@ def _spill_lock(root: str) -> "threading.Lock":
 
 
 def _spill_records_dir() -> str:
-    """Where the spill manifests live: Unsloth's own storage, NOT the sandbox. The sandbox is a
+    """Where the spill manifests live: LABZ's own storage, NOT the sandbox. The sandbox is a
     directory tool code writes to, so nothing kept inside it can be evidence about the sandbox. A
     marker file there was replaceable by a link, and once it is a plain file the model can
-    rewrite its contents and name the user's own files as Unsloth's, which turns the cleanup into
+    rewrite its contents and name the user's own files as LABZ's, which turns the cleanup into
     a delete and the prune into an unlink. Held beside the other records this file already keeps
     outside the sandboxes."""
     try:
@@ -18388,7 +18388,7 @@ def _write_spill_file(target_dir: str, name: str, body: str) -> "str | None":
 
     Returns the stamp of what was installed, or None if nothing was. The stamp is taken here rather
     than re-read from the path afterwards, because by then another call can have replaced the file
-    and the record would name its content as Unsloth's.
+    and the record would name its content as LABZ's.
     """
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     if not _DIR_FD_WRITES:
@@ -18587,7 +18587,7 @@ def _write_spill_manifest(
 def _record_spill(root: str, relative: str, stamp: str, digest: str) -> None:
     """Append one written spill, with the stamp and digest of what was INSTALLED. Not re-read from
     the path: between the install and this, another call sharing the sandbox can replace the
-    file, and stating the path then records that call's content as Unsloth's, which a later prune
+    file, and stating the path then records that call's content as LABZ's, which a later prune
     or cleanup would delete. The writer knows what it put there, so it says so."""
     try:
         with _spill_lock(root):
@@ -18742,7 +18742,7 @@ def _unlink_verified_spill(root: str, path: str, owned: "dict[str, tuple[str, st
     Moved to a private name first. A rename is atomic, so from that point the inode this verifies is
     the inode this deletes: a sandbox writer that replaces the original name afterwards replaces
     nothing that is on its way out. Verifying and then unlinking by name cannot promise that,
-    because the manifest lock orders Unsloth's own threads and the thing racing here is the sandbox.
+    because the manifest lock orders LABZ's own threads and the thing racing here is the sandbox.
 
     Checked again under the private name, and put back if it no longer matches, since at that point
     it is not the file this recorded and is not this to delete. The rename itself moves ctime, which
@@ -18901,7 +18901,7 @@ def _prune_spills_locked(target_dir: str, root: str) -> None:
         logger.debug("tool result spill prune failed", exc_info = True)
 
 
-# ChatGPT code-interpreter path conventions models write out of habit; none exist in the Unsloth sandbox, so a failure
+# ChatGPT code-interpreter path conventions models write out of habit; none exist in the LABZ sandbox, so a failure
 # on one earns the retry hint.
 _MISSING_PATH_PREFIXES = (
     "/mnt/data",
@@ -19080,7 +19080,7 @@ _MAX_SNAPSHOT_DIRS = 2000  # nor a directory-writing one stall the next call
 def _user_path_parts(parts: "list[str]", root: "str | None" = None) -> "list[str]":
     """The segments _MAX_SANDBOX_PATH_SEGMENTS applies to.
 
-    The scratch container is Unsloth's, not a name the model chose, and on Windows it is what /tmp
+    The scratch container is LABZ's, not a name the model chose, and on Windows it is what /tmp
     resolves to, so charging it a segment would drop one level of the /tmp artifacts served before
     the workdir stopped being %TEMP%.
 
@@ -19111,7 +19111,7 @@ def _servable_segment(name: str) -> bool:
     return not any("\ud800" <= ch <= "\udfff" for ch in name)
 
 
-# Unsloth's own bookkeeping, written by the sandbox sitecustomize. One exact name we write ourselves, not a pattern
+# LABZ's own bookkeeping, written by the sandbox sitecustomize. One exact name we write ourselves, not a pattern
 # reserved over names a tool may pick.
 _INTERNAL_SANDBOX_FILES = frozenset({".unsloth_sandbox_remap.json", _SANDBOX_MARKER})
 
@@ -19416,7 +19416,7 @@ def _python_exec(
         # Close the /proc/<parent>/environ secret-recovery path first; if it cannot be applied, fail closed rather
         # than leak the parent environ.
         return (
-            "Execution error: could not harden the Unsloth process against "
+            "Execution error: could not harden the LABZ process against "
             "/proc environment reads; refusing bypass execution."
         )
 
@@ -19591,7 +19591,7 @@ def _bash_exec(
         # Close the /proc/<parent>/environ secret-recovery path first; if it cannot be applied, fail closed rather
         # than leak the parent environ.
         return (
-            "Execution error: could not harden the Unsloth process against "
+            "Execution error: could not harden the LABZ process against "
             "/proc environment reads; refusing bypass execution."
         )
 

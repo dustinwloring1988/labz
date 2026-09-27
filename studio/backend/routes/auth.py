@@ -65,7 +65,7 @@ def _require_a_credential_of_its_own(what: str):
         if no_credential:
             raise HTTPException(
                 status_code = status.HTTP_403_FORBIDDEN,
-                detail = f"{what} can only be done from the Unsloth UI or with an existing API key.",
+                detail = f"{what} can only be done from the LABZ UI or with an existing API key.",
             )
 
     return dependency
@@ -116,7 +116,7 @@ def _reset_password_command() -> str:
     Windows never names unsloth.exe here, present or not. Existing is not the same as runnable: an Application
     Control policy leaves the generated, unsigned unsloth.exe on disk and denies it at CreateProcess (issue
     #8490), and a bare `unsloth` resolves to that same file because PATHEXT puts .EXE ahead of the .cmd shim.
-    Whoever is locked out of Unsloth is exactly who needs this command to work, so it must not be the one a
+    Whoever is locked out of LABZ is exactly who needs this command to work, so it must not be the one a
     policy refuses. Preference order is therefore the interpreter's module entry, which needs no quoting in cmd
     or PowerShell, then `unsloth.cmd` -- spelling the extension is what stops PATHEXT reaching for the
     executable.
@@ -404,11 +404,11 @@ def _clear_login_bucket(key: tuple[str, str]) -> None:
 # so FastAPI runs it in the threadpool rather than blocking the event loop.
 @router.get("/identity")
 def identity(nonce: str, request: Request) -> dict:
-    """Challenge-response proof this is the real local Unsloth: caller sends a nonce,
+    """Challenge-response proof this is the real local LABZ: caller sends a nonce,
     gets HMAC(install identity secret, nonce, connection address + port).
     Unauthenticated and side-effect free; a process that can't read the same-user
     secret can't forge a proof, and binding to the address/port the connection
-    landed on stops a squatter relaying a proof from the real Unsloth elsewhere."""
+    landed on stops a squatter relaying a proof from the real LABZ elsewhere."""
     try:
         raw = base64.urlsafe_b64decode(nonce)
     except Exception:
@@ -464,11 +464,11 @@ def _login_failure_detail() -> str:
     printed on the host's own console by run.py, where naming the install is the point.
     """
     command = _reset_password_command_on_path()
-    where = "in the environment Unsloth is installed in"
+    where = "in the environment LABZ is installed in"
     if policy.installation_is_multi_user():
         return (
             "Incorrect username, password or setup code. Ask the installation owner to reset "
-            f"the account, by running this on the Unsloth Studio host {where}: {command} "
+            f"the account, by running this on the LABZ Studio host {where}: {command} "
             "--username <name>"
         )
     return f"Incorrect password. To reset it, run this in your terminal, {where}: {command}"
@@ -653,7 +653,7 @@ async def set_desktop_initial_password(
     if not is_desktop or current_subject != storage.DEFAULT_ADMIN_USERNAME:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
-            detail = "This action requires the Unsloth desktop app.",
+            detail = "This action requires the LABZ desktop app.",
         )
 
     record = storage.get_user_and_secret(current_subject)

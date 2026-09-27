@@ -42,7 +42,7 @@ _MAX_DECODE_MS = 24 * 60 * 60 * 1000
 # Far above any real context window; larger means a broken upstream payload.
 _MAX_TOKEN_COUNT = 1 << 40
 
-# Opt-in startup kill switch for Unsloth's in-memory API monitor.
+# Opt-in startup kill switch for LABZ's in-memory API monitor.
 _DISABLE_ENV = "UNSLOTH_STUDIO_DISABLE_API_MONITOR"
 _TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 
@@ -185,7 +185,7 @@ class ApiMonitorEntry:
     subject: Optional[str] = None
     # Usernames are reusable and these in-memory rows outlive the account, so the immutable account id fences a replacement off its predecessor's traffic.
     account_id: str = field(default_factory = current_account_id)
-    # True for sk-unsloth callers only: the panel auto-opens on these, not Unsloth's chat.
+    # True for sk-unsloth callers only: the panel auto-opens on these, not LABZ's chat.
     via_api_key: bool = False
     # Monotonic anchors so duration math survives wall-clock steps (NTP).
     started_monotonic: float = 0.0

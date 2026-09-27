@@ -39,7 +39,7 @@ class WhisperUpdateJob(BaseModel):
 class WhisperUpdateStatusResponse(BaseModel):
     supported: bool = Field(
         False,
-        description = "True when the install came from an Unsloth prebuilt (has a marker).",
+        description = "True when the install came from an LABZ prebuilt (has a marker).",
     )
     update_available: bool = Field(
         False, description = "True when the latest release is genuinely newer than the install."

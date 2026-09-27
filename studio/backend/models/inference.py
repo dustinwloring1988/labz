@@ -302,7 +302,7 @@ class LoadRequest(BaseModel):
     gpu_memory_mode: Literal["auto", "manual"] = Field(
         "auto",
         description = (
-            "GPU memory strategy for GGUF models. 'auto' (default): Unsloth "
+            "GPU memory strategy for GGUF models. 'auto' (default): LABZ "
             "selects GPUs and caps context to fit VRAM. 'manual': you own the "
             "offload. Leave gpu_layers at -1 (Auto) to hand memory management to "
             "llama.cpp's --fit (no device masking, no context auto-reduce, no "
@@ -387,7 +387,7 @@ class LoadRequest(BaseModel):
         description = (
             "Extra arguments forwarded verbatim to llama-server for GGUF models. "
             "One token per list entry, e.g. ['--top-k', '20', '--seed', '42']. "
-            "Unsloth-managed flags (model identity, port, context length, GPU placement, "
+            "LABZ-managed flags (model identity, port, context length, GPU placement, "
             "auth, UI/server mode) are rejected. Ignored for non-GGUF models."
         ),
     )
@@ -663,13 +663,13 @@ class TransformersUpgradeInfo(BaseModel):
     )
     supported_in_pypi: bool = Field(
         False,
-        description = "True if the latest PyPI release ships this model_type; Unsloth can "
+        description = "True if the latest PyPI release ships this model_type; LABZ can "
         "install it into a persistent sidecar after user consent.",
     )
     supported_in_main: bool = Field(
         False,
         description = "True if transformers GitHub main ships this model_type (dev-only; "
-        "not installable through Unsloth yet).",
+        "not installable through LABZ yet).",
     )
 
 
@@ -1564,7 +1564,7 @@ class LlamaFlagCatalogResponse(BaseModel):
     """Every llama-server flag THIS build documents, for validating pass-through args.
 
     Read from the installed binary's ``--help`` rather than a list bundled with
-    Unsloth: a custom or newer llama.cpp is exactly the case where a bundled list
+    LABZ: a custom or newer llama.cpp is exactly the case where a bundled list
     would reject a flag that works, or accept one that does not exist.
     """
 
@@ -1574,7 +1574,7 @@ class LlamaFlagCatalogResponse(BaseModel):
     )
     managed: list[str] = Field(
         default_factory = list,
-        description = "Flags Unsloth Studio owns; validate_extra_args rejects these outright",
+        description = "Flags LABZ Studio owns; validate_extra_args rejects these outright",
     )
     switch_flags: list[str] = Field(
         default_factory = list,
@@ -1839,7 +1839,7 @@ class VideoContentPart(BaseModel):
 class InputDocumentContentPart(BaseModel):
     """Document (PDF / file) content part in a multimodal message.
 
-    Unsloth-normalised shape (file_data or file_url, plus optional filename/media_type).
+    LABZ-normalised shape (file_data or file_url, plus optional filename/media_type).
     Mapped onto Anthropic ``document`` / OpenAI ``input_file`` for vision providers;
     dropped for non-vision providers.
     """
@@ -2050,7 +2050,7 @@ class ThinkingConfig(BaseModel):
     """Anthropic-compatible thinking/reasoning configuration.
     Use type='disabled' to turn off thinking, or type='enabled' to turn it on.
     Only type is read; extra fields (e.g. budget_tokens) are ignored, since
-    Unsloth sets provider thinking budgets itself.
+    LABZ sets provider thinking budgets itself.
     """
 
     type: Literal["disabled", "enabled"] = "disabled"
@@ -2191,7 +2191,7 @@ class ChatCompletionRequest(BaseModel):
         None,
         description = (
             "OpenAI function-tool definitions. When provided without `enable_tools=true`, "
-            "Unsloth forwards the tools to the backend so the model returns structured "
+            "LABZ forwards the tools to the backend so the model returns structured "
             "tool_calls for the client to execute (standard OpenAI function calling)."
         ),
     )
@@ -2372,7 +2372,7 @@ class ChatCompletionRequest(BaseModel):
             "returns a 400 with code=context_length_exceeded. 'truncate_middle' is "
             "limited to client-tool or response_format passthrough and retries after "
             "keeping the first and recent turns. 'truncate_oldest' provides a rolling "
-            "window for plain and Unsloth-tool chats by dropping complete oldest turns. "
+            "window for plain and LABZ-tool chats by dropping complete oldest turns. "
             "Both truncation policies preserve system messages and tool-call groups."
         ),
     )
@@ -2381,7 +2381,7 @@ class ChatCompletionRequest(BaseModel):
         description = (
             "[x-unsloth] How a local GGUF chat compacts once context_overflow is "
             "truncate_oldest. 'checkpoint' resets to the latest turn plus standing "
-            "instructions (Unsloth default). 'rolling' drops oldest complete turns. "
+            "instructions (LABZ default). 'rolling' drops oldest complete turns. "
             "Unset uses UNSLOTH_CONTEXT_POLICY."
         ),
     )
@@ -2399,7 +2399,7 @@ class ChatCompletionRequest(BaseModel):
     studio_tool_history: Optional[bool] = Field(
         None,
         description = (
-            "[x-unsloth] The replayed tool calls were produced by Unsloth's local "
+            "[x-unsloth] The replayed tool calls were produced by LABZ's local "
             "tool loop rather than by an OpenAI-compatible client tool contract."
         ),
     )
@@ -2416,12 +2416,12 @@ class ChatCompletionRequest(BaseModel):
     run_tools_locally: Optional[bool] = Field(
         None,
         description = (
-            "[x-unsloth] Execute the selected tools on the Unsloth host instead of "
+            "[x-unsloth] Execute the selected tools on the LABZ host instead of "
             "asking the provider to run its own hosted builtins. Only meaningful "
             "for providers that ship hosted tools of the same name (OpenAI, "
             "Gemini, Kimi, OpenRouter), where 'web_search' alone is ambiguous: "
             "the same request means hosted search to a client written before "
-            "Unsloth ran tools for external providers. Omitted keeps the hosted "
+            "LABZ ran tools for external providers. Omitted keeps the hosted "
             "behaviour, so an older client is unaffected."
         ),
     )
@@ -2710,7 +2710,7 @@ class ChatCompletionRequest(BaseModel):
             # An explicit confirm_tool_calls=True with no mode opted into the pre-permission-mode contract of
             # gating every call, so resolve it to "ask" rather than let the loop apply the "auto" default,
             # which would silently weaken that opt-in to high-risk calls only. Unlike the "ask" branch below
-            # this only sets permission_mode, which is inert unless Unsloth's own tool loop runs, so it needs
+            # this only sets permission_mode, which is inert unless LABZ's own tool loop runs, so it needs
             # no enable_tools/mcp gate. A bare unset request still defaults to auto.
             self.permission_mode = "ask"
         elif (
@@ -2720,7 +2720,7 @@ class ChatCompletionRequest(BaseModel):
             and (self.enable_tools is True or bool(self.mcp_enabled))
         ):
             # "Ask" gates every call, so a direct API caller that omits the legacy confirm flag must still hit
-            # the confirmation gate for Unsloth's own tool loop. An explicit confirm_tool_calls=False wins over
+            # the confirmation gate for LABZ's own tool loop. An explicit confirm_tool_calls=False wins over
             # the mode, so only self-enable when the flag is unset, and only when that loop is actually
             # requested (enable_tools / mcp_enabled): the router enters the loop on those signals, not on
             # enabled_tools alone. A plain client-tool passthrough must route verbatim, and external-provider
@@ -2789,7 +2789,7 @@ class ChatCountTokensRequest(ReasoningControlsRequest):
         None,
         description = (
             "[x-unsloth] Mirrors ChatCompletionRequest: the replayed tool calls came from "
-            "Unsloth's local tool loop, so _takes_tool_passthrough routes the count the way "
+            "LABZ's local tool loop, so _takes_tool_passthrough routes the count the way "
             "it routes the completion. Declared rather than left to extra='allow', which "
             "coerces nothing and would read the string 'false' as a claim of ownership."
         ),

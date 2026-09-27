@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Bind Unsloth child processes to the parent's lifetime so none survive an
+"""Bind LABZ child processes to the parent's lifetime so none survive an
 abnormal parent exit (terminal-window close, Task Manager "End Task", SIGKILL,
 crash) -- the cooperative shutdown path only runs on graceful exits.
 
@@ -52,7 +52,7 @@ def is_signalable_pid(pid: object) -> bool:
     `bool` is excluded explicitly: it is an `int` subclass, so True would
     otherwise read as pid 1.
 
-    Public because the floor has to hold at every signalling boundary in Unsloth,
+    Public because the floor has to hold at every signalling boundary in LABZ,
     not just this module's. It was written out by hand in four places at first,
     and the site that got missed was missed precisely because "who enforces the
     floor" was a question you had to answer by reading rather than by grepping
@@ -256,7 +256,7 @@ def _install_windows_job() -> None:
             kernel32.CloseHandle(job)
             return
         # AssignProcessToJobObject(parent) makes children inherit the job. May
-        # fail if Unsloth already runs inside an incompatible host job (pre-Win8);
+        # fail if LABZ already runs inside an incompatible host job (pre-Win8);
         # degrade to the cooperative path rather than blocking startup.
         if not kernel32.AssignProcessToJobObject(job, kernel32.GetCurrentProcess()):
             _record_job_status(False, "AssignProcessToJobObject failed", _last_error(ctypes))
@@ -274,7 +274,7 @@ def _install_windows_job() -> None:
 def _pdeathsig_preexec(owner_pid: Optional[int] = None) -> None:
     # Runs in the forked child before exec (PR_SET_PDEATHSIG does not survive the fork); the getppid check closes the
     # race where the parent died first, against owner_pid, the spawner's pid read pre-fork. A bare `getppid() == 1` also
-    # matches a parent that legitimately IS pid 1, which is how Unsloth runs as a container entrypoint: it killed every
+    # matches a parent that legitimately IS pid 1, which is how LABZ runs as a container entrypoint: it killed every
     # llama-server before exec (#7886). It also misses reparenting to a subreaper, whose pid is not 1.
     try:
         import ctypes
@@ -895,7 +895,7 @@ def collect_descendants_known(
     #
     # The root floor alone is not enough, and the difference is a real machine:
     # the root starts at t=100, a stranger U starts at t=200 under some unrelated
-    # pid P, P exits, at t=300 P's number is reused for a genuine Unsloth child, and
+    # pid P, P exits, at t=300 P's number is reused for a genuine LABZ child, and
     # U still records P as its creator. U is later than the root, so a root-only floor
     # admits it and taskkill /T /F reaches U and everything under it. Ordering U
     # against P's CURRENT creation time (300) rejects it, because a child cannot
@@ -954,7 +954,7 @@ def _windows_collect_descendants_known(
     down the walk, not only against the root's. The root floor alone is not enough and the
     difference is a real machine: the root starts at t=100, a stranger U starts at t=200
     under some unrelated pid P, P exits, at t=300 P's number is reused for a genuine
-    Unsloth child, and U still records P as its creator because Windows never clears that
+    LABZ child, and U still records P as its creator because Windows never clears that
     field. U is later than the root, so a root-only floor admits it, and the survivor sweep
     then hands it to ``taskkill /PID <U> /T /F``, which takes down U and everything under
     it. Ordering U against P's CURRENT creation time rejects it: a process cannot predate
@@ -1658,7 +1658,7 @@ def _breadcrumb_dir():
 
 
 def _breadcrumb_file():
-    # One file per owner: two Unsloth instances can share a home (different ports), and a
+    # One file per owner: two LABZ instances can share a home (different ports), and a
     # single shared file would let the second erase the first's children.
     directory = _breadcrumb_dir()
     return None if directory is None else directory / f"{os.getpid()}.json"
@@ -1915,7 +1915,7 @@ def adopt_pid(
                 # breadcrumb flush, and the process can exit anywhere in that interval; the
                 # number is then free, and this `OpenProcess` can land on whatever took it.
                 # Assigning a stranger to a job whose limit is kill-on-close means closing
-                # Unsloth kills a process that has nothing to do with it. The handle refers
+                # LABZ kills a process that has nothing to do with it. The handle refers
                 # to one process for its whole lifetime, so a creation time read through it
                 # answers about the process `AssignProcessToJobObject` will act on.
                 #
@@ -2100,10 +2100,10 @@ def terminate_pid(
 
 
 def reap_recorded_children(timeout: float = 5.0) -> "list[int]":
-    """Kill children recorded by a previous Unsloth that is no longer running.
+    """Kill children recorded by a previous LABZ that is no longer running.
 
     Runs once at startup, before anything new spawns. Every record in the
-    directory is considered, so an Unsloth that crashed while a sibling was
+    directory is considered, so an LABZ that crashed while a sibling was
     running is still cleaned up. A child is only signalled when its recorded
     start-time identity still matches, so a recycled pid is never touched.
     """
@@ -2160,7 +2160,7 @@ def _reap_one_record(path, timeout: float) -> "tuple[list[int], bool]":
         isinstance(owner_pid, int)
         and owner_matches
         and _pid_alive(owner_pid)
-        # os.kill(pid, 0) succeeds for a zombie, and an Unsloth nobody has waited
+        # os.kill(pid, 0) succeeds for a zombie, and an LABZ nobody has waited
         # on yet is still a dead one whose sidecars are orphans.
         and not _pid_is_zombie(owner_pid)
     ):
@@ -2222,7 +2222,7 @@ def _reap_one_record(path, timeout: float) -> "tuple[list[int], bool]":
         try:
             import logging
             logging.getLogger(__name__).warning(
-                "Reaped %d orphaned child process(es) left by a previous Unsloth: %s",
+                "Reaped %d orphaned child process(es) left by a previous LABZ: %s",
                 len(killed),
                 killed,
             )
@@ -2234,8 +2234,8 @@ def _reap_one_record(path, timeout: float) -> "tuple[list[int], bool]":
 def _own_process_group(pid: int) -> Optional[int]:
     """The pid's process group, but only when it leads one (start_new_session).
 
-    A child sharing Unsloth's group must never be recorded: killing that group
-    would take Unsloth and every sibling with it.
+    A child sharing LABZ's group must never be recorded: killing that group
+    would take LABZ and every sibling with it.
     """
     if _is_windows() or not hasattr(os, "getpgid"):
         return None

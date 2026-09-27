@@ -1,5 +1,5 @@
-# Unsloth Zoo - Utilities for Unsloth
-# Copyright 2023-present Daniel Han-Chen, Michael Han-Chen & the Unsloth team. All rights reserved.
+# LABZ Zoo - Utilities for LABZ
+# Copyright 2023-present Daniel Han-Chen, Michael Han-Chen & the LABZ team. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
 """Native Transformers/Diffusers audio generation backends.
 
 This module intentionally has no ML imports at module import time. The worker uses
-``is_native_audio_model`` before choosing its MLX or Unsloth runtime, including on
+``is_native_audio_model`` before choosing its MLX or LABZ runtime, including on
 Apple Silicon, and imports torch/transformers only after the normal version and
 remote-code security gates have run.
 """
@@ -674,7 +674,7 @@ def native_audio_download_plan(model_name: str, hf_token: Optional[str] = None) 
     audio_type = _native_audio_type(normalized)
     if audio_type in PYTHON310_AUDIO_TYPES and sys.version_info < (3, 10):
         family = "Higgs TTS" if audio_type.startswith("higgs_") else "MiniMax Music 3"
-        raise ValueError(f"{family} requires Python 3.10 or newer in Unsloth.")
+        raise ValueError(f"{family} requires Python 3.10 or newer in LABZ.")
     if local_checkpoint and audio_type is None:
         return {
             "entries": [],
@@ -947,7 +947,7 @@ class NativeAudioBackend:
                     "its official local runtime does not support AMD ROCm."
                 )
         if audio_type == "minimax_music3" and sys.version_info < (3, 10):
-            raise RuntimeError("MiniMax Music 3 requires Python 3.10 or newer in Unsloth.")
+            raise RuntimeError("MiniMax Music 3 requires Python 3.10 or newer in LABZ.")
 
         if model_name in self.models:
             self.active_model_name = model_name

@@ -869,7 +869,7 @@ def _apply_ollama_reasoning_controls(
 # Shared client reused across all requests for HTTP connection pooling. Auth headers and timeouts are passed
 # per-request, so a single client handles every provider without storing credentials.
 def _create_shared_http_client() -> httpx.AsyncClient:
-    # Unsupported env proxy schemes (socks:// etc) raise at construction and would crash Unsloth startup (#6090);
+    # Unsupported env proxy schemes (socks:// etc) raise at construction and would crash LABZ startup (#6090);
     # retry ignoring env proxies instead.
     try:
         return httpx.AsyncClient()
@@ -1506,7 +1506,7 @@ class ExternalProviderClient:
 
         if not self._is_openai_compatible():
             # Gemini speaks its own native REST shape (contents/parts); `_stream_gemini` translates request/response
-            # into the OpenAI Chat Completions chunk format the rest of Unsloth expects.
+            # into the OpenAI Chat Completions chunk format the rest of LABZ expects.
             if self.provider_type == "gemini":
                 async for line in self._stream_gemini(
                     messages,
@@ -1921,7 +1921,7 @@ class ExternalProviderClient:
                                                         _record_or_url_citation(ann)
                         if self.provider_type == "lemonade" and line.startswith("{"):
                             line = _bare_json_error_as_sse(line) or line
-                        # Verbatim relay, minus Unsloth's own UI control protocol: the frames this server writes to
+                        # Verbatim relay, minus LABZ's own UI control protocol: the frames this server writes to
                         # paint tool cards ride the same stream, so an endpoint that echoes them forges a card for a
                         # tool that never ran.
                         relayed = sanitize_provider_sse_line(line)
@@ -2156,7 +2156,7 @@ class ExternalProviderClient:
                             except StopAsyncIteration:
                                 break
                             if line.strip():
-                                # Same rule as the main relay: never let the endpoint speak Unsloth's control
+                                # Same rule as the main relay: never let the endpoint speak LABZ's control
                                 # vocabulary.
                                 relayed = sanitize_provider_sse_line(line)
                                 if relayed is not None:
@@ -2294,7 +2294,7 @@ class ExternalProviderClient:
                                                     annotation_shapes.add(
                                                         str(ann.get("type") or "?")
                                                     )
-                        # Same rule as the main relay: never let the endpoint speak Unsloth's control vocabulary.
+                        # Same rule as the main relay: never let the endpoint speak LABZ's control vocabulary.
                         relayed = sanitize_provider_sse_line(line)
                         if relayed is None:
                             continue
@@ -2398,7 +2398,7 @@ class ExternalProviderClient:
                 continue
             if isinstance(content, list):
                 # Translate OpenAI multimodal parts -> Anthropic native shapes: `image_url` -> `{type:"image",
-                # source:...}`, and `input_document` -> `{type:"document", source:...}` (an Unsloth extension
+                # source:...}`, and `input_document` -> `{type:"document", source:...}` (an LABZ extension
                 # mirroring Anthropic's document block, which supports PDFs as base64 or URL).
                 anthropic_parts: list[dict[str, Any]] = []
                 for part in content:
@@ -2438,7 +2438,7 @@ class ExternalProviderClient:
                                 }
                             )
                     elif part.get("type") == "input_document":
-                        # Unsloth's normalised PDF/doc type (file_data data-URI or file_url) -> Anthropic's native
+                        # LABZ's normalised PDF/doc type (file_data data-URI or file_url) -> Anthropic's native
                         # `document` block.
                         url = part.get("file_url") or ""
                         data_uri = part.get("file_data") or ""
@@ -5246,7 +5246,7 @@ class ExternalProviderClient:
                     )
                 # OpenAI requires the reasoning items that came back alongside a tool call to be replayed with the
                 # function_call / function_call_output pair whenever the history is managed by hand, which is exactly
-                # what the Unsloth tool loop does: "any reasoning items returned in model responses with tool calls
+                # what the LABZ tool loop does: "any reasoning items returned in model responses with tool calls
                 # must also be passed back with tool call outputs"
                 # (https://developers.openai.com/api/docs/guides/function-calling). Dropping them loses the model's
                 # chain of thought across every local tool hop and misses the prompt cache on the turn after.
@@ -5320,7 +5320,7 @@ class ExternalProviderClient:
                                 {"type": "image_generation_call", "id": call_id}
                             )
                     elif part_type == "input_document":
-                        # Map Unsloth's `input_document` onto Responses' `input_file`.
+                        # Map LABZ's `input_document` onto Responses' `input_file`.
                         file_url = part.get("file_url")
                         file_data = part.get("file_data")
                         filename = part.get("filename")
@@ -6858,7 +6858,7 @@ class ExternalProviderClient:
                     models = [model for model in raw_models if isinstance(model, dict)]
             if not models and self.provider_type == "ollama":
                 models = await self._list_ollama_native_models()
-            # Gemini's native /v1beta/models uses a different shape; repackage into the OpenAI-compatible one Unsloth
+            # Gemini's native /v1beta/models uses a different shape; repackage into the OpenAI-compatible one LABZ
             # expects.
             if not models and self.provider_type == "gemini":
                 models = self._parse_gemini_models(data)
@@ -7051,7 +7051,7 @@ def _friendly_provider_error_text(
     *,
     model: str | None = None,
 ) -> str:
-    """Rewrite common provider errors into actionable Unsloth copy."""
+    """Rewrite common provider errors into actionable LABZ copy."""
     if status_code == 404 and model:
         lowered = raw_message.lower()
         if "not found" in lowered or "not_found" in lowered:

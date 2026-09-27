@@ -23,7 +23,7 @@ from utils.models.drafters.common import (
 def dspark_precision_rank(name: str) -> int:
     """Sidecar precision preference: Q8_0 first, the precision the DSpark model
     card recommends. Shared with the hub download and VRAM-sizing paths so the
-    file Unsloth budgets for is the file it fetches and launches."""
+    file LABZ budgets for is the file it fetches and launches."""
     base = Path(name).name.lower()
     if "-q8_0" in base:
         return 0

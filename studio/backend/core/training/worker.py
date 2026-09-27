@@ -88,7 +88,7 @@ def _data_parallel_world_size() -> int:
     only CUDA counts.
 
     The larger of the two, never the sum: a distributed run forces n_gpu to 1, and a model-parallel
-    one (a sharding device_map, which is what Unsloth's own multi-GPU load uses) forces it to 1 as
+    one (a sharding device_map, which is what LABZ's own multi-GPU load uses) forces it to 1 as
     well. Rounding up when the model turns out to be sharded rather than replicated only tokenizes a
     larger subset of a corpus this bound is orders of magnitude below anyway; rounding down means
     the run silently re-reads rows it has already trained on.
@@ -273,7 +273,7 @@ def _model_cache_fallback_error(config: dict, error: BaseException | None) -> Ru
 
 def _mlx_revision_fallback_error(config: dict) -> RuntimeError | None:
     """Refuse an exact retry when MLX would remap the repo and drop its commit. ``FastMLXModel``
-    maps Unsloth bitsandbytes repositories to their full-precision base because MLX cannot read
+    maps LABZ bitsandbytes repositories to their full-precision base because MLX cannot read
     bnb-packed weights, and a commit from the selected repository has no guaranteed meaning in
     that different repository, so silently applying or dropping it would violate the cache pin."""
     model_name = str(config.get("model_name") or "")
@@ -2050,7 +2050,7 @@ _MLX_VLM_RESIZED_IMAGE_LAYOUT_CACHE = {}
 
 
 def _mlx_vlm_resized_image_layout(processor = None) -> str | None:
-    """Return the numpy image layout expected after Unsloth-side VLM resizing."""
+    """Return the numpy image layout expected after LABZ-side VLM resizing."""
     image_processor = getattr(processor, "image_processor", None)
     if image_processor is None:
         return None
@@ -2279,7 +2279,7 @@ def _normalize_mlx_studio_scheduler(value):
 
 
 def _resolve_mlx_local_dataset_files(file_paths: list) -> list[str]:
-    """Resolve CLI paths and Unsloth local dataset uploads without importing the GPU trainer."""
+    """Resolve CLI paths and LABZ local dataset uploads without importing the GPU trainer."""
     from utils.paths import dataset_files_in_dir, resolve_dataset_path
 
     all_files: list[str] = []
@@ -2405,12 +2405,12 @@ def _resolve_mlx_max_grad_norm(value):
         value = float(value)
     except (TypeError, ValueError):
         raise ValueError(
-            f"Unsloth MLX: max_grad_norm={value!r} must be a non-negative float or None."
+            f"LABZ MLX: max_grad_norm={value!r} must be a non-negative float or None."
         )
     # inf clears a >= 0 check but never binds, so the run would train unclipped.
     if value < 0 or not math.isfinite(value):
         raise ValueError(
-            f"Unsloth MLX: max_grad_norm={value} must be a finite value >= 0 "
+            f"LABZ MLX: max_grad_norm={value} must be a finite value >= 0 "
             "(use 0 to disable global norm clipping)."
         )
     return value
@@ -2448,7 +2448,7 @@ def _run_mlx_training(event_queue, stop_queue, config):
         )
     except ImportError as e:
         raise ImportError(
-            "Unsloth: MLX training requires unsloth-zoo with the MLX modules "
+            "LABZ: MLX training requires unsloth-zoo with the MLX modules "
             "(unsloth_zoo.mlx.loader / unsloth_zoo.mlx.trainer). Reinstall via "
             "install.sh on Apple Silicon."
         ) from e
@@ -2947,7 +2947,7 @@ def _run_mlx_training(event_queue, stop_queue, config):
         max_grad_value = float(max_grad_value)
         if max_grad_value < 0 or not math.isfinite(max_grad_value):
             raise ValueError(
-                f"Unsloth MLX: max_grad_value={max_grad_value} must be finite and >= 0 "
+                f"LABZ MLX: max_grad_value={max_grad_value} must be finite and >= 0 "
                 "(0 or None disables elementwise clipping)."
             )
     max_grad_leaf_norm = config.get("max_grad_leaf_norm")
@@ -2955,7 +2955,7 @@ def _run_mlx_training(event_queue, stop_queue, config):
         max_grad_leaf_norm = float(max_grad_leaf_norm)
         if max_grad_leaf_norm < 0 or not math.isfinite(max_grad_leaf_norm):
             raise ValueError(
-                f"Unsloth MLX: max_grad_leaf_norm={max_grad_leaf_norm} must be finite and >= 0 "
+                f"LABZ MLX: max_grad_leaf_norm={max_grad_leaf_norm} must be finite and >= 0 "
                 "(0 or None disables proportional leaf-norm clipping)."
             )
     weight_decay = config.get("weight_decay", 0.001)
@@ -3005,7 +3005,7 @@ def _run_mlx_training(event_queue, stop_queue, config):
         # beats switching clip modes, which would alter the loss trajectory and cost VLM runs mx.compile.
         mlx_config_kwargs["report_grad_norm"] = True
     if "append_eos" in _supported_fields:
-        # Unsloth SFT formatting owns rendered examples; raw/CPT text still needs MLX to append EOS.
+        # LABZ SFT formatting owns rendered examples; raw/CPT text still needs MLX to append EOS.
         mlx_config_kwargs["append_eos"] = bool(raw_text_mode)
 
     trainer = MLXTrainer(
@@ -3266,7 +3266,7 @@ def run_mlx_training_process(
     transformers_activated: bool = False,
     config_prevalidated: bool = False,
 ) -> None:
-    """MLX worker entrypoint shared by Unsloth subprocesses and the CLI adapter."""
+    """MLX worker entrypoint shared by LABZ subprocesses and the CLI adapter."""
     backend_path = str(Path(__file__).resolve().parent.parent.parent)
     if backend_path not in sys.path:
         sys.path.insert(0, backend_path)
@@ -3973,7 +3973,7 @@ def run_training_process(*, event_queue: Any, stop_queue: Any, config: dict) -> 
 
     # ── 2. Now import ML libraries (fresh in this clean process) ──
     try:
-        _send_status(event_queue, "Importing Unsloth...")
+        _send_status(event_queue, "Importing LABZ...")
 
         backend_path = str(Path(__file__).resolve().parent.parent.parent)
         if backend_path not in sys.path:
@@ -4461,7 +4461,7 @@ def run_training_process(*, event_queue: Any, stop_queue: Any, config: dict) -> 
         if is_cpt:
             if cpt_trains_embeddings:
                 if embedding_lr_value is None:
-                    # Default embedding_learning_rate = lr/10 (Unsloth CPT notebook).
+                    # Default embedding_learning_rate = lr/10 (LABZ CPT notebook).
                     embedding_lr_value = lr_value / 10.0
                     logger.info(
                         f"CPT: using default embedding_learning_rate={embedding_lr_value:.1e} "

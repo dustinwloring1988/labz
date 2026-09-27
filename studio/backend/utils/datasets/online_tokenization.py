@@ -84,14 +84,14 @@ def dataloader_worker_start_method() -> Optional[str]:
 
 
 def platform_supports_dataloader_workers() -> bool:
-    """Fork, and only fork. The hazard is ``spawn``, not the OS: a spawned worker re-imports the entry point against a fresh ``sys.path``, and Unsloth's is modified in-process, so the import fails (why ``trainer.py`` already forces 0 workers on Windows and macOS, which default to spawn). A Linux process set to ``spawn`` or ``forkserver`` is the same hazard, and a platform check cannot see it."""
+    """Fork, and only fork. The hazard is ``spawn``, not the OS: a spawned worker re-imports the entry point against a fresh ``sys.path``, and LABZ's is modified in-process, so the import fails (why ``trainer.py`` already forces 0 workers on Windows and macOS, which default to spawn). A Linux process set to ``spawn`` or ``forkserver`` is the same hazard, and a platform check cannot see it."""
     if sys.platform in ("win32", "darwin"):
         return False
     return dataloader_worker_start_method() == "fork"
 
 
 def trl_supports_skip_prepare_dataset() -> bool:
-    """Feature-detect the ``skip_prepare_dataset`` hook. ``SFTConfig`` must carry ``dataset_kwargs`` and ``SFTTrainer.__init__`` must read the key. If the source is unreadable (compiled or patched build) the field alone decides: Unsloth's VLM branch has relied on this hook across every supported TRL, so a missing source is not evidence of a missing hook."""
+    """Feature-detect the ``skip_prepare_dataset`` hook. ``SFTConfig`` must carry ``dataset_kwargs`` and ``SFTTrainer.__init__`` must read the key. If the source is unreadable (compiled or patched build) the field alone decides: LABZ's VLM branch has relied on this hook across every supported TRL, so a missing source is not evidence of a missing hook."""
     try:
         import dataclasses
 
@@ -500,7 +500,7 @@ def _shutdown_loader_workers(loader: Any, shut: list) -> int:
 
 
 def release_train_dataloader(trainer: Any) -> int:
-    """Shut down the online run's persistent DataLoader workers. Returns how many. Covers the prewarmed train loader and the eval loaders transformers memoized in ``_eval_dataloaders``; both were built with the same worker settings. ``dataloader_persistent_workers = True`` lets the barrier's workers survive into ``train()``, and equally keeps them alive after it returns: memo holds loader holds iterator holds the processes, so nothing drops the last reference, and Unsloth then merges, quantizes and exports (the most memory-hungry part of a run) with four forked children still resident, each holding the parent's CUDA file descriptors. Idempotent and never raises: called from a ``finally``, including where training never started."""
+    """Shut down the online run's persistent DataLoader workers. Returns how many. Covers the prewarmed train loader and the eval loaders transformers memoized in ``_eval_dataloaders``; both were built with the same worker settings. ``dataloader_persistent_workers = True`` lets the barrier's workers survive into ``train()``, and equally keeps them alive after it returns: memo holds loader holds iterator holds the processes, so nothing drops the last reference, and LABZ then merges, quantizes and exports (the most memory-hungry part of a run) with four forked children still resident, each holding the parent's CUDA file descriptors. Idempotent and never raises: called from a ``finally``, including where training never started."""
     released = 0
     cache = getattr(trainer, "_unsloth_online_loader_cache", None)
     loader = cache.pop("loader", None) if isinstance(cache, dict) else None

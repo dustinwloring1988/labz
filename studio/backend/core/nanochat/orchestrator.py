@@ -78,7 +78,7 @@ _KILL_TIMEOUT_SECONDS = 20
 
 
 class NanochatBusy(RuntimeError):
-    """Another nanochat run, or an Unsloth training run, owns the GPU."""
+    """Another nanochat run, or an LABZ training run, owns the GPU."""
 
 
 class NanochatNotInstalled(RuntimeError):
@@ -650,7 +650,7 @@ class NanochatRun:
 
         if is_process_shutting_down():
             stage.status = "failed"
-            stage.error = "Unsloth is shutting down"
+            stage.error = "LABZ is shutting down"
             return "failed"
 
         # Free VRAM before the child allocates any. A resident chat model is kept
@@ -1090,7 +1090,7 @@ def _as_float(value: Any) -> Optional[float]:
 class NanochatRunManager:
     """The single active run, and the lock that keeps the GPU to itself.
 
-    One run at a time, and mutually exclusive with Unsloth's own training: both
+    One run at a time, and mutually exclusive with LABZ's own training: both
     want the whole GPU, and running them together would have one of them OOM at an
     unpredictable point hours into a run.
     """
@@ -1114,13 +1114,13 @@ class NanochatRunManager:
         with self._lock:
             if self._current is not None and self._current.is_active():
                 raise NanochatBusy("A nanochat run is already in progress")
-            # Serialised against Unsloth training, which owns the same GPU.
+            # Serialised against LABZ training, which owns the same GPU.
             with training_lifecycle_guard():
                 from core.training.training import get_training_backend
 
                 backend = get_training_backend()
                 if backend.is_training_active():
-                    raise NanochatBusy("Unsloth training is running; stop it first")
+                    raise NanochatBusy("LABZ training is running; stop it first")
 
                 run = NanochatRun(run_id=uuid.uuid4().hex[:12], config=config)
                 self._current = run

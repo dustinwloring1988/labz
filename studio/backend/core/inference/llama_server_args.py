@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Boundary validator for user-supplied llama-server pass-through args. Reject only flags Unsloth
+"""Boundary validator for user-supplied llama-server pass-through args. Reject only flags LABZ
 manages (model identity, auth, network, parallel slots). Everything else (sampling, ``-c``,
 ``-ngl``, ``--flash-attn``, ``--cache-type-*``, ``--spec-*``, ``--jinja``, ...) is appended after
-Unsloth's auto-set flags so llama.cpp's last-wins parser lets the user override. Ref:
+LABZ's auto-set flags so llama.cpp's last-wins parser lets the user override. Ref:
 https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md"""
 
 from __future__ import annotations
@@ -55,11 +55,11 @@ _DENYLIST_GROUPS: tuple[frozenset[str], ...] = (
     # Parallel slots: owned by typer --parallel and LoadRequest.n_parallel; a pass-through would desync the slot
     # bookkeeping from llama-server.
     _PARALLEL_FLAGS,
-    # Model identity: Unsloth resolves it from LoadRequest; a second -m would load a different model than Unsloth
+    # Model identity: LABZ resolves it from LoadRequest; a second -m would load a different model than LABZ
     # thinks it loaded.
     frozenset({"-m", "--model"}),
-    # Public model id: Unsloth sets a sanitized --alias so the OpenAI API never exposes the local .gguf path. A
-    # user-supplied alias is appended after Unsloth's and, with llama.cpp's last-wins parsing, would reintroduce the
+    # Public model id: LABZ sets a sanitized --alias so the OpenAI API never exposes the local .gguf path. A
+    # user-supplied alias is appended after LABZ's and, with llama.cpp's last-wins parsing, would reintroduce the
     # path leak this is meant to prevent.
     frozenset({"-a", "--alias"}),
     frozenset({"-mu", "--model-url"}),
@@ -71,13 +71,13 @@ _DENYLIST_GROUPS: tuple[frozenset[str], ...] = (
     frozenset({"-hft", "--hf-token"}),
     frozenset({"-mm", "--mmproj"}),
     frozenset({"-mmu", "--mmproj-url"}),
-    # Networking: Unsloth binds + proxies; retargeting orphans the proxy.
+    # Networking: LABZ binds + proxies; retargeting orphans the proxy.
     frozenset({"--host"}),
     frozenset({"--port"}),
     frozenset({"--path"}),
     frozenset({"--api-prefix"}),
     frozenset({"--reuse-port"}),
-    # Auth / TLS: Unsloth terminates auth; upstream --api-key / TLS shadows Unsloth's key and breaks the proxy hop
+    # Auth / TLS: LABZ terminates auth; upstream --api-key / TLS shadows LABZ's key and breaks the proxy hop
     frozenset({"--api-key"}),
     frozenset({"--api-key-file"}),
     frozenset({"--ssl-key-file"}),
@@ -99,7 +99,7 @@ _DENYLIST_GROUPS: tuple[frozenset[str], ...] = (
     # Pooling decides whether the managed embedding launch is safe. A pass-through override appended after --embedding
     # could switch it to NONE or RANK.
     frozenset({"--pooling"}),
-    # llama-server's own built-in tools flag would silently stack on top of Unsloth's --enable-tools / --disable-tools
+    # llama-server's own built-in tools flag would silently stack on top of LABZ's --enable-tools / --disable-tools
     # policy resolver.
     frozenset({"--tools"}),
     # --agent is --tools by another name: upstream documents it as "enable CORS proxy and ALL built-in tools", and
@@ -112,7 +112,7 @@ _DENYLIST_GROUPS: tuple[frozenset[str], ...] = (
     # environments" for both.
     frozenset({"--mcp-servers-config"}),
     frozenset({"--mcp-servers-json"}),
-    # CORS: Unsloth terminates browser access at its own origin, so widening the child's would hand a page past the
+    # CORS: LABZ terminates browser access at its own origin, so widening the child's would hand a page past the
     # boundary the proxy exists to hold.
     frozenset({"--cors-origins"}),
     frozenset({"--cors-headers"}),
@@ -124,8 +124,8 @@ _DENYLIST_GROUPS: tuple[frozenset[str], ...] = (
     # redirecting or silencing it makes every failure the same opaque one.
     frozenset({"--log-file"}),
     frozenset({"--log-disable"}),
-    # Slot-state dir: Unsloth owns it for KV persistence across idle unload. Endpoint exposure (--slots, --props) is
-    # deliberately NOT denied alongside it: Unsloth reads GET /props and never /slots, so either is the user's own
+    # Slot-state dir: LABZ owns it for KV persistence across idle unload. Endpoint exposure (--slots, --props) is
+    # deliberately NOT denied alongside it: LABZ reads GET /props and never /slots, so either is the user's own
     # call.
     frozenset({"--slot-save-path"}),
     # These print and exit instead of serving, so the load would "succeed" with no server behind it and only time out
@@ -157,14 +157,14 @@ _OPTIONAL_SECOND_VALUE_FLAGS: frozenset[str] = frozenset(
 MAX_EXTRA_ARG_TOKENS = 256
 MAX_EXTRA_ARGS_BYTES = 32 * 1024
 # Windows passes CreateProcess ONE string for the whole command line, capped at 32767 characters, and the model path,
-# Unsloth's own flags and the quoting subprocess adds all come out of the same budget. So the extras get a smaller
+# LABZ's own flags and the quoting subprocess adds all come out of the same budget. So the extras get a smaller
 # share there: accepting the full 32 KiB would pass every check here and then fail inside Popen, after the load had
 # already begun switching models.
 MAX_EXTRA_ARGS_BYTES_WINDOWS = 24 * 1024
 
 
 # CreateProcess takes the whole command line as ONE string, capped here. The rest of the command (the binary, the
-# model path, Unsloth's own flags) has to fit too, so the extras are checked against the limit minus this reserve.
+# model path, LABZ's own flags) has to fit too, so the extras are checked against the limit minus this reserve.
 WINDOWS_COMMAND_LIMIT = 32767
 WINDOWS_COMMAND_RESERVE = 8192
 
@@ -272,7 +272,7 @@ def validate_extra_args(args: Optional[Iterable[str]]) -> list[str]:
         flag = _flag_name(token)
         if flag is not None and flag in _DENYLIST:
             message = (
-                f"llama-server flag '{flag}' is managed by Unsloth Studio "
+                f"llama-server flag '{flag}' is managed by LABZ Studio "
                 f"and cannot be passed as an extra arg"
             )
             # Why (#9510): users reaching for `--parallel 1` to cap concurrent predictions on a local model hit this
@@ -480,7 +480,7 @@ def sorted_managed_flags() -> list[str]:
 
 
 def is_managed_flag(flag: str) -> bool:
-    """True if ``flag`` is Unsloth-managed. Normalises via ``_flag_name`` so `-np8` / `--parallel=8`
+    """True if ``flag`` is LABZ-managed. Normalises via ``_flag_name`` so `-np8` / `--parallel=8`
     classify like the canonical tokens."""
     normalised = _flag_name(flag)
     return normalised is not None and normalised in _DENYLIST
@@ -504,7 +504,7 @@ _SPEC_FLAGS: frozenset[str] = frozenset(
         "--draft-min",
         "--draft-max",
         # MTP path (llama.cpp #22673). The drafter selectors (local --model-draft and HF --spec-draft-hf aliases) are
-        # Unsloth-managed since the separate-drafter support (Gemma 4): an inherited copy must not last-wins-override
+        # LABZ-managed since the separate-drafter support (Gemma 4): an inherited copy must not last-wins-override
         # the auto-detected drafter, while explicit extras for the current load are never stripped. The per-drafter
         # tuning knobs (-ngld, --spec-draft-device) are NOT stripped: the VRAM budget reads them via the same parsers
         # the child honors, so they stay consistent on inherit, and stripping them would silently move a CPU-offloaded
@@ -541,8 +541,8 @@ _TEMPLATE_FLAGS: frozenset[str] = frozenset(
 )
 # Multi-GPU split mode shadows the Tensor Parallelism toggle (--split-mode tensor). Pass-through stays allowed so
 # users keep the row/none/layer modes the toggle doesn't expose, but it's stripped on inherit and reconciled into the
-# round-tripped tensor_parallel state. --tensor-split is coupled to the split mode and is stripped with it: Unsloth
-# owns the tensor-mode split ratios, so an inherited/stale --tensor-split must not last-wins-override Unsloth's
+# round-tripped tensor_parallel state. --tensor-split is coupled to the split mode and is stripped with it: LABZ
+# owns the tensor-mode split ratios, so an inherited/stale --tensor-split must not last-wins-override LABZ's
 # computed asymmetric split.
 _SPLIT_MODE_FLAGS: frozenset[str] = frozenset({"-sm", "--split-mode"})
 _TENSOR_SPLIT_FLAGS: frozenset[str] = frozenset({"-ts", "--tensor-split"})
@@ -636,7 +636,7 @@ _BOOLEAN_SHADOWING_FLAGS: frozenset[str] = frozenset(
 
 def parse_ctx_override(args: Optional[Iterable[str]]) -> Optional[int]:
     """Return the last user-supplied ``-c`` / ``--ctx-size`` value. Mirrors llama.cpp's last-wins
-    parsing for the one numeric knob Unsloth's load-time fit logic needs."""
+    parsing for the one numeric knob LABZ's load-time fit logic needs."""
     if not args:
         return None
 
@@ -824,7 +824,7 @@ def _last_flag_value(
 def parse_cache_override(args: Optional[Iterable[str]]) -> Optional[str]:
     """Return the last-wins cache type if extras pass cache flags. Mirrors parse_ctx_override but
     for cache type. Recognises both -ctk (key) and -ctv (value); when both appear, returns the
-    last-wins value, treating key and value cache flags as the same setting because Unsloth's KV
+    last-wins value, treating key and value cache flags as the same setting because LABZ's KV
     estimate has a single cache_type_kv knob."""
     return _last_flag_value(args, _CACHE_FLAGS)
 
@@ -1106,7 +1106,7 @@ def split_policy_starves_devices(
 
     ``--split-mode`` and ``--tensor-split`` are pass-through under auto-select
     (``_SPLIT_SHADOWING_FLAGS`` is stripped only when the Tensor Parallelism toggle owns the split),
-    so both reach the child appended after Unsloth's own placement flags, and either can quietly
+    so both reach the child appended after LABZ's own placement flags, and either can quietly
     shrink the pool a pooled VRAM credit was priced for. ``--split-mode none`` is
     ``LLAMA_SPLIT_MODE_NONE`` (common/arg.cpp), which puts the whole model on ``--main-gpu`` alone,
     while ``row``/``layer``/``tensor`` all keep every device. ``--tensor-split`` is a per-device
@@ -1181,7 +1181,7 @@ def resolve_tensor_parallel(args: Optional[Iterable[str]], fallback_tensor_paral
 
 
 def _env_split_mode_is_tensor(env: Optional[Mapping[str, str]] = None) -> bool:
-    """True when the inherited LLAMA_ARG_SPLIT_MODE env selects tensor. Unsloth emits --split-mode
+    """True when the inherited LLAMA_ARG_SPLIT_MODE env selects tensor. LABZ emits --split-mode
     only on its tensor branch, so a tensor env on the layer path would run the child
     tensor-parallel unbudgeted; this flips the budget to tensor. Only tensor is heavier, so other
     modes are ignored."""
@@ -1326,7 +1326,7 @@ def strip_shadowing_flags(
     strip_cache_ram: bool = False,
     strip_spec_draft_cache: bool = False,
 ) -> list[str]:
-    """Strip flags that shadow first-class Unsloth settings.
+    """Strip flags that shadow first-class LABZ settings.
 
     Used when inheriting a previous load's ``llama_extra_args`` so an inherited `-c 4096` can't
     override the current `max_seq_length` (same for cache / spec / template / split-mode). Each
@@ -1515,7 +1515,7 @@ def apply_model_memory_policy(
     settings: Optional[tuple[bool, bool]] = None,
 ) -> tuple[list[str], list[str]]:
     """Resolve the Model Memory settings into llama-server flags, returning ``(managed_flags,
-    extras)``: what Unsloth emits itself, and the user's extras with any vetoed flag removed.
+    extras)``: what LABZ emits itself, and the user's extras with any vetoed flag removed.
 
     "Keep model in GPU memory" page-locks the weights (``--load-mode mmap+mlock``, or the deprecated
     ``--mlock``) but ONLY when ``weights_in_host_memory``. mlock pins a whole mapping in host RAM,
@@ -1740,7 +1740,7 @@ def _env_var_locks_or_reserves(name: str, value: str) -> bool:
 
 
 # The LLAMA_ARG_* twins of flags the denylist refuses. llama.cpp reads these before argv, so a name refused in extra
-# args is still reachable through the environment Unsloth's own process inherits. Anyone who can set that environment
+# args is still reachable through the environment LABZ's own process inherits. Anyone who can set that environment
 # can already do worse, so this is not the boundary -- it just stops a denied flag arriving by the back door and
 # leaving no trace in the recorded command.
 DENIED_ENV_VARS: tuple[str, ...] = (
@@ -1754,30 +1754,30 @@ DENIED_ENV_VARS: tuple[str, ...] = (
     "LLAMA_ARG_CORS_METHODS",
     "LLAMA_ARG_CORS_CREDENTIALS",
     "LLAMA_ARG_MEDIA_PATH",
-    # The twins of --log-file and --log-disable. Unsloth classifies a failed start by reading llama-server's own
+    # The twins of --log-file and --log-disable. LABZ classifies a failed start by reading llama-server's own
     # output, so an inherited redirect leaves every failure looking like the same opaque one; and unlike the flags,
-    # Unsloth emits nothing later that would override these. LLAMA_ARG_LOG_DISABLE has no twin in today's builds, and
+    # LABZ emits nothing later that would override these. LLAMA_ARG_LOG_DISABLE has no twin in today's builds, and
     # is listed so it cannot arrive as one.
     "LLAMA_ARG_LOG_FILE",
     "LLAMA_ARG_LOG_DISABLE",
-    # --api-prefix moves every endpoint, including the /health Unsloth waits on, so an inherited one turns every load
+    # --api-prefix moves every endpoint, including the /health LABZ waits on, so an inherited one turns every load
     # into a timeout.
     "LLAMA_ARG_API_PREFIX",
-    # --api-key and its file. Unsloth terminates auth itself and sends the child no Authorization header, so an
+    # --api-key and its file. LABZ terminates auth itself and sends the child no Authorization header, so an
     # inherited key makes the healthy child refuse every request. The bundled build reads LLAMA_API_KEY for the flag
     # and LLAMA_ARG_API_KEY_FILE for the file; the third spelling is listed because the name has moved between
     # releases and none of them is ours to honour.
     "LLAMA_API_KEY",
     "LLAMA_ARG_API_KEY",
     "LLAMA_ARG_API_KEY_FILE",
-    # The twins of --ssl-key-file and --ssl-cert-file. Given both, llama-server listens on https, while Unsloth probes
+    # The twins of --ssl-key-file and --ssl-cert-file. Given both, llama-server listens on https, while LABZ probes
     # /health and proxies over http against the port it launched: the child comes up healthy and every load times out.
     # Measured on b10360, where an inherited pair turns "listening on http://127.0.0.1:PORT" into "listening on
     # https://...".
     "LLAMA_ARG_SSL_KEY_FILE",
     "LLAMA_ARG_SSL_CERT_FILE",
     # The rest of the twins its --help documents for a denied flag, enumerated from the bundled b10342 help rather
-    # than picked one at a time: every "(env: NAME)" whose option this module refuses. Unsloth emits most of these
+    # than picked one at a time: every "(env: NAME)" whose option this module refuses. LABZ emits most of these
     # itself and argv wins over the environment, so removing them changes nothing in the ordinary case; they are here
     # for the paths where it does not, and so a flag denied in the box is not reachable through the environment
     # instead. The mapping below records which flag each one belongs to, since the name does not always say
@@ -1802,13 +1802,13 @@ DENIED_ENV_VARS: tuple[str, ...] = (
     "LLAMA_ARG_UI_CONFIG_FILE",
     "LLAMA_ARG_UI_MCP_PROXY",
     "LLAMA_ARG_STATIC_PATH",
-    # Deliberately absent: LLAMA_ARG_MMPROJ and LLAMA_ARG_MMPROJ_URL. --mmproj is refused in the box because Unsloth
+    # Deliberately absent: LLAMA_ARG_MMPROJ and LLAMA_ARG_MMPROJ_URL. --mmproj is refused in the box because LABZ
     # resolves the projector itself, but the environment twin is an INPUT here: _launch_has_mmproj reads both to know
     # the launch has a projector at all, which is what keeps the vision and audio state of a model loaded through an
     # inherited one. Only the paravirtual CPU recovery drops them, where an unpinned projector is the corrupt path it
     # is undoing. The pooling twins are absent for the opposite reason: load_model already pops LLAMA_ARG_POOLING /
     # _RERANKING / _EMBEDDINGS itself. The multi-model server mode is absent too: a child holding its own model
-    # directory, preset and autoload policy is not the single model Unsloth launched and accounts for.
+    # directory, preset and autoload policy is not the single model LABZ launched and accounts for.
     "LLAMA_ARG_MODELS_DIR",
     "LLAMA_ARG_MODELS_PRESET",
     "LLAMA_ARG_MODELS_MAX",
@@ -2085,7 +2085,7 @@ def resolve_effective_memory_state(
 
     Mirrors llama.cpp: env supplies defaults, argv overrides last-wins. Used to
     compare a running process against the current settings, so the reload hint
-    reflects the launched state rather than only what Unsloth emitted.
+    reflects the launched state rather than only what LABZ emitted.
     """
     mlock, reserves_ram, _direct_io = resolve_effective_load_state(argv, env)
     return mlock, reserves_ram

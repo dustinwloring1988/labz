@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-# ``general.architecture`` values no Unsloth runtime can decode (llama.cpp has no CSM decoder).
+# ``general.architecture`` values no LABZ runtime can decode (llama.cpp has no CSM decoder).
 # Published CSM GGUFs disagree on spelling, so all four on the Hub are listed. Named once so the
 # chat gate, the listing classifier and the media preflight cannot drift apart.
 SPEECH_GGUF_ARCHS = frozenset({"llama-csm", "csm", "csm-tts", "mimi"})

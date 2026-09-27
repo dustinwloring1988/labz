@@ -201,7 +201,7 @@ def _warm_datasets() -> None:
 
 
 # Keep metadata and framework registries ready without importing optional GPU consumers.
-# Unsloth Zoo is loaded by utils.hf_xet_fallback only when a Hub operation needs it.
+# LABZ Zoo is loaded by utils.hf_xet_fallback only when a Hub operation needs it.
 def _warm_inference_backend() -> None:
     from core.inference import get_inference_backend
 
@@ -288,7 +288,7 @@ def close_dynamo_import_window(log) -> bool:
         return True
     log.warning(
         "torch._dynamo is not importable in this process; "
-        "if this load fails on a dynamo import, restart Unsloth"
+        "if this load fails on a dynamo import, restart LABZ"
     )
     return False
 

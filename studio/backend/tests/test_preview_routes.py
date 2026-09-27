@@ -136,7 +136,7 @@ def test_page_renders_with_csp(client):
 
 def test_page_renders_friendly_busy_message(client):
     response = client.get(f"/p/demorun?k={_sig('demorun')}")
-    assert "Unsloth is currently using another model" in response.text
+    assert "LABZ is currently using another model" in response.text
 
 
 def test_page_renders_reasoning_stream(client):

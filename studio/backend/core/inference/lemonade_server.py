@@ -131,7 +131,7 @@ class LemonadeServer:
                 return
             self._stop_requested.clear()
             if is_process_shutting_down():
-                raise LemonadeUnavailable("Unsloth is shutting down; not starting Lemonade.")
+                raise LemonadeUnavailable("LABZ is shutting down; not starting Lemonade.")
             self.cache_dir.mkdir(parents = True, exist_ok = True)
             self.flm_model_dir.mkdir(parents = True, exist_ok = True)
             self._write_config()
@@ -179,7 +179,7 @@ class LemonadeServer:
             # Shutdown may have swept children before this process was adopted.
             if is_process_shutting_down():
                 self._kill_locked()
-                raise LemonadeUnavailable("Unsloth is shutting down; not starting Lemonade.")
+                raise LemonadeUnavailable("LABZ is shutting down; not starting Lemonade.")
             self._drain_thread = threading.Thread(
                 target = self._drain, args = (proc,), daemon = True, name = "lemond-drain"
             )

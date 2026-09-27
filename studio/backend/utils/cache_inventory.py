@@ -411,7 +411,7 @@ def _unsloth_compiled_dirs() -> list[Path]:
 def _measure_unsloth_compiled() -> tuple[int, int]:
     """Size only what a clear would actually remove.
 
-    A directory Unsloth created goes whole; one it merely wrote into keeps
+    A directory LABZ created goes whole; one it merely wrote into keeps
     everything but the generated modules, so counting all of it would promise
     space the clear cannot free.
     """
@@ -455,7 +455,7 @@ def _compiled_cache_refusal() -> Optional[str]:
 def _purge_unsloth_compiled() -> PurgeOutcome:
     """Clear the compiled cache through the module that owns it.
 
-    cache_cleanup already knows which of these directories Unsloth created and
+    cache_cleanup already knows which of these directories LABZ created and
     which merely hold files it generated, and it serializes against a sibling
     backend that may be compiling right now. Re-deriving either here would give
     this install a second, weaker answer.
@@ -471,7 +471,7 @@ def _purge_unsloth_compiled() -> PurgeOutcome:
     with compiled_cache_lock() as lock_state:
         if lock_state == LOCK_BUSY:
             outcome.errors.append(
-                "Another Unsloth backend is using the compiled cache, so it was left in place."
+                "Another LABZ backend is using the compiled cache, so it was left in place."
             )
             return outcome
         refusal = _compiled_cache_refusal()

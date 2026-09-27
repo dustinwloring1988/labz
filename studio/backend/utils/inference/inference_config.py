@@ -183,7 +183,7 @@ def _operator_sampling_override(field: str):
 
 @lru_cache(maxsize = 128)
 def _recommended_sampling(model_id: str) -> Dict[str, Any]:
-    """Per-model recommended sampling, resolved through the SAME path the Unsloth Chat UI uses. The UI seeds its sampling from the ``.inference`` block of the load/status responses, which is exactly :func:`load_inference_config` (model-specific YAML, then family defaults from inference_defaults.json, then default.yaml), so sourcing recommendations here keeps the values the server applies identical to what the UI shows. Only the fields the UI actually adopts (:data:`_UI_RECOMMENDED_FIELDS`) are recommended; each value is validated (finite and in range) before use. Cached by model id."""
+    """Per-model recommended sampling, resolved through the SAME path the LABZ Chat UI uses. The UI seeds its sampling from the ``.inference`` block of the load/status responses, which is exactly :func:`load_inference_config` (model-specific YAML, then family defaults from inference_defaults.json, then default.yaml), so sourcing recommendations here keeps the values the server applies identical to what the UI shows. Only the fields the UI actually adopts (:data:`_UI_RECOMMENDED_FIELDS`) are recommended; each value is validated (finite and in range) before use. Cached by model id."""
     if not model_id:
         return {}
     try:

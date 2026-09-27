@@ -10,7 +10,7 @@ isolated from the chat backend.
 Device is ``auto`` (GPU when present, else CPU, falling back to CPU if a GPU start fails);
 ``RAG_EMBED_DEVICE`` forces it. We call only llama_cpp's *static* helpers (no torch), copying the
 instance-coupled bits locally, since constructing a ``LlamaCppBackend`` runs an ``__init__`` reaper
-that kills any Unsloth llama-server, so each request re-spawns ours if it died.
+that kills any LABZ llama-server, so each request re-spawns ours if it died.
 """
 
 from __future__ import annotations
@@ -945,7 +945,7 @@ class LlamaServerBackend:
         # encode still resolving or downloading its model as the app quits would
         # otherwise Popen a server after terminate_all had taken its snapshot.
         if is_process_shutting_down():
-            raise RuntimeError("Unsloth is shutting down; not starting the embed server")
+            raise RuntimeError("LABZ is shutting down; not starting the embed server")
         proc = subprocess.Popen(
             cmd,
             stdout = subprocess.PIPE,
@@ -968,7 +968,7 @@ class LlamaServerBackend:
         if is_process_shutting_down():
             logger.info("shutdown began during the spawn; killing the new embed server")
             self._kill_process()
-            raise RuntimeError("Unsloth is shutting down; not starting the embed server")
+            raise RuntimeError("LABZ is shutting down; not starting the embed server")
         self._port = port
         self._stdout_thread = account_thread(
             target = self._drain_stdout,

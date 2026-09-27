@@ -231,7 +231,7 @@ def normalize_resume_output_dir(path_value: str) -> str:
     except (OSError, RuntimeError) as error:
         raise ValueError("Resume checkpoint path could not be resolved.") from error
     if not _is_under_outputs(path):
-        raise ValueError("Resume checkpoint must be inside Unsloth outputs.")
+        raise ValueError("Resume checkpoint must be inside LABZ outputs.")
     return str(path)
 
 

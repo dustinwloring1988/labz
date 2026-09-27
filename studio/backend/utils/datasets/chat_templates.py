@@ -37,7 +37,7 @@ _TEMPLATE_PROBE_ROWS = 8
 _CHOSEN_TEMPLATE_ATTR = "_unsloth_studio_chat_template_choice"
 
 _CUSTOM_PROMPT_TEMPLATE_ERROR = (
-    "custom_prompt_template is deprecated and unsupported because Unsloth Studio cannot persist a "
+    "custom_prompt_template is deprecated and unsupported because LABZ Studio cannot persist a "
     "matching template for inference. Pass None to continue without a custom prompt template."
 )
 
@@ -67,7 +67,7 @@ def _chat_template_kwargs() -> dict:
 
 
 def get_tokenizer_chat_template(tokenizer, model_name):
-    """Apply a chat template to ``tokenizer``, using Unsloth's get_chat_template when ``model_name`` (a model class name such as "Gemma3ForCausalLM") is in the mapper. Returns the tokenizer with the template applied."""
+    """Apply a chat template to ``tokenizer``, using LABZ's get_chat_template when ``model_name`` (a model class name such as "Gemma3ForCausalLM") is in the mapper. Returns the tokenizer with the template applied."""
     try:
         from unsloth.chat_templates import get_chat_template
     except ImportError:
@@ -79,7 +79,7 @@ def get_tokenizer_chat_template(tokenizer, model_name):
 
     if model_name_lower in MODEL_TO_TEMPLATE_MAPPER:
         matched_template = MODEL_TO_TEMPLATE_MAPPER[model_name_lower]
-        logger.info(f"📝 Applying Unsloth chat template: {matched_template}")
+        logger.info(f"📝 Applying LABZ chat template: {matched_template}")
         try:
             tokenizer = get_chat_template(
                 tokenizer,
@@ -87,7 +87,7 @@ def get_tokenizer_chat_template(tokenizer, model_name):
                 **_chat_template_kwargs(),
             )
         except Exception as e:
-            logger.info(f"⚠️ Failed to apply Unsloth template '{matched_template}': {e}")
+            logger.info(f"⚠️ Failed to apply LABZ template '{matched_template}': {e}")
             logger.info(f"   Falling back to tokenizer's default chat template")
     else:
         has_chat_template = (
@@ -95,7 +95,7 @@ def get_tokenizer_chat_template(tokenizer, model_name):
             and tokenizer.chat_template is not None
         )
         if has_chat_template:
-            logger.info(f"📝 Using tokenizer's own chat template (no Unsloth template match)")
+            logger.info(f"📝 Using tokenizer's own chat template (no LABZ template match)")
         else:
             # Base model with no chat template: apply default ChatML.
             logger.info(f"📝 No chat template found — applying default ChatML template (base model)")
@@ -176,7 +176,7 @@ def keep_renderable_chat_template(tokenizer, dataset, chat_column, own_template)
         return None
 
     return (
-        "📝 The Unsloth chat template cannot render this dataset's conversations "
+        "📝 The LABZ chat template cannot render this dataset's conversations "
         "(tool calls or consecutive same-role turns); using the model's own chat "
         "template instead"
     )

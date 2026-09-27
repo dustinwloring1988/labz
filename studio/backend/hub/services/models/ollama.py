@@ -162,7 +162,7 @@ def _contained_link_path(link_dir: Path, link_name: str) -> Optional[Path]:
 
 
 def _ollama_links_roots(ollama_dir: Path) -> tuple[Path, ...]:
-    """Where *ollama_dir*'s ``.gguf`` links can live, best first: beside the blobs, then Unsloth's cache (read-only installs), then the temp dir (sandboxed installs)."""
+    """Where *ollama_dir*'s ``.gguf`` links can live, best first: beside the blobs, then LABZ's cache (read-only installs), then the temp dir (sandboxed installs)."""
     # Hashed so two Ollama roots cannot collide. A cache path, not a security boundary.
     try:
         digest = hashlib.sha256(str(ollama_dir.resolve()).encode()).hexdigest()[:12]
@@ -346,7 +346,7 @@ def _ollama_model_info_from_manifest(
         rendered_layers = ", ".join(unsupported_layers)
         if reject_unsupported_layers:
             raise ValueError(
-                "Ollama manifest contains unsupported runtime layers that Unsloth cannot preserve: "
+                "Ollama manifest contains unsupported runtime layers that LABZ cannot preserve: "
                 f"{rendered_layers}"
             )
         logger.debug(

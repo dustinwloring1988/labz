@@ -31,7 +31,7 @@ _AUDIO_REFUSAL_MESSAGE = (
     "to use guided decoding."
 )
 _TOOL_LOOP_REFUSAL_MESSAGE = (
-    "response_format is not supported with Unsloth tool execution; send the request without "
+    "response_format is not supported with LABZ tool execution; send the request without "
     "enable_tools to use guided decoding."
 )
 

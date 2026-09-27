@@ -79,7 +79,7 @@ _rocm_install_args = _flow.rocm_install_args
 
 
 def _find_binary() -> Optional[str]:
-    """Locate the active llama-server via the inference backend's own resolver, so update targets exactly what Unsloth runs. Lazy import keeps the heavy inference module off this import path."""
+    """Locate the active llama-server via the inference backend's own resolver, so update targets exactly what LABZ runs. Lazy import keeps the heavy inference module off this import path."""
     try:
         from core.inference.llama_cpp import LlamaCppBackend
         return LlamaCppBackend._find_llama_server_binary()
@@ -158,7 +158,7 @@ def get_installed_llama_version() -> Optional[str]:
 
 
 def _llama_install_root(binary: Optional[str]) -> Optional[Path]:
-    """The Unsloth-managed llama.cpp root the active binary lives under, or None when unmanaged (see update_flow.managed_install_root)."""
+    """The LABZ-managed llama.cpp root the active binary lives under, or None when unmanaged (see update_flow.managed_install_root)."""
     return _flow.managed_install_root(
         binary,
         marker_root = _install_dir_for(binary),
@@ -366,7 +366,7 @@ def _llama_only_status(
 ) -> dict:
     """The llama.cpp half of get_update_status (no whisper sub-status)."""
     binary = _find_binary()
-    # A path selected in Settings is user-managed even if its folder happens to contain an Unsloth prebuilt marker. Never offer to replace that tree.
+    # A path selected in Settings is user-managed even if its folder happens to contain an LABZ prebuilt marker. Never offer to replace that tree.
     if _studio_custom_path_active():
         return _local_link_status()
     # A --with-llama-cpp-dir local link is the user's own tree; never offer to replace it. Bail before any network/freshness work.
@@ -862,7 +862,7 @@ def _plan_llama_phase(backend_request: Optional[str] = None) -> dict:
                 "reason": "custom_path",
                 "message": (
                     "llama.cpp is using the custom folder selected in Settings; "
-                    "Unsloth won't replace it. Update that build yourself or restore "
+                    "LABZ won't replace it. Update that build yourself or restore "
                     "the bundled runtime first."
                 ),
             },
@@ -876,7 +876,7 @@ def _plan_llama_phase(backend_request: Optional[str] = None) -> dict:
                 "reason": "local_link",
                 "message": (
                     "llama.cpp is a local directory linked with --with-llama-cpp-dir; "
-                    "Unsloth won't replace it. Update your own llama.cpp checkout instead."
+                    "LABZ won't replace it. Update your own llama.cpp checkout instead."
                 ),
             },
         }
@@ -940,7 +940,7 @@ def _plan_llama_phase(backend_request: Optional[str] = None) -> dict:
                 "started": False,
                 "reason": "not_prebuilt",
                 "message": (
-                    "This llama.cpp install was not made from an Unsloth prebuilt, so "
+                    "This llama.cpp install was not made from an LABZ prebuilt, so "
                     "its backend cannot be switched from here."
                 ),
             },
@@ -1021,7 +1021,7 @@ def start_update() -> dict:
             "reason": "update_checks_disabled",
             "message": (
                 "Update checks are disabled (UNSLOTH_DISABLE_UPDATE_CHECK=1). "
-                "Unset it and restart Unsloth to update llama.cpp from here."
+                "Unset it and restart LABZ to update llama.cpp from here."
             ),
             "job": job,
         }
@@ -1037,7 +1037,7 @@ def start_backend_switch(backend: str) -> dict:
         return {
             "started": False,
             "reason": "unknown_backend",
-            "message": f"{backend!r} is not a llama.cpp backend Unsloth can install.",
+            "message": f"{backend!r} is not a llama.cpp backend LABZ can install.",
             "job": job,
         }
     env_backend = _env_backend_override()
@@ -1049,7 +1049,7 @@ def start_backend_switch(backend: str) -> dict:
             "reason": "environment_override",
             "message": (
                 f"llama.cpp is controlled by the {env_backend} environment override. "
-                "Unset it and restart Unsloth before switching backends here."
+                "Unset it and restart LABZ before switching backends here."
             ),
             "job": job,
         }

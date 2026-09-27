@@ -517,7 +517,7 @@ def _purge_incomplete_blobs(
 
     ``unresumable_only`` restricts the sweep to partials no writer can reuse AND that nothing has touched for ``ABANDONED_PARTIAL_SECONDS``. Unlinking a live partial does not stop its writer on POSIX: it keeps filling an unlinked inode and then fails at the rename, so the cost of that mistake is another client's whole download.
 
-    ``owned_hashes``, or ``owns_all_blobs`` for a job that owns its whole repo dir, are blobs whose only Unsloth-side writer has just been reaped. Those do not wait out the full grace, since the corpse would outlive the retry that follows a cancel, but they are not simply trusted either: registry ownership proves OUR writer is gone, never that no independent process shares the cache. They go through a stillness probe instead, the one liveness test that survives a filesystem where flock is granted to every caller.
+    ``owned_hashes``, or ``owns_all_blobs`` for a job that owns its whole repo dir, are blobs whose only LABZ-side writer has just been reaped. Those do not wait out the full grace, since the corpse would outlive the retry that follows a cancel, but they are not simply trusted either: registry ownership proves OUR writer is gone, never that no independent process shares the cache. They go through a stillness probe instead, the one liveness test that survives a filesystem where flock is granted to every caller.
     """
     now = time.time()
     blobs_dir = entry / "blobs"

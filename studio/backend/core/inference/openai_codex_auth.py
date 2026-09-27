@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""ChatGPT/Codex public-client OAuth owned by the Unsloth backend.
+"""ChatGPT/Codex public-client OAuth owned by the LABZ backend.
 
 OAuth transient material never crosses the API boundary: callers receive only an
 opaque flow id and safe user-facing authorization metadata.
@@ -47,7 +47,7 @@ OPENAI_CODEX_USER_AGENT = "unsloth-studio/1"
 # /codex/models hides any slug whose minimal_client_version exceeds this.
 OPENAI_CODEX_CLIENT_VERSION = "0.156.0"
 OPENAI_CODEX_COMPATIBILITY_INSTRUCTIONS = (
-    "You are operating inside Unsloth Studio. Follow the user's instructions, "
+    "You are operating inside LABZ Studio. Follow the user's instructions, "
     "use only tools supplied in this request, and return concise, accurate results."
 )
 
@@ -111,7 +111,7 @@ def _provider_file_lock(provider_id: str) -> FileLock:
 
 @asynccontextmanager
 async def provider_oauth_write_guard(provider_id: str):
-    """Serialize refresh and deletion across Unsloth workers without blocking the event loop."""
+    """Serialize refresh and deletion across LABZ workers without blocking the event loop."""
     file_lock = _provider_file_lock(provider_id)
     try:
         await asyncio.to_thread(file_lock.acquire)
@@ -381,9 +381,9 @@ async def _loopback_handler(
         if flow.consumed and flow.status == "pending":
             flow.status = "error"
             flow.message = str(exc) if isinstance(exc, CodexAuthError) else "Authorization failed."
-        message = "Authorization failed. Return to Unsloth Studio and try again."
+        message = "Authorization failed. Return to LABZ Studio and try again."
     body = (
-        "<!doctype html><meta charset=utf-8><title>Unsloth Studio</title>"
+        "<!doctype html><meta charset=utf-8><title>LABZ Studio</title>"
         + "<p>"
         + message.replace("&", "&amp;").replace("<", "&lt;")
         + "</p>"

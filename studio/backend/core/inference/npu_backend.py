@@ -40,7 +40,7 @@ DEFAULT_CONTEXT_LENGTH = 8192
 # Names the lemond install whose NPU passed `flm validate`, so a restart needs no new Enable.
 _VALIDATED_MARKER = "npu_validated.json"
 
-# Model modes Unsloth's chat cannot serve: embeddings and transcription have no chat endpoint,
+# Model modes LABZ's chat cannot serve: embeddings and transcription have no chat endpoint,
 # and a single-turn ("flash") model answers only the first message of a conversation.
 _EXCLUDED_LABELS = frozenset({"embeddings", "transcription", "single-turn"})
 
@@ -398,7 +398,7 @@ class LemonadeNpuBackend:
         env["FLM_MODEL_PATH"] = str(self.root / "flm")
         env["FLM_DISABLE_UPDATE_CHECK"] = "1"
         if self._closing.is_set():
-            return {"ready": False, "problems": ["Unsloth is shutting down."]}
+            return {"ready": False, "problems": ["LABZ is shutting down."]}
         try:
             # On the lifetime thread: shutdown() kills it, and it dies with a crashed Studio.
             process = spawn_on_lifetime_thread(

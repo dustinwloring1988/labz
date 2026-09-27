@@ -190,7 +190,7 @@ def pytorch_wheel_index_base_url() -> str:
 
 
 _XFORMERS_WHEEL_VERSIONS: dict[str, dict[str, str]] = {
-    # torch 2.7.0 is deliberately absent: it predates the stable-ABI switch, so it ships one wheel per interpreter and stops at cp312, while Unsloth's default interpreter is 3.13. Supporting it would mean a per-interpreter gate here and a second one in install.ps1, for a torch that resolves to nothing on the default install anyway (xFormers 0.0.30).
+    # torch 2.7.0 is deliberately absent: it predates the stable-ABI switch, so it ships one wheel per interpreter and stops at cp312, while LABZ's default interpreter is 3.13. Supporting it would mean a per-interpreter gate here and a second one in install.ps1, for a torch that resolves to nothing on the default install anyway (xFormers 0.0.30).
     "2.7.1": {"cu126": "0.0.31.post1", "cu128": "0.0.31.post1"},
     "2.8.0": {"cu126": "0.0.32.post2", "cu128": "0.0.32.post2", "cu129": "0.0.32.post2"},
     "2.9.0": {"cu126": "0.0.33.post1", "cu128": "0.0.33.post1", "cu130": "0.0.33.post1"},
@@ -329,7 +329,7 @@ def join_wheel_url(base: str, path: str) -> str:
 
 
 def redact_url_credentials(url: str) -> str:
-    """A URL safe to log: no userinfo, no query, no fragment. UNSLOTH_PYTORCH_MIRROR is allowed to be a private index, and people put credentials in it (``https://user:token@mirror/whl`` or ``...?token=``). The wheel URL built from it is handed to pip AND printed, so without this the secret lands in the backend log the first time Unsloth installs (or fails to install) xFormers. Same rule as the installer's Remove-IndexUrlCredentials, so both sides redact identically."""
+    """A URL safe to log: no userinfo, no query, no fragment. UNSLOTH_PYTORCH_MIRROR is allowed to be a private index, and people put credentials in it (``https://user:token@mirror/whl`` or ``...?token=``). The wheel URL built from it is handed to pip AND printed, so without this the secret lands in the backend log the first time LABZ installs (or fails to install) xFormers. Same rule as the installer's Remove-IndexUrlCredentials, so both sides redact identically."""
     separator = url.find("://")
     if separator < 0:
         return url

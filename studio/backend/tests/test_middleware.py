@@ -1105,7 +1105,7 @@ class TestHealthAuthGate:
         assert "timestamp" in body
         for field in self.LAUNCHER_BITS:
             assert field in body, f"missing launcher bit: {field}"
-        assert body["service"] == "Unsloth UI Backend"
+        assert body["service"] == "LABZ UI Backend"
         for forbidden in self.FINGERPRINT_FIELDS:
             assert forbidden not in body
 

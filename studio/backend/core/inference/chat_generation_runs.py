@@ -82,7 +82,7 @@ def _background_request(
         "query_string": b"",
         "headers": [
             (b"x-unsloth-generation-run", run_id.encode("ascii", "ignore")),
-            # Durable runs replay their event log to the UI, which needs the Unsloth control frames (see routes.inference).
+            # Durable runs replay their event log to the UI, which needs the LABZ control frames (see routes.inference).
             (b"x-unsloth-events", b"1"),
             *(
                 (name.encode("latin-1"), value.encode("latin-1"))
@@ -712,7 +712,7 @@ class ChatGenerationSupervisor:
                     worker_token = worker_token,
                     status = "failed" if shutting_down else "cancelled",
                     finish_reason = "interrupted" if shutting_down else "cancelled",
-                    error = "Unsloth shut down during generation" if shutting_down else None,
+                    error = "LABZ shut down during generation" if shutting_down else None,
                 )
                 return
             # Spans the lifecycle gate as well as preparation: a run waiting on the gate is still queued, so its lease
@@ -727,7 +727,7 @@ class ChatGenerationSupervisor:
                         worker_token = worker_token,
                         status = "failed" if shutting_down else "cancelled",
                         finish_reason = "interrupted" if shutting_down else "cancelled",
-                        error = "Unsloth shut down during generation" if shutting_down else None,
+                        error = "LABZ shut down during generation" if shutting_down else None,
                     )
                     return
                 if not await asyncio.to_thread(db.mark_running, run_id, worker_token):
@@ -840,7 +840,7 @@ class ChatGenerationSupervisor:
             if run_id in self._shutdown_runs:
                 status = "failed"
                 finish_reason = "interrupted"
-                error = "Unsloth shut down during generation"
+                error = "LABZ shut down during generation"
             elif current["cancelRequested"] or (cancel_event.is_set() and error is None):
                 # A bare event is not proof of a user stop: the streaming paths set this same event from their cleanup
                 # after emitting an in-band error, so a parsed failure outranks it. An explicit cancelRequested still
@@ -895,7 +895,7 @@ class ChatGenerationSupervisor:
                     error = (
                         None
                         if cancelled
-                        else "Unsloth shut down during generation"
+                        else "LABZ shut down during generation"
                         if shutting_down
                         else str(exc)[:1000]
                     ),

@@ -782,7 +782,7 @@ def create_job_dataset_download_url(
         # The capability outlives the setting that admitted this caller. As the video links do.
         raise HTTPException(
             status_code = 403,
-            detail = "Dataset download links can only be created from the Unsloth UI or with an API key.",
+            detail = "Dataset download links can only be created from the LABZ UI or with an API key.",
         )
     resolved = _resolve_download_artifact_path(job_id = job_id, artifact_path = artifact_path)
     stem = safe_filename_stem(

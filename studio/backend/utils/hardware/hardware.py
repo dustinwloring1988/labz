@@ -32,7 +32,7 @@ logger = get_logger(__name__)
 # CUDA numbers GPUs by FASTEST_FIRST while nvidia-smi (and every free-VRAM probe here) numbers by PCI bus id, so on a mixed-GPU host an index picked from nvidia-smi lands the model on a different physical card. Pinning PCI_BUS_ID gives torch, nvidia-smi and CUDA_VISIBLE_DEVICES one index space; set at import, before any torch.cuda call latches the order, and setdefault so a user override wins.
 os.environ.setdefault("CUDA_DEVICE_ORDER", "PCI_BUS_ID")
 
-# Unsloth workers can import MLX without importing unsloth first, so mirror the package bootstrap here. An explicit user value stays authoritative.
+# LABZ workers can import MLX without importing unsloth first, so mirror the package bootstrap here. An explicit user value stays authoritative.
 if platform.system() == "Darwin" and platform.machine() == "arm64":
     os.environ.setdefault("AGX_RELAX_CDM_CTXSTORE_TIMEOUT", "1")
 
@@ -1381,7 +1381,7 @@ def _detect_hardware_locked() -> DeviceType:
             except Exception:
                 xpu_ok = False
             if xpu_ok:
-                # Forced XPU on a hybrid host: unsloth's device_type picks CUDA before XPU and ignores this Unsloth-only env var, so hide CUDA or spawned workers would silently train on CUDA.
+                # Forced XPU on a hybrid host: unsloth's device_type picks CUDA before XPU and ignores this LABZ-only env var, so hide CUDA or spawned workers would silently train on CUDA.
                 if force_xpu and not cuda_hidden and not cuda_unavailable:
                     os.environ["CUDA_VISIBLE_DEVICES"] = ""
                 DEVICE = DeviceType.XPU
@@ -1655,21 +1655,21 @@ def _gpu_present_but_unusable_message(
         return (
             f"This host has a GPU, but the installed PyTorch is a CPU-only build{installed}, "
             f"so {feature} cannot use it. Reinstall the GPU build: use Repair installation "
-            f"in Settings in the desktop app, or re-run the Unsloth installer."
+            f"in Settings in the desktop app, or re-run the LABZ installer."
             + (f" {node_hint}" if node_hint else "")
         )
     return (
         f"This host has a GPU, but the installed PyTorch{installed} cannot initialise it, so "
         f"{feature} cannot use it. This is usually a driver or runtime mismatch; reinstalling "
         f"a matching PyTorch build fixes it. Use Repair installation in Settings in the "
-        f"desktop app, or re-run the Unsloth installer." + (f" {node_hint}" if node_hint else "")
+        f"desktop app, or re-run the LABZ installer." + (f" {node_hint}" if node_hint else "")
         # Appended, not substituted: the wheel is still the repair, but the node is
         # still closed and the matching ROCm build will need it.
     )
 
 
 def export_capability() -> dict:
-    """Whether model export can run here, with a torch-aware reason when it cannot. Export runs through Unsloth, which hard-requires an accelerator (it calls ``torch.cuda`` at import and has no CPU path), so it is supported iff ``get_device() in {CUDA, XPU, MLX}``. The reason distinguishes a --no-torch install from a bare-CPU host. Safe to call without torch. Returns {export_supported, export_unsupported_reason, export_unsupported_message}."""
+    """Whether model export can run here, with a torch-aware reason when it cannot. Export runs through LABZ, which hard-requires an accelerator (it calls ``torch.cuda`` at import and has no CPU path), so it is supported iff ``get_device() in {CUDA, XPU, MLX}``. The reason distinguishes a --no-torch install from a bare-CPU host. Safe to call without torch. Returns {export_supported, export_unsupported_reason, export_unsupported_message}."""
     if get_device() in (DeviceType.CUDA, DeviceType.XPU, DeviceType.MLX):
         return {
             "export_supported": True,
@@ -1682,13 +1682,13 @@ def export_capability() -> dict:
         reason = "detection_failed"
         message = (
             "Hardware detection failed on this host, so export is disabled. The server log records "
-            "the underlying error; restart Unsloth Studio to retry detection."
+            "the underlying error; restart LABZ Studio to retry detection."
         )
     elif verdict[0] == "no_torch":
         reason = "no_torch"
         message = (
             "This install was set up without the training stack (--no-torch), so export is "
-            "disabled. Reinstall Unsloth Studio without --no-torch to enable export."
+            "disabled. Reinstall LABZ Studio without --no-torch to enable export."
         )
     elif is_apple_silicon():
         reason = "mlx_unavailable"
@@ -1710,7 +1710,7 @@ def export_capability() -> dict:
         reason = "no_accelerator"
         message = (
             "Export requires an NVIDIA, AMD, or Intel GPU, or Apple Silicon (MLX). No supported "
-            "accelerator was found on this host. (PyTorch is installed, but Unsloth cannot export "
+            "accelerator was found on this host. (PyTorch is installed, but LABZ cannot export "
             "on CPU only.)"
         )
     return {
@@ -1734,7 +1734,7 @@ def video_capability() -> dict:
         reason = "detection_failed"
         message = (
             "Hardware detection failed on this host, so video generation is disabled. The server "
-            "log records the underlying error; restart Unsloth Studio to retry detection."
+            "log records the underlying error; restart LABZ Studio to retry detection."
         )
     elif is_apple_silicon() or get_device() == DeviceType.MLX:
         # The MLX arm covers an Apple host whose platform probe somehow disagrees.
@@ -5468,8 +5468,8 @@ def reject_gpu_ids_without_torch_kernels(gpu_ids) -> None:
         return
     built_for = ", ".join(_torch_kernel_arch_tokens()) or "other GPU architectures"
     raise ValueError(
-        f"{', '.join(_describe_rocm_gpus(uncovered))} cannot run the PyTorch build this Unsloth Studio installed, "
-        f"which has kernels for {built_for} only. Pick another GPU, or reinstall Unsloth "
+        f"{', '.join(_describe_rocm_gpus(uncovered))} cannot run the PyTorch build this LABZ Studio installed, "
+        f"which has kernels for {built_for} only. Pick another GPU, or reinstall LABZ "
         f"Studio for that card."
     )
 
@@ -6404,7 +6404,7 @@ def _num_proc_override_is_set() -> bool:
 def _bounded_by_the_shared_policy(
     desired: Optional[int], serial_as_none: bool = True
 ) -> Optional[int]:
-    """Apply the training-side num_proc policy to an Unsloth request. format_conversion.py and chat_templates.py hand this straight to Dataset.map, so without it a container with 2GB and eight cores still got eight tokenizer workers. ``desired`` is passed through as written: materializing an auto request with safe_num_proc first would hide it from the policy, whose auto path reads this process's CPU affinity and cgroup quota while safe_num_proc reads the host's os.cpu_count(). Unsloth's own caps are then applied to whatever the policy chose, except over the escape hatch, which is uncapped by contract."""
+    """Apply the training-side num_proc policy to an LABZ request. format_conversion.py and chat_templates.py hand this straight to Dataset.map, so without it a container with 2GB and eight cores still got eight tokenizer workers. ``desired`` is passed through as written: materializing an auto request with safe_num_proc first would hide it from the policy, whose auto path reads this process's CPU affinity and cgroup quota while safe_num_proc reads the host's os.cpu_count(). LABZ's own caps are then applied to whatever the policy chose, except over the escape hatch, which is uncapped by contract."""
     policy = _shared_policy()
     if policy is None:
         return safe_num_proc(desired)  # the behaviour before the shared policy

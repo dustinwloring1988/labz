@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Shared controller state for Unsloth local agentic tool loops.
+"""Shared controller state for LABZ local agentic tool loops.
 
 This module is intentionally dependency-light: it owns only per-response
 ledger state and value objects used by the GGUF and safetensors loops.
@@ -960,7 +960,7 @@ _STUDIO_SECRET_MASK = "[redacted]"
 
 
 def redact_studio_credentials(text: str) -> str:
-    """Mask any Unsloth Studio credential in text bound for the model/provider."""
+    """Mask any LABZ Studio credential in text bound for the model/provider."""
     # Two substring scans first: the alternation has no literal to anchor on and costs ~20x per MB.
     if "sk-unsloth-" not in text and "desktop-" not in text:
         return text

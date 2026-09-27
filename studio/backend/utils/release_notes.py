@@ -34,7 +34,7 @@ RELEASES_RATE_LIMITED_TTL_SECONDS = 15 * 60
 RELEASES_RATE_LIMIT_MAX_SECONDS = 60 * 60
 RELEASE_NOTES_MAX_CHARS = 20_000
 
-# The repo also publishes llama.cpp prebuilts (`b8475`), legacy month tags (`February-2026`) and desktop drafts; only an Unsloth version tag is an announcement the popup should show.
+# The repo also publishes llama.cpp prebuilts (`b8475`), legacy month tags (`February-2026`) and desktop drafts; only an LABZ version tag is an announcement the popup should show.
 _RELEASE_TAG_PATTERN = re.compile(r"^v\d+(?:\.\d+)+")
 
 # CommonMark needs a space, tab or line end after the hashes: a non-breaking space is text, and a bare `##` is an empty heading that still ends the section above.
@@ -103,7 +103,7 @@ _SAFE_VERSION_PATTERN = re.compile(r"^[0-9A-Za-z][0-9A-Za-z.!+-]{0,63}$")
 _GENERATED_TITLES = frozenset({"what's changed", "whats changed", "new contributors"})
 _GENERATED_PREFIXES = ("what's changed in ", "whats changed in ")
 _GENERATED_SUFFIXES = ("zoo changes", "notebooks changes", "changelog")
-# The install block, worded differently in almost every release. Naming Unsloth separates those from "Updating models is now 2x faster", which is a change and not instructions.
+# The install block, worded differently in almost every release. Naming LABZ separates those from "Updating models is now 2x faster", which is a change and not instructions.
 _UPGRADE_PREFIXES = ("update", "updating", "to update", "how to update")
 _UPGRADE_SUBJECTS = ("unsloth", "studio")
 _UPGRADE_TITLES = frozenset({"update instructions", "install instructions"})
@@ -493,7 +493,7 @@ def _is_platform(title: str) -> bool:
 
 
 def get_release_notes(version: str, refresh: bool = False) -> dict[str, Any]:
-    """Return the newest release's notes for the update popup. `version` is echoed back, not used to select a release: the pip popup offers a PyPI version (`2026.8.7`) and releases are tagged with the Unsloth version (`v0.1.60-beta`), so no tag could match it. `refresh` retries a cached failure, so the UI's retry is not stuck behind the failure TTL once connectivity returns."""
+    """Return the newest release's notes for the update popup. `version` is echoed back, not used to select a release: the pip popup offers a PyPI version (`2026.8.7`) and releases are tagged with the LABZ version (`v0.1.60-beta`), so no tag could match it. `refresh` retries a cached failure, so the UI's retry is not stuck behind the failure TTL once connectivity returns."""
     version = version.strip()
     if not is_supported_version_query(version):
         return _notes_response(version = version, error = "Unsupported version.")

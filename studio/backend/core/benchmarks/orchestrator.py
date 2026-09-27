@@ -90,7 +90,7 @@ _PHASE_WEIGHTS = {"materialize": 0.25, "score": 0.65, "grade": 0.10}
 
 
 class BenchmarkBusy(RuntimeError):
-    """Another benchmark run, or an Unsloth training run, owns the GPU."""
+    """Another benchmark run, or an LABZ training run, owns the GPU."""
 
 
 class BenchmarkUnavailable(RuntimeError):
@@ -1033,7 +1033,7 @@ class BenchmarkRun:
     ) -> int:
         """Run one pass, pumping its events, and honouring a stop request."""
         if is_process_shutting_down():
-            self._fail("Unsloth is shutting down")
+            self._fail("LABZ is shutting down")
             return 1
 
         env = environment.stage_environment(
@@ -1374,7 +1374,7 @@ def _pass_path(name: str) -> Path:
 class BenchmarkRunManager:
     """The single active run, and the lock that keeps the GPU to itself.
 
-    One run at a time, and mutually exclusive with Unsloth's own training and
+    One run at a time, and mutually exclusive with LABZ's own training and
     nanochat's: all three want the whole GPU, and running two would have one of
     them fail out of memory at an unpredictable point.
     """
@@ -1412,7 +1412,7 @@ class BenchmarkRunManager:
 
                 backend = get_training_backend()
                 if backend.is_training_active():
-                    raise BenchmarkBusy("Unsloth training is running; stop it first")
+                    raise BenchmarkBusy("LABZ training is running; stop it first")
 
                 from core.nanochat.orchestrator import get_run_manager as nanochat_runs
 

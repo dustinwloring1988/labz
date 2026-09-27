@@ -255,7 +255,7 @@ def hide_xformers_built_for_another_torch() -> None:
     sys.modules["xformers"] = None
     xformers_version, requirement, torch_version = mismatch
     print(
-        f"Unsloth: xformers {xformers_version} requires torch{requirement} but torch "
+        f"LABZ: xformers {xformers_version} requires torch{requirement} but torch "
         f"{torch_version} is installed, so it cannot be imported. Using PyTorch attention "
         "instead.",
         file = sys.stderr,

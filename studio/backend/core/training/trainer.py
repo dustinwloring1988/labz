@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Unsloth training backend: integrates Unsloth training with the FastAPI backend."""
+"""LABZ training backend: integrates LABZ training with the FastAPI backend."""
 
 from utils.account_context import account_thread
 import gc
@@ -157,7 +157,7 @@ def _drop_hf_stdout_callbacks(trainer) -> None:
     """Remove HF's stdout progress callbacks from an already-built trainer. `disable_tqdm=True` only
     swaps ProgressCallback for PrinterCallback, which prints a raw dict per step instead
     (`{'loss': '0.5684', 'grad_norm': ..., 'epoch': ...}`). Both write to the same stdout, so
-    both have to go; Unsloth's own progress callback, the SSE stream and `training_progress` are
+    both have to go; LABZ's own progress callback, the SSE stream and `training_progress` are
     unaffected. Best effort: a transformers build without these classes just keeps its current
     behaviour."""
     if _verbose_logging_requested():
@@ -212,7 +212,7 @@ def _metadata_lookup_name(
     if mirror is None:
         return lookup_name
     logger.info(
-        "Reading %s config and tokenizer from %s, the repo Unsloth loads", model_name, mirror
+        "Reading %s config and tokenizer from %s, the repo LABZ loads", model_name, mirror
     )
     return mirror
 
@@ -917,7 +917,7 @@ class UnslothTrainer:
             # Clear audio sys.path/sys.modules state; stale entries deadlock forked map() workers
             self._cleanup_audio_artifacts()
 
-            # Reload the Unsloth-patched modeling modules first: __UNSLOTH_PATCHED__ blocks re-compilation, so
+            # Reload the LABZ-patched modeling modules first: __UNSLOTH_PATCHED__ blocks re-compilation, so
             # clearing the disk cache alone would leave files missing.
             import importlib
 
@@ -931,7 +931,7 @@ class UnslothTrainer:
 
             from utils.cache_cleanup import clear_unsloth_compiled_cache
 
-            _preserve = ["Unsloth*Trainer.py"] if sys.platform in ("win32", "darwin") else None
+            _preserve = ["LABZ*Trainer.py"] if sys.platform in ("win32", "darwin") else None
             clear_unsloth_compiled_cache(preserve_patterns = _preserve)
             # Checked: this reassigns _audio_type, so an unchecked answer would leave the flag describing the previous
             # probe.
@@ -993,7 +993,7 @@ class UnslothTrainer:
             if hf_token:
                 os.environ["HF_TOKEN"] = hf_token
 
-            # Gate-check the repo Unsloth will fetch, which may be a public mirror of it.
+            # Gate-check the repo LABZ will fetch, which may be a public mirror of it.
             if "/" in model_name and not local_files_only and not _env_offline():
                 try:
                     from huggingface_hub import model_info as hf_model_info
@@ -1234,7 +1234,7 @@ class UnslothTrainer:
                 )
                 logger.info("Loaded text model")
 
-            raise_if_offloaded(self.model, device_map, "Unsloth training")
+            raise_if_offloaded(self.model, device_map, "LABZ training")
 
             restored_repo_id = restore_hf_cache_repo_identity(
                 self.model,
@@ -1263,7 +1263,7 @@ class UnslothTrainer:
             if "could not get source code" in str(e) and not getattr(
                 self, "_source_code_retried", False
             ):
-                # Unsloth patching can leave stale state that breaks inspect.getsource() when switching model
+                # LABZ patching can leave stale state that breaks inspect.getsource() when switching model
                 # families; the first failure clears it.
                 self._source_code_retried = True
                 logger.info(f"\n'could not get source code' — retrying once...\n")
@@ -3503,7 +3503,7 @@ class UnslothTrainer:
             self._update_progress(error = "Model not loaded")
             return False
 
-        # Pre-import heavy transformers modules on the main thread: Unsloth's patched_import is not thread-safe with
+        # Pre-import heavy transformers modules on the main thread: LABZ's patched_import is not thread-safe with
         # importlib's cache.
         import transformers  # noqa: F401 - ensures submodules are cached
         from transformers import (  # noqa: F401
@@ -3616,7 +3616,7 @@ class UnslothTrainer:
                 # PMI_SIZE, mlx.launch's CUDA-only NCCL backend MLX_WORLD_SIZE, and LOCAL_WORLD_SIZE is defensive
                 # since torchrun sets both. Reading one variable calls an mpirun launch single-process or raises on
                 # junk like int("auto"), leaving resolved_epochs None. Env-only, deliberately NOT worker.py's
-                # _data_parallel_world_size, which also counts visible CUDA devices: Unsloth's multi-GPU load is a
+                # _data_parallel_world_size, which also counts visible CUDA devices: LABZ's multi-GPU load is a
                 # sharding device_map, model-parallel to transformers.
                 world_size = world_size_from_env()
                 if world_size > 1:
@@ -3880,7 +3880,7 @@ class UnslothTrainer:
                     trainer_kwargs["eval_dataset"] = eval_dataset
                 self.trainer = HFTrainer(**trainer_kwargs)
                 self.trainer.add_callback(self._create_progress_callback())
-                # Unsloth publishes progress itself, so HF's stdout callbacks are pure duplication in a log that has
+                # LABZ publishes progress itself, so HF's stdout callbacks are pure duplication in a log that has
                 # no terminal; --verbose keeps them.
                 _drop_hf_stdout_callbacks(self.trainer)
 
@@ -4358,7 +4358,7 @@ class UnslothTrainer:
                         )
                     except ImportError as exc:
                         raise RuntimeError(
-                            "CPT requires a newer Unsloth install that exports "
+                            "CPT requires a newer LABZ install that exports "
                             "`UnslothTrainer` and `UnslothTrainingArguments` "
                             "(for embedding_learning_rate support). "
                             "Upgrade with: `pip install -U unsloth unsloth_zoo`."
@@ -4451,7 +4451,7 @@ class UnslothTrainer:
                 if masking_applied:
                     try:
                         # Safety net: train_on_responses_only masks non-response tokens with -100, and a row becomes
-                        # all -100 (Unsloth drops it) when the response template is missing from the formatted text;
+                        # all -100 (LABZ drops it) when the response template is missing from the formatted text;
                         # len()-based, so skipped for streaming.
                         if detect_streaming_dataset(self.trainer.train_dataset):
                             logger.info("Skipping post-filter length check for streaming dataset\n")
@@ -4503,7 +4503,7 @@ class UnslothTrainer:
                     logger.info("Training on full sequences (including prompts)\n")
 
             self.trainer.add_callback(self._create_progress_callback())
-            # Unsloth publishes progress itself, so HF's stdout callbacks are pure duplication in a log that has no
+            # LABZ publishes progress itself, so HF's stdout callbacks are pure duplication in a log that has no
             # terminal; --verbose keeps them.
             _drop_hf_stdout_callbacks(self.trainer)
 

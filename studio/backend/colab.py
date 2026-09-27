@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Colab helpers for Unsloth Studio. Uses Colab's built-in proxy."""
+"""Colab helpers for LABZ Studio. Uses Colab's built-in proxy."""
 
 from pathlib import Path
 import sys
@@ -202,7 +202,7 @@ def _colab_login_html(username: str, password: str) -> str:
     <div style="display: inline-block; padding: 20px; background: #ffffff; border: 2px solid #000000;
                 border-radius: 12px; margin: 10px 0; font-family: system-ui, -apple-system, sans-serif;">
         <h2 style="color: #000000; margin: 0 0 12px 0; font-size: 22px; font-weight: 800;">
-            Unsloth Studio Login (Colab)
+            LABZ Studio Login (Colab)
         </h2>
         <p style="color: #333333; margin: 0 0 12px 0; font-size: 14px; font-weight: bold;">
             Log in as <code>{username}</code> with this password. This cell is visible only in
@@ -219,7 +219,7 @@ def _show_colab_login_credentials(username: str, password: str) -> None:
     """Display Colab admin credentials in the notebook output."""
     from IPython.display import HTML, display
 
-    logger.info(f"🔐 Unsloth Studio login — user: {username}")
+    logger.info(f"🔐 LABZ Studio login — user: {username}")
     display(HTML(_colab_login_html(username, password)))
 
 
@@ -230,7 +230,7 @@ def _ready_card_html(
     has_cloudflare_link: bool = False,
     cloudflare_requested: bool = False,
 ) -> str:
-    """Branded ready card for the in-notebook Unsloth view. Colab ``*.prod.colab.dev`` proxy URLs are
+    """Branded ready card for the in-notebook LABZ view. Colab ``*.prod.colab.dev`` proxy URLs are
     session-scoped and 404 when opened as a top-level tab or on another device, so never
     ``window.open`` them. On real Colab the Cloudflare link is the supported entry point because
     in-cell proxy embeds often stay blank."""
@@ -238,12 +238,12 @@ def _ready_card_html(
     if _is_colab_runtime() or _is_colab_proxy_url(url, port):
         if has_cloudflare_link:
             embed_note = (
-                "Open Unsloth with the Cloudflare link above. In-cell proxy previews on "
+                "Open LABZ with the Cloudflare link above. In-cell proxy previews on "
                 "current Colab often stay blank, so the tunnel link is the supported path."
             )
         elif cloudflare_requested:
             embed_note = (
-                "Could not open a Cloudflare tunnel, so Unsloth may be unreachable on Colab. "
+                "Could not open a Cloudflare tunnel, so LABZ may be unreachable on Colab. "
                 "Check the logs above and re-run this cell. Pass "
                 '<code style="background:#f3f3f3;padding:2px 6px;border-radius:4px;">'
                 "cloudflare=True</code> after fixing any tunnel errors."
@@ -261,7 +261,7 @@ def _ready_card_html(
                    display: flex; align-items: center; gap: 12px;">
             <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
-            Unsloth Studio is Ready!
+            LABZ Studio is Ready!
         </h2>
         <p style="color: #333333; margin: 0 0 8px 0; font-size: 15px; font-weight: bold;">
             {embed_note}
@@ -279,14 +279,14 @@ def _ready_card_html(
                    display: flex; align-items: center; gap: 12px;">
             <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
-            Unsloth Studio is Ready!
+            LABZ Studio is Ready!
         </h2>
         <a href="{url}" onclick="var w=window.open(this.href,'_blank');if(!w){{return true;}}return false;"
            style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px;
                   background: #000000; color: white; text-decoration: none; border-radius: 8px;
                   font-weight: 800; font-size: 16px; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-            Open Unsloth Studio
+            Open LABZ Studio
         </a>
         <p style="color: #333333; margin: 12px 0 0 0; font-size: 14px; font-weight: bold;">
             If the link doesn't work, you can scroll down to view the UI generated directly in Colab.
@@ -311,7 +311,7 @@ def show_link(
     from IPython.display import display, HTML
 
     url = _url if _url is not None else get_colab_url(port)
-    logger.info(f"🌐 Unsloth Studio URL: {url}")
+    logger.info(f"🌐 LABZ Studio URL: {url}")
     display(
         HTML(
             _ready_card_html(
@@ -329,7 +329,7 @@ def _warn_colab_cloudflare_missing(*, use_cloudflare: bool, cloudflare_url: "str
     if not use_cloudflare or cloudflare_url or not _is_colab_runtime():
         return
     logger.warning(
-        "Colab Cloudflare tunnel unavailable — Unsloth is unlikely to be reachable in this "
+        "Colab Cloudflare tunnel unavailable — LABZ is unlikely to be reachable in this "
         "notebook. Check the logs above for tunnel or auth errors, then re-run start()."
     )
 
@@ -354,7 +354,7 @@ def start_cloudflare_tunnel(port: int) -> "str | None":
         logger.warning(
             "Cloudflare link not started: the admin account still has its temporary "
             "bootstrap password, which is exposed to anyone who can load the page. "
-            "Open Unsloth in this tab, log in and change the admin password, then re-run "
+            "Open LABZ in this tab, log in and change the admin password, then re-run "
             "start(cloudflare=True) to get the shareable link."
         )
         return None
@@ -393,7 +393,7 @@ def _stop_cloudflare_tunnel() -> None:
 
 
 def _is_studio_healthy(port: int, timeout: float = 2.0) -> bool:
-    """True only if Unsloth Studio (not some other app) answers /api/health on *port*. The
+    """True only if LABZ Studio (not some other app) answers /api/health on *port*. The
     service-marker check stops the reuse path reusing or tunneling a foreign process."""
     import json, urllib.request
     try:
@@ -431,14 +431,14 @@ def _shareable_link_html(
                    display: flex; align-items: center; gap: 12px;">
             <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
-            Shareable Unsloth Link is Ready!
+            Shareable LABZ Link is Ready!
         </h2>
         <a href="{cloudflare_url}" onclick="var w=window.open(this.href,'_blank');if(!w){{return true;}}return false;"
            style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px;
                   background: #000000; color: white; text-decoration: none; border-radius: 8px;
                   font-weight: 800; font-size: 16px; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-            Open Unsloth Studio
+            Open LABZ Studio
         </a>
         <p style="color: #333333; margin: 12px 0 0 0; font-size: 14px; font-weight: bold;">
             This Cloudflare HTTPS link works from any device, so you can share it with anyone.
@@ -456,7 +456,7 @@ _COLAB_IFRAME_HEIGHT = 900
 
 
 def _embed_kernel_port_iframe(port: int) -> bool:
-    """Embed Unsloth via Colab's native kernel-port iframe helper. Only trusted on a real Colab
+    """Embed LABZ via Colab's native kernel-port iframe helper. Only trusted on a real Colab
     runtime: colabtools can import ``google.colab`` and queue browser-side JS without appending an
     iframe, so callers outside Colab must use the HTML iframe path instead."""
     if not _is_colab_runtime():
@@ -494,7 +494,7 @@ def _embed_html_iframe(url: str, port: int) -> bool:
   <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:#000;">
     <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
          height="26" style="display:block;">
-    <span style="color:#fff;font-weight:700;font-size:15px;letter-spacing:-0.2px;">Unsloth Studio</span>
+    <span style="color:#fff;font-weight:700;font-size:15px;letter-spacing:-0.2px;">LABZ Studio</span>
     <span style="margin-left:auto;color:#666;font-size:11px;font-family:monospace;">{short_url}</span>
   </div>
   <iframe
@@ -519,11 +519,11 @@ def _show_and_embed(
     colab_login: "tuple[str, str] | None" = None,
     cloudflare_requested: bool = False,
 ):
-    """Render the Unsloth ready card + iframe for *port*. Prefer Colab's ``serve_kernel_port_as_iframe`` on real
+    """Render the LABZ ready card + iframe for *port*. Prefer Colab's ``serve_kernel_port_as_iframe`` on real
     Colab; raw HTML iframe is the fallback. Cloudflare cards stay clickable.
     """
     url = get_colab_url(port)
-    logger.info(f"🌐 Unsloth Studio URL: {url}")
+    logger.info(f"🌐 LABZ Studio URL: {url}")
     if cloudflare_url:
         logger.info(f"🔗 Shareable Cloudflare link: {cloudflare_url}")
 
@@ -562,7 +562,7 @@ def _show_and_embed(
                 cloudflare_requested = cloudflare_requested,
             )
         except Exception as e:
-            logger.info(f"Could not render Unsloth link card ({e}).")
+            logger.info(f"Could not render LABZ link card ({e}).")
 
     # On Colab with a working tunnel, skip the in-cell proxy embed (often blank).
     if _is_colab_runtime() and cloudflare_url:
@@ -576,7 +576,7 @@ def _show_and_embed(
 
 
 def start(port: int = 8888, *, cloudflare: "bool | None" = None):
-    """Start Unsloth Studio in Colab and display the URL. Args: port: Port to bind/serve on.
+    """Start LABZ Studio in Colab and display the URL. Args: port: Port to bind/serve on.
     cloudflare: Shareable Cloudflare HTTPS link. ``None`` (default) auto-enables on real Colab
     because the in-cell proxy embed is often blank; pass ``False`` to skip the tunnel or ``True`` to
     force it on other runtimes. Usage: start() # Cloudflare link on Colab (auto); proxy iframe
@@ -584,12 +584,12 @@ def start(port: int = 8888, *, cloudflare: "bool | None" = None):
     start(cloudflare=True) # force Cloudflare link on any runtime"""
     import time
 
-    logger.info("🦥 Starting Unsloth Studio...")
+    logger.info("🦥 Starting LABZ Studio...")
     use_cloudflare = _colab_wants_cloudflare(cloudflare)
 
     # Fast path: already running (cell re-run); re-show link/iframe instead of rebinding the port.
     if _is_studio_healthy(port):
-        logger.info(f"   Unsloth is already running on port {port} — reusing existing server.")
+        logger.info(f"   LABZ is already running on port {port} — reusing existing server.")
         # try/finally: tear the tunnel down even if interrupted mid-start/render.
         try:
             colab_login = _finalize_colab_admin_password() if use_cloudflare else None
@@ -630,10 +630,10 @@ def start(port: int = 8888, *, cloudflare: "bool | None" = None):
             cloudflare = False,
         )
     except SystemExit as exc:
-        logger.error(f"❌ Unsloth Studio failed to start: {exc}")
+        logger.error(f"❌ LABZ Studio failed to start: {exc}")
         return
     except Exception as exc:
-        logger.error(f"❌ Unsloth Studio failed to start: {exc}")
+        logger.error(f"❌ LABZ Studio failed to start: {exc}")
         return
 
     # run_server may auto-increment the port; read back the bound port for the proxy URL/iframe.
@@ -655,7 +655,7 @@ def start(port: int = 8888, *, cloudflare: "bool | None" = None):
 
     if not server_ready:
         logger.error(
-            f"❌ Unsloth Studio did not become healthy on port {actual_port}. "
+            f"❌ LABZ Studio did not become healthy on port {actual_port}. "
             "Check for errors above."
         )
         return

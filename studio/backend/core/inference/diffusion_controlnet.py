@@ -80,7 +80,7 @@ _CURATED: tuple[ControlNetCatalogEntry, ...] = (
 
 
 def controlnets_dir() -> Path:
-    """Local directory Unsloth scans for user-provided ControlNet model folders; per-account, with the owner on the install root."""
+    """Local directory LABZ scans for user-provided ControlNet model folders; per-account, with the owner on the install root."""
     d = account_path("controlnets/diffusion")
     d.mkdir(parents = True, exist_ok = True)
     return d

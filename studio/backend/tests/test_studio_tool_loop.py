@@ -1184,7 +1184,7 @@ def test_a_skipped_duplicate_closes_the_card_the_provider_already_painted(execut
     ends = _events(lines, "tool_end")
     assert len(ends) == 2
     assert [end["tool_call_id"] for end in ends] == ["call_a", "call_a"]
-    assert ends[1]["result"].startswith("Unsloth did not run this call")
+    assert ends[1]["result"].startswith("LABZ did not run this call")
     # Opened as well as closed. The client retires a card id when it closes it,
     # so a second tool_end on the same id resolves to no card and the adapter
     # drops it -- the skip would be invisible again. Announcing it first draws

@@ -233,7 +233,7 @@ def with_readable_traceback(renderer):
     return _render
 
 
-# Set alongside HF_HUB_DISABLE_PROGRESS_BARS when the value is Unsloth's default rather than the
+# Set alongside HF_HUB_DISABLE_PROGRESS_BARS when the value is LABZ's default rather than the
 # operator's, so allow_progress_bars() can tell them apart.
 _PROGRESS_BARS_DEFAULTED = "UNSLOTH_STUDIO_PROGRESS_BARS_DEFAULTED"
 
@@ -337,7 +337,7 @@ def keep_progress_bars_countable() -> None:
     into the UI's status line, which is the only progress a user sees between "Loading model..." and
     the first step. A disabled bar is never registered in _instances, so the inherited
     HF_HUB_DISABLE_PROGRESS_BARS default would leave that status frozen for a whole multi-GB
-    download. Only Unsloth's own default is undone; an operator who set the variable themselves
+    download. Only LABZ's own default is undone; an operator who set the variable themselves
     keeps getting no bars, and afterwards quiet_third_party_progress_bars() is a no-op in this
     process. Call it BEFORE huggingface_hub is imported: hub reads the variable once into a module
     constant, and enable_progress_bars() then refuses to override it."""
@@ -352,7 +352,7 @@ def keep_progress_bars_countable() -> None:
 
 
 def quiet_bar_kwargs() -> dict:
-    """tqdm kwargs that keep a bar counting but stop it writing to the log. For Unsloth's own explicit
+    """tqdm kwargs that keep a bar counting but stop it writing to the log. For LABZ's own explicit
     bars (the dataset conversion loops), which no library switch reaches. Empty when the operator
     asked to keep bars, so nothing changes."""
     value = os.environ.get("HF_HUB_DISABLE_PROGRESS_BARS")
@@ -362,7 +362,7 @@ def quiet_bar_kwargs() -> dict:
 
 
 def allow_progress_bars() -> None:
-    """Undo an inherited Unsloth default so this process can draw progress bars. Called by the export
+    """Undo an inherited LABZ default so this process can draw progress bars. Called by the export
     worker, whose stdout is forwarded to the export dialog and whose Hub upload bar is the only live
     byte progress a long push_to_hub has. An operator-set HF_HUB_DISABLE_PROGRESS_BARS is left
     alone."""
@@ -374,7 +374,7 @@ def allow_progress_bars() -> None:
 
 def quiet_third_party_progress_bars() -> None:
     """Turn off the tqdm bars transformers / diffusers / huggingface_hub draw during an in-process
-    model load. A bar is written with carriage returns to a terminal, so in Unsloth's log it lands
+    model load. A bar is written with carriage returns to a terminal, so in LABZ's log it lands
     as a burst of partial lines, and because tqdm writes to a different stream than the structlog
     JSON writer with no line discipline between them, a bar can land mid-record and leave a line
     that is no longer parseable JSON, losing the record for anything reading it record-by-record.

@@ -308,7 +308,7 @@ def load_h3_quantized_text_encoder(
     ``cache_dir`` pins the config resolution to the live cache root for the hub-id case, exactly as
     the artifact download above and every other loader call in this backend do -- unset, it
     resolves through huggingface_hub's import-time constant instead and can re-download into a root
-    Unsloth no longer reads (or fail outright on an offline host that has already staged it).
+    LABZ no longer reads (or fail outright on an offline host that has already staged it).
 
     ``local_files_only`` is a load nobody asked for, which may not fetch anything. The artifact is
     ~27 GB, and the caller's staging phase (``_fetch_h3_te_quant``) has already accepted it -- so

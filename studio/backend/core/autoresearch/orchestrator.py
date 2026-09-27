@@ -1456,7 +1456,7 @@ class AutoresearchRunManager:
         from core.training.lifecycle import training_lifecycle_guard
 
         if is_process_shutting_down():
-            raise AutoresearchBusy("Unsloth is shutting down")
+            raise AutoresearchBusy("LABZ is shutting down")
         with self._lock:
             if self._current is not None and self._current.is_active():
                 raise AutoresearchBusy("An autoresearch loop is already running")
@@ -1469,7 +1469,7 @@ class AutoresearchRunManager:
             from core.training.training import get_training_backend
 
             if get_training_backend().is_training_active():
-                raise AutoresearchBusy("Unsloth training is running; stop it first")
+                raise AutoresearchBusy("LABZ training is running; stop it first")
 
             from core.nanochat.orchestrator import get_run_manager as nanochat_runs
 

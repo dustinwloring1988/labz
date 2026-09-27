@@ -133,7 +133,7 @@ class DiffusionFamily:
     # Preferred checkpoint FILENAME for a scheme, as (scheme, filename), overriding the ``<Model>-<SCHEME>.pt`` name
     # ``prequant_repo_filename`` derives. The derived name stays on as the fallback, so a repo hosting BOTH an old and
     # a new artifact serves the new one to a build that asks for it by name and the old one to every build that does
-    # not. That is what lets a rotated (v2) checkpoint ship without regressing an already-installed Unsloth, which
+    # not. That is what lets a rotated (v2) checkpoint ship without regressing an already-installed LABZ, which
     # would otherwise refuse the v2 tag and fall all the way back to the dense download. A row may also be (scheme,
     # task, filename), which names the artifact for ONE task and beats the task-agnostic row; see
     # ``family_prequant_filename``.
@@ -171,7 +171,7 @@ class DiffusionFamily:
     sd_cpp_arch_marker: Optional[str] = None
     # Literal an sd.cpp build carries once it can EDIT this family; the arch marker proves text-to-image only.
     sd_cpp_edit_marker: Optional[str] = None
-    # True when Unsloth can TRAIN a LoRA on this family; the training-start path refuses a non-trainable family up
+    # True when LABZ can TRAIN a LoRA on this family; the training-start path refuses a non-trainable family up
     # front.
     trainable: bool = False
     # Recommended base repos to train FROM, most-preferred first (e.g. a QLoRA prequant repo, then bf16). Surfaced by
@@ -625,7 +625,7 @@ _FAMILIES: tuple[DiffusionFamily, ...] = (
 
 
 def trainable_family_names() -> tuple[str, ...]:
-    """Names of families Unsloth can train a LoRA on, in registry order."""
+    """Names of families LABZ can train a LoRA on, in registry order."""
     return tuple(fam.name for fam in _FAMILIES if fam.trainable)
 
 
@@ -636,14 +636,14 @@ IDEOGRAM4_FAMILY_NAME = "ideogram-4"
 LUMINA2_FAMILY_NAME = "lumina-2"
 
 
-# Models Unsloth deliberately does NOT support, reason surfaced verbatim in the load error, keyed by lowercase repo-id
+# Models LABZ deliberately does NOT support, reason surfaced verbatim in the load error, keyed by lowercase repo-id
 # substring. The bar is a diffusers pipeline.
 _EXCLUDED_MODELS: tuple[tuple[str, str], ...] = (
     (
         # "-3" scoped so a future HunyuanImage 2.x with a diffusers pipeline falls through normally
         "hunyuanimage-3",
         "HunyuanImage-3.0 has no diffusers pipeline (it is an 80B autoregressive MoE "
-        "that requires trust_remote_code), so Unsloth does not support it.",
+        "that requires trust_remote_code), so LABZ does not support it.",
     ),
 )
 
@@ -739,7 +739,7 @@ def pipeline_class_from_index(path: Optional[str]) -> Optional[str]:
     """The ``_class_name`` the diffusers pipeline saved at ``path`` declares, or None.
 
     Size-capped and schema-free: neither a listing nor a load may be held up by whatever a scan
-    folder contains. ``_class_name`` is a LIST for a remote-code community pipeline, which Unsloth
+    folder contains. ``_class_name`` is a LIST for a remote-code community pipeline, which LABZ
     cannot load, so only a plain string answers.
 
     ``utf-8-sig`` because PowerShell writes JSON with a BOM and a hand-authored index is ordinary
@@ -1346,7 +1346,7 @@ def _diffusers_main_archive_remedy() -> str:
     cannot name the SHA.
     """
     generic = (
-        "Re-run the Unsloth installer (leaving UNSLOTH_DIFFUSERS_MAIN unset), which installs it "
+        "Re-run the LABZ installer (leaving UNSLOTH_DIFFUSERS_MAIN unset), which installs it "
         "from a zip archive when git is missing."
     )
     try:
@@ -1384,7 +1384,7 @@ def _too_old_message(pipeline_class: str, family_name: str, installed: str) -> s
         remedy = _diffusers_main_archive_remedy()
         return (
             f"'{family_name}' needs diffusers >= {minimum} ({pipeline_class}), which has not been "
-            f"released yet; this environment has diffusers {installed}. Unsloth installs a pinned "
+            f"released yet; this environment has diffusers {installed}. LABZ installs a pinned "
             "build of diffusers main for this and that build is not here, which almost always "
             "means the install had no working git (run: git --version) or could not reach "
             f"github.com. {remedy}"

@@ -38,7 +38,7 @@ from typing import Any, Optional
 PREQUANT_FORMAT = "unsloth_prequant_transformer_state_dict_v1"
 
 # v2 is v1 plus an ACTIVATION ROTATION (see ``diffusion_convrot``): the weights are stored in a rotated basis and are
-# wrong unless the loader rotates the activations to match. That is the one on-disk change a released Unsloth cannot
+# wrong unless the loader rotates the activations to match. That is the one on-disk change a released LABZ cannot
 # ignore safely -- an old build reading a rotated artifact as v1 would load it clean, raise nothing and render quietly
 # wrong pixels forever -- so it gets a tag old builds refuse outright, and the load drops to dense instead. Strictly a
 # biconditional: a v2 artifact MUST declare a rotation and a v1 artifact must NOT, both checked below, so neither a
@@ -60,7 +60,7 @@ ALLOW_LOCAL_PREQUANT_PATH_ENV = "UNSLOTH_ALLOW_LOCAL_PREQUANT_PATH"
 
 # The constructors a pre-quant checkpoint's pickle may name, on top of what ``weights_only`` already permits
 # (storages, dtypes, ``_rebuild_*``, ``OrderedDict``, ``torch.device``, ``_get_layout``). Surveyed across every hosted
-# checkpoint Unsloth resolves (image + video, fp8 + int8, rotated and not) this is the complete set, so the load runs
+# checkpoint LABZ resolves (image + video, fp8 + int8, rotated and not) this is the complete set, so the load runs
 # ``weights_only = True`` and a checkpoint naming anything else is refused before one opcode of it executes, hosted or
 # local. Registered under the name the PICKLE records, which for a re-exported class is not the class's own
 # ``__module__`` (``torchao.quantization.Float8Tensor`` really lives in
@@ -170,7 +170,7 @@ def _tuple_safe_globals_supported() -> bool:
     """Whether this torch's ``add_safe_globals`` understands ``(object, name)`` pairs (2.6+). Asked
     by VERSION rather than by trying it: 2.4/2.5 accept the pairs silently and only fail later,
     in ``_get_user_allowed_globals``, which reads ``f.__module__`` off every entry of a
-    PROCESS-WIDE list, so a tuple left there breaks every other weights_only load in Unsloth.
+    PROCESS-WIDE list, so a tuple left there breaks every other weights_only load in LABZ.
     Nothing is registered unless the answer here is yes."""
     try:
         import torch
@@ -684,7 +684,7 @@ def cached_checkpoint_path(
 
     ``names`` narrows the chain further, to a caller's own subset.
 
-    Both cache roots are searched: Unsloth pins the LIVE cache setting while an unpinned
+    Both cache roots are searched: LABZ pins the LIVE cache setting while an unpinned
     ``hf_hub_download`` falls back to huggingface_hub's import-time constant. Never raises."""
     roots = (cache_dir, None) if cache_dir else (None,)
     wanted = set(names) if names is not None else None
@@ -789,7 +789,7 @@ def load_prequantized_transformer(
 
     ``cache_dir`` is the live Hub cache root, as every other loader call pins it: unset, a fetch
     lands under huggingface_hub's import-time constant, so a mid-session cache change re-downloads
-    into a root Unsloth no longer reads.
+    into a root LABZ no longer reads.
 
     ``config_subfolder`` is where the DENOISER CONFIG lives inside ``base``, defaulting to the
     universal ``transformer``. A family hosting several denoiser partitions in one repo overrides it
@@ -1071,7 +1071,7 @@ def _resolve_checkpoint_path(
 def _config_cache_roots(checkpoint_path: str, cache_dir: Optional[str]) -> tuple:
     """Cache roots to read the transformer config from, the checkpoint's OWN root first.
     ``_resolve_checkpoint_path`` may answer from huggingface_hub's import-time root even when
-    Unsloth pins its live one, so pinning the config to the live root alone misses in exactly the
+    LABZ pins its live one, so pinning the config to the live root alone misses in exactly the
     cache-moved/offline case the checkpoint lookup just accepted, and load_config's raise is
     swallowed into a None return. The other root is still tried second."""
     if cache_dir is None:
@@ -1154,7 +1154,7 @@ def _validate_activation_rotation(ckpt_format: Any, meta: Any, scheme: str, logg
     same place -- weights in a rotated basis multiplied by unrotated activations, which is finite,
     raises nothing, and renders quietly wrong -- so all three are refused here rather than
     discovered later. First, the artifact declares a rotation and is tagged v1: only v2 makes an
-    Unsloth too old for this code refuse it, so a v1 tag on rotated weights is a hazard to every
+    LABZ too old for this code refuse it, so a v1 tag on rotated weights is a hazard to every
     OTHER build, and the builder that produced it is not one to trust about anything else in the
     file. Second, the artifact is tagged v2 and declares none: nothing here would rotate, and the
     tag says something was meant to. Third, the rotation is declared but its contract does not parse

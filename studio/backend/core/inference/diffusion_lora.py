@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Shared LoRA support for the Unsloth diffusion backends.
+"""Shared LoRA support for the LABZ diffusion backends.
 
 The native sd-cli engine selects adapters by `<lora:NAME:WEIGHT>` prompt tags resolved against a
 `--lora-model-dir`; diffusers loads them with `load_lora_weights()` + `set_adapters()`. This

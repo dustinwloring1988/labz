@@ -584,7 +584,7 @@ def can_keep_chat_during_nanochat(
     if free_bytes is None:
         return False, {"reason": f"no_probe:{probe}", "required_gb": required_bytes / 1e9}
 
-    # Same margin as the Unsloth path: the estimate is a model of memory use, so
+    # Same margin as the LABZ path: the estimate is a model of memory use, so
     # leave room for being wrong plus for KV cache growth.
     usable = free_bytes * (1.0 / SAFETY_MARGIN)
     fits = usable >= required_bytes

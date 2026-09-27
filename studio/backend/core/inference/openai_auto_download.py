@@ -140,7 +140,7 @@ def is_downloadable_ref(requested: str) -> bool:
 
 
 def looks_like_gguf_hub_repo_id(repo_id: str) -> bool:
-    """Whether *repo_id* names an Unsloth catalog entry, not a LiteLLM/OpenRouter label.
+    """Whether *repo_id* names an LABZ catalog entry, not a LiteLLM/OpenRouter label.
 
     Namespaced ids without a GGUF suffix are foreign routing labels (``openai/gpt-4o``).
     ``-GGUF`` and the ``unsloth/`` namespace mark ids clients pick from this server's
@@ -483,7 +483,7 @@ def _downloading_refusal(label: str, percent: Optional[float]) -> AutoDownloadRe
     return AutoDownloadRefusal(
         status = 503,
         code = "model_downloading",
-        message = (f"Downloading '{label}'{progress}. Retry shortly. Track it in Unsloth Studio."),
+        message = (f"Downloading '{label}'{progress}. Retry shortly. Track it in LABZ Studio."),
         retry_after = _RETRY_AFTER_S,
     )
 
@@ -534,7 +534,7 @@ async def maybe_auto_download(
     model.
 
     ``subject`` and ``via_api_key`` describe the caller for the monitor row this
-    opens: the same /v1 endpoints serve Unsloth's own chat on a session JWT, so the
+    opens: the same /v1 endpoints serve LABZ's own chat on a session JWT, so the
     download is not API-key traffic unless the request that asked for it was.
     """
     global _active
@@ -700,7 +700,7 @@ async def _admit_and_start(
             code = "model_not_supported",
             message = (
                 f"'{repo_id}' has no GGUF weights. Automatic download serves GGUF only; "
-                "load other formats from Unsloth Studio."
+                "load other formats from LABZ Studio."
             ),
         )
 
@@ -730,7 +730,7 @@ async def _admit_and_start(
                     if unknown
                     else "ships custom code that runs on load"
                 )
-                + ". Load it once in Unsloth Studio to review and approve it, then retry."
+                + ". Load it once in LABZ Studio to review and approve it, then retry."
             ),
         )
 
@@ -968,7 +968,7 @@ async def _dispatch(
         return busy
 
     monitor_id = api_monitor.record_lifecycle(
-        # Reason "api" since only /v1 reaches auto-download, but that is not API-key traffic: Unsloth's chat calls /v1
+        # Reason "api" since only /v1 reaches auto-download, but that is not API-key traffic: LABZ's chat calls /v1
         # on a JWT, and marking its download would pop the overlay mid-chat. So attribution comes from the request,
         # plus its caller, since the row is shared.
         event = "download",
@@ -1004,7 +1004,7 @@ async def _dispatch(
         code = "model_downloading",
         message = (
             f"Downloading '{label}' ({_gb(expected_bytes)}). Retry shortly. "
-            "Track it in Unsloth Studio."
+            "Track it in LABZ Studio."
         ),
         retry_after = _RETRY_AFTER_S,
     )

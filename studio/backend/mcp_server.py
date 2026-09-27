@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Curated MCP tools for driving an Unsloth Studio instance. The MCP surface deliberately wraps the existing
-Unsloth services instead of duplicating training or export logic. It is opt-in because several tools can start
+"""Curated MCP tools for driving an LABZ Studio instance. The MCP surface deliberately wraps the existing
+LABZ services instead of duplicating training or export logic. It is opt-in because several tools can start
 GPU work or write model artifacts.
 """
 
@@ -16,14 +16,14 @@ from fastmcp import FastMCP
 
 
 class BearerTokenMiddleware:
-    """Require an exact bearer token when Unsloth MCP is exposed remotely."""
+    """Require an exact bearer token when LABZ MCP is exposed remotely."""
 
     def __init__(self, app: Any, token: str) -> None:
         if not token or not token.strip():
-            raise ValueError("Unsloth MCP bearer token must be a non-empty value")
+            raise ValueError("LABZ MCP bearer token must be a non-empty value")
         if not token.isascii():
             # A non-ASCII token cannot be sent in an HTTP header; reject it here.
-            raise ValueError("Unsloth MCP bearer token must contain ASCII characters only")
+            raise ValueError("LABZ MCP bearer token must contain ASCII characters only")
         self.app = app
         # Compare on raw header bytes: str hmac.compare_digest raises on non-ASCII input, which would
         # surface as a 500 instead of a clean 401.
@@ -73,18 +73,18 @@ def _dump(value: Any) -> Any:
 
 
 def _clamp(value: int, low: int, high: int) -> int:
-    """Clamp an MCP-supplied integer into an inclusive range. MCP tools call the Unsloth route functions
+    """Clamp an MCP-supplied integer into an inclusive range. MCP tools call the LABZ route functions
     directly, which skips FastAPI's Query(ge=, le=) validation, so we re-apply the same bounds here.
     """
     return max(low, min(value, high))
 
 
 def create_studio_mcp() -> FastMCP:
-    """Create the Unsloth MCP server and register the high-value tools."""
+    """Create the LABZ MCP server and register the high-value tools."""
     mcp = FastMCP(
-        "Unsloth Studio",
+        "LABZ Studio",
         instructions = (
-            "Use read tools to inspect the local Unsloth state before starting GPU work. "
+            "Use read tools to inspect the local LABZ state before starting GPU work. "
             "Training and export tools can consume substantial VRAM and write files. "
             "Never expose tokens or local paths from tool results unless the user asks."
         ),
@@ -114,7 +114,7 @@ def create_studio_mcp() -> FastMCP:
 
     @mcp.tool
     async def list_local_models(models_dir: str = "./models") -> dict[str, Any]:
-        """List local and cached models available to Unsloth."""
+        """List local and cached models available to LABZ."""
         from routes.models import list_local_models as list_models
         return _dump(await list_models(models_dir = models_dir, current_subject = "mcp"))
 
@@ -126,9 +126,9 @@ def create_studio_mcp() -> FastMCP:
 
     @mcp.tool
     async def start_training(config: dict[str, Any]) -> dict[str, Any]:
-        """Start a validated Unsloth training job from a TrainingStartRequest-shaped object.
+        """Start a validated LABZ training job from a TrainingStartRequest-shaped object.
 
-        The config is validated by the same Pydantic model used by the Unsloth UI.
+        The config is validated by the same Pydantic model used by the LABZ UI.
         Call get_training_status first and do not start work while another job runs.
         """
         from models import TrainingStartRequest
@@ -160,7 +160,7 @@ def create_studio_mcp() -> FastMCP:
 
     @mcp.tool
     def validate_recipe(recipe: dict[str, Any]) -> dict[str, Any]:
-        """Validate a Data Recipe with the same validator used by Unsloth."""
+        """Validate a Data Recipe with the same validator used by LABZ."""
         from models.data_recipe import RecipePayload
         from routes.data_recipe.validate import validate
 
@@ -233,7 +233,7 @@ def create_studio_mcp() -> FastMCP:
         imatrix_path: str | None = None,
         private: bool = False,
     ) -> dict[str, Any]:
-        """Export the loaded model to GGUF using Unsloth's existing path validation.
+        """Export the loaded model to GGUF using LABZ's existing path validation.
 
         quantization_method may be a single method or a list to produce several
         GGUFs from one load. Pass hf_token when push_to_hub is set (the backend

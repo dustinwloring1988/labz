@@ -546,7 +546,7 @@ def _archive_root_name(spec: PinnedSource) -> str:
 
 
 def _download_archive(url: str, destination: Path, spec: PinnedSource) -> None:
-    request = urllib.request.Request(url, headers = {"User-Agent": "Unsloth-Studio"})
+    request = urllib.request.Request(url, headers = {"User-Agent": "LABZ-Studio"})
     deadline = time.monotonic() + _ARCHIVE_DOWNLOAD_DEADLINE_SECONDS
     try:
         if time.monotonic() >= deadline:
@@ -807,7 +807,7 @@ def ensure_pinned_source(
 
                 if hf_env_offline():
                     raise RuntimeError(
-                        f"The pinned {spec.name} source is not cached and Unsloth is offline"
+                        f"The pinned {spec.name} source is not cached and LABZ is offline"
                     )
                 if spec.archive_url is not None:
                     _install_archive_source(checkout, spec)

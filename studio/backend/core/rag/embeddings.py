@@ -49,7 +49,7 @@ _name: str | None = None
 _served_by = threading.local()
 
 
-# Unsloth device -> torch device string. Apple has no torch device -> CPU.
+# LABZ device -> torch device string. Apple has no torch device -> CPU.
 _TORCH_DEVICE = {DeviceType.CUDA: "cuda", DeviceType.XPU: "xpu"}
 
 

@@ -193,7 +193,7 @@ def list_builtins(
         item = blender.catalog_item()
         item.available = False
         item.unavailable_reason = (
-            "An authenticated Unsloth Studio UI session is required for Blender MCP."
+            "An authenticated LABZ Studio UI session is required for Blender MCP."
         )
         return [item]
     return [blender.catalog_item(_blender_row())]

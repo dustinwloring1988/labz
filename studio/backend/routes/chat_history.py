@@ -199,8 +199,8 @@ class ChatThread(BaseModel):
 
 def thread_from_row(row: dict) -> ChatThread:
     """Build a ChatThread from a DATABASE row, tolerating a snapshot it cannot read. `settings` is the
-    first strictly validated nested model Unsloth builds out of the database rather than off the
-    wire, and a stored snapshot outlives the build that wrote it: a newer Unsloth adding a setting,
+    first strictly validated nested model LABZ builds out of the database rather than off the
+    wire, and a stored snapshot outlives the build that wrote it: a newer LABZ adding a setting,
     widening an enum or raising a bound writes a blob this one rejects. Refusing it here 500s the
     chat on open and takes the entire history export with it. Only the read is forgiving: the wire
     contract stays strict in both directions and the row is left untouched, so upgrading again
@@ -232,7 +232,7 @@ def readable_thread_settings(settings: dict) -> Optional[dict]:
 
 def _unreadable_thread_settings(stored: dict) -> dict:
     """The part of a stored snapshot this build cannot validate, and so must not delete. An older
-    Unsloth opening a database a newer one wrote drops the fields it cannot read, and a blind
+    LABZ opening a database a newer one wrote drops the fields it cannot read, and a blind
     replacement would make that loss permanent, so a write carries forward everything the writer
     could not have known about: unknown keys, and known keys holding rejected values."""
     readable = readable_thread_settings(stored) or {}
@@ -1096,7 +1096,7 @@ def save_project(payload: ChatProject, current_subject: str = Depends(get_curren
     try:
         return ChatProject(**upsert_chat_project(payload.model_dump()))
     except ProjectWorkspaceError as exc:
-        # A project is the only thing Unsloth writes to Documents, so only this error and only its own path: the same
+        # A project is the only thing LABZ writes to Documents, so only this error and only its own path: the same
         # upsert also opens the database, which lives elsewhere.
         raise log_and_http_error(
             exc,

@@ -3,7 +3,7 @@
 
 """Filesystem layout for Hub download state.
 
-State sits beside HF's cache (under Unsloth's own cache root) so it survives ``huggingface-cli delete-cache`` and any other HF-side lifecycle:
+State sits beside HF's cache (under LABZ's own cache root) so it survives ``huggingface-cli delete-cache`` and any other HF-side lifecycle:
 
     <studio cache>/hub-state/
         manifests/cache-<digest>/<key>.json   expected-files manifest

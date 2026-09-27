@@ -1514,7 +1514,7 @@ def _build_browse_allowlist(
     media_roots: Optional[list[Path]] = None, drive_roots: Optional[list[Path]] = None
 ) -> list[Path]:
     """The root directories the folder browser may walk, which also seed the sidebar suggestion chips so chip
-    targets are always reachable: HOME, resolved HF cache dirs, Unsloth's outputs/exports/studio root,
+    targets are always reachable: HOME, resolved HF cache dirs, LABZ's outputs/exports/studio root,
     registered scan folders, and well-known local-LLM dirs, each only if it resolves to a real directory.
     *media_roots* / *drive_roots* let the caller pass already-probed removable-media and Windows drive roots
     so they are not scanned again (a disconnected mapped drive makes each probe slow)."""
@@ -1570,7 +1570,7 @@ def _build_browse_allowlist(
         _add(outputs_root())
         _add(exports_root())
     except Exception as exc:  # noqa: BLE001 -- best-effort
-        logger.debug("browse-folders: Unsloth roots unavailable: %s", exc)
+        logger.debug("browse-folders: LABZ roots unavailable: %s", exc)
     try:
         for folder in list_scan_folders():
             p = folder.get("path")
@@ -1787,7 +1787,7 @@ def browse_folders(
             "Directory to list. If omitted, defaults to the current user's "
             "home directory. Tilde (`~`) and relative paths are expanded. "
             "Must resolve inside the allowlist of browseable roots (HOME, "
-            "HF cache, Unsloth dirs, registered scan folders, well-known "
+            "HF cache, LABZ dirs, registered scan folders, well-known "
             "model dirs)."
         ),
     ),
@@ -3140,15 +3140,15 @@ async def delete_finetuned_model(
     gguf_variant: Optional[str] = Body(None),
     current_subject: str = Depends(get_current_subject),
 ):
-    """Delete an Unsloth-trained or exported model from disk.
+    """Delete an LABZ-trained or exported model from disk.
 
-    Only paths under Unsloth's outputs/exports roots are accepted.
+    Only paths under LABZ's outputs/exports roots are accepted.
     Exported GGUF entries can delete one quant variant at a time.
     """
     if source not in {"training", "exported"}:
         raise HTTPException(
             status_code = 400,
-            detail = "Only trained or exported Unsloth models can be deleted",
+            detail = "Only trained or exported LABZ models can be deleted",
         )
 
     if not model_path or not model_path.strip():
@@ -3180,14 +3180,14 @@ async def delete_finetuned_model(
         if not _is_path_under_lexically(delete_path, allowed_root):
             raise HTTPException(
                 status_code = 400,
-                detail = "Model path is outside Unsloth storage",
+                detail = "Model path is outside LABZ storage",
             )
         if export_type == "gguf" and gguf_variant:
             target_path = delete_path.resolve()
             if not _is_path_under(target_path, allowed_root):
                 raise HTTPException(
                     status_code = 400,
-                    detail = "Model path is outside Unsloth storage",
+                    detail = "Model path is outside LABZ storage",
                 )
         else:
             target_path = delete_path
@@ -3200,7 +3200,7 @@ async def delete_finetuned_model(
     if should_check_resolved_path and not _is_path_under(target_path, allowed_root):
         raise HTTPException(
             status_code = 400,
-            detail = "Model path is outside Unsloth storage",
+            detail = "Model path is outside LABZ storage",
         )
     if target_path == allowed_root:
         raise HTTPException(
@@ -4950,7 +4950,7 @@ async def list_cached_gguf(
     current_subject: str = Depends(get_current_subject),
     via_api_key: bool = Depends(authenticated_via_api_key),
 ):
-    """List GGUF repos downloaded to HF cache, legacy Unsloth cache, and HF default cache."""
+    """List GGUF repos downloaded to HF cache, legacy LABZ cache, and HF default cache."""
     try:
         # Off the loop: the filter can probe the Hub per ungranted repo.
         return redact_host_paths(
@@ -5060,7 +5060,7 @@ async def list_cached_models(
     hf_token: HfTokenArg = Depends(get_request_hf_token),
     via_api_key: bool = Depends(authenticated_via_api_key),
 ):
-    """List non-GGUF model repos downloaded to HF cache, legacy Unsloth cache, and HF default cache."""
+    """List non-GGUF model repos downloaded to HF cache, legacy LABZ cache, and HF default cache."""
     try:
         # Off the loop: the filter can probe the Hub per ungranted repo.
         return redact_host_paths(
@@ -5527,7 +5527,7 @@ _EXPORT_SIZE_CACHE: dict[object, tuple[int, int, str]] = {}
 
 
 def _is_sizable_local_path(model: str) -> bool:
-    """True only for local paths under an Unsloth data root. Containment is decided lexically (no filesystem
+    """True only for local paths under an LABZ data root. Containment is decided lexically (no filesystem
     access) before the path is touched, then the path is symlink-resolved and re-checked so a symlink inside
     a root cannot point the sizer outside it."""
     from utils.paths import outputs_root, exports_root, studio_root

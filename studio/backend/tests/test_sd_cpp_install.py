@@ -422,7 +422,7 @@ def test_install_into_nonempty_unowned_dir_is_refused(tmp_path, monkeypatch):
     user_file = target / "USER_WORK"
     user_file.write_text("keep", encoding = "utf-8")
 
-    with pytest.raises(RuntimeError, match = "not an Unsloth-managed directory"):
+    with pytest.raises(RuntimeError, match = "not an LABZ-managed directory"):
         install(install_dir = target)
 
     # The user's directory is left exactly as it was: file intact, no marker, nothing extracted.
@@ -454,7 +454,7 @@ def test_install_sha256_mismatch_raises_and_cleans_up(tmp_path, monkeypatch):
 
 def test_partial_install_failure_is_reclaimed_on_retry(tmp_path, monkeypatch):
     # A crash AFTER extraction leaves the target non-empty. Because ownership is marked BEFORE the partial writes, the retry
-    # recognises the debris as ours and re-extracts instead of tripping the "not an Unsloth-managed directory" refusal.
+    # recognises the debris as ours and re-extracts instead of tripping the "not an LABZ-managed directory" refusal.
     zb = _zip_with_sd_cli()
     _stub_release(monkeypatch, zip_bytes = zb, digest = "sha256:" + hashlib.sha256(zb).hexdigest())
     target = tmp_path / "sdcpp"
@@ -1703,7 +1703,7 @@ def test_unrunnable_binary_in_an_unmarked_root_is_kept_because_install_would_ref
     monkeypatch.setattr(bk, "_server_binary_runnable", lambda *_a, **_k: False)
 
     def _refuse(**_kwargs):
-        raise RuntimeError("sd.cpp install target already exists and is not an Unsloth-managed dir")
+        raise RuntimeError("sd.cpp install target already exists and is not an LABZ-managed dir")
 
     stub = types.ModuleType("install_sd_cpp_prebuilt")
     stub.install = _refuse

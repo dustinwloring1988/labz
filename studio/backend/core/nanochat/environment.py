@@ -456,7 +456,7 @@ def install(on_line: Callable[[str], None] | None = None,
         url = _UV_WINDOWS_URL if os.name == "nt" else _UV_DOWNLOAD_URL
         _set_install_state("failed", 0.0, "", "uv is required to set up the nanochat environment")
         raise RuntimeError(
-            f"uv was not found. Install it from {url} and reopen Unsloth Studio."
+            f"uv was not found. Install it from {url} and reopen LABZ Studio."
         )
 
     extra = _torch_extra()

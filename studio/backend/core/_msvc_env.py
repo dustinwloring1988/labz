@@ -220,7 +220,7 @@ def gate_torch_compile_on_windows(log: logging.Logger) -> None:
         return
 
     os.environ["TORCHDYNAMO_DISABLE"] = "1"
-    # This only turns off the compiles we own; Unsloth's @triton.jit kernels still need the toolchain.
+    # This only turns off the compiles we own; LABZ's @triton.jit kernels still need the toolchain.
     log.warning(
         "Triton is installed but its C toolchain has no CRT headers, so its "
         "clang-cl JIT would fail on 'stdlib.h' (#7595). torch.compile disabled; "

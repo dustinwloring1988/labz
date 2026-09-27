@@ -451,7 +451,7 @@ def load(checkpoint: CheckpointInfo) -> _ChatWorker:
             _worker.close()
             _worker = None
         if is_process_shutting_down():
-            raise NanochatChatError("Unsloth is shutting down")
+            raise NanochatChatError("LABZ is shutting down")
         worker = _ChatWorker(checkpoint)
         worker.start()
         _worker = worker

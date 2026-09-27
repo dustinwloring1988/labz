@@ -61,12 +61,12 @@ _CURATED_TTS_REPO_IDS_LOWER = frozenset(repo_id.lower() for repo_id in _CURATED_
 
 
 def is_curated_tts_repo_id(value: str | None) -> bool:
-    """True only for Unsloth's exact curated TTS Hub repositories."""
+    """True only for LABZ's exact curated TTS Hub repositories."""
     return bool(value and value.strip().lower() in _CURATED_TTS_REPO_IDS_LOWER)
 
 
 def is_curated_stt_repo_id(value: str | None) -> bool:
-    """True only for Unsloth's exact curated STT Hub repositories. Still hidden from chat, but task-scoped inventory consumers need the real cache rows so the Audio page need not reimplement size, format, variants and lifecycle."""
+    """True only for LABZ's exact curated STT Hub repositories. Still hidden from chat, but task-scoped inventory consumers need the real cache rows so the Audio page need not reimplement size, format, variants and lifecycle."""
     return bool(value and value.strip().lower() in _HIDDEN_STT_REPO_IDS_LOWER)
 
 

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Fail-closed admission policy for serving Unsloth without an API key. Off by default; when an admin turns it on, a request that sends no usable credential authenticates as the local admin, so ``curl`` and the OpenAI SDKs reach this server the way they reach LM Studio and Ollama. Two scopes, so opening up chat does not also open up training: ``inference`` covers the OpenAI-compatible endpoints only, named one by one in ``_INFERENCE_ROUTES``, and everything else keeps needing a key; ``full`` covers every route, but only for callers arriving and connecting over loopback. Server-side tools (python, terminal, web search) stay off for a keyless caller whatever the scope, until the admin ticks them on separately: ``/v1/chat/completions`` runs that tool loop on this machine, so it is a bigger grant than chat itself. Public tunnels and Colab never receive keyless access, private-LAN inference is accepted only through a live settings listener or the launch-managed bind that matches the ASGI accepting address and port, and signing in to Unsloth is unaffected."""
+"""Fail-closed admission policy for serving LABZ without an API key. Off by default; when an admin turns it on, a request that sends no usable credential authenticates as the local admin, so ``curl`` and the OpenAI SDKs reach this server the way they reach LM Studio and Ollama. Two scopes, so opening up chat does not also open up training: ``inference`` covers the OpenAI-compatible endpoints only, named one by one in ``_INFERENCE_ROUTES``, and everything else keeps needing a key; ``full`` covers every route, but only for callers arriving and connecting over loopback. Server-side tools (python, terminal, web search) stay off for a keyless caller whatever the scope, until the admin ticks them on separately: ``/v1/chat/completions`` runs that tool loop on this machine, so it is a bigger grant than chat itself. Public tunnels and Colab never receive keyless access, private-LAN inference is accepted only through a live settings listener or the launch-managed bind that matches the ASGI accepting address and port, and signing in to LABZ is unaffected."""
 
 from __future__ import annotations
 
@@ -576,7 +576,7 @@ class KeylessToolPolicyMiddleware:
 
 
 def asgi_request_is_keyless(asgi_scope, settings: Optional[tuple[str, bool]] = None) -> bool:
-    """Whether this ASGI request is admitted by the setting rather than by a credential. Middleware-side twin of ``auth.authentication.admitted_without_credential``, reading the raw scope because it runs before the request object exists. An Unsloth session and a working API key both authenticate as themselves, so neither is keyless: applying the tool restriction to an existing API client would take away tools it already had."""
+    """Whether this ASGI request is admitted by the setting rather than by a credential. Middleware-side twin of ``auth.authentication.admitted_without_credential``, reading the raw scope because it runs before the request object exists. An LABZ session and a working API key both authenticate as themselves, so neither is keyless: applying the tool restriction to an existing API client would take away tools it already had."""
     try:
         from starlette.requests import Request
         request = Request(asgi_scope)

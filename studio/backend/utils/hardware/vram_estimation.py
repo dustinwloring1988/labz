@@ -921,7 +921,7 @@ def _embedding_leaves(target_modules) -> set:
 
 
 def _full_weight_embedding_elements(arch: ModelArchConfig, target_modules) -> int:
-    """embed_tokens/lm_head cost a full matrix each, not a low-rank pair, since Unsloth redirects them into modules_to_save. A tied pair also gets ensure_weight_tying, which collapses them to one trainable matrix."""
+    """embed_tokens/lm_head cost a full matrix each, not a low-rank pair, since LABZ redirects them into modules_to_save. A tied pair also gets ensure_weight_tying, which collapses them to one trainable matrix."""
     selected = len(_embedding_leaves(target_modules))
     if arch.tie_word_embeddings:
         selected = min(selected, 1)
@@ -966,7 +966,7 @@ def compute_lora_params(arch: ModelArchConfig, lora_rank: int, target_modules: l
         if n_experts > 1:
             n_dense = arch.num_dense_layers
             n_moe = n_layers - n_dense
-            # peft "all-linear" attaches LoRA to nn.Linear only: shared experts are nn.Linear and get_peft_regex picks them up, while routed experts are nn.Parameter and need explicit gate_proj/up_proj/down_proj naming via Unsloth's get_moe_target_parameters.
+            # peft "all-linear" attaches LoRA to nn.Linear only: shared experts are nn.Linear and get_peft_regex picks them up, while routed experts are nn.Parameter and need explicit gate_proj/up_proj/down_proj naming via LABZ's get_moe_target_parameters.
             routed_moe = (
                 0
                 if all_linear

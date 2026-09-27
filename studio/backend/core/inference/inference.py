@@ -78,7 +78,7 @@ def _hf_token_for_loader(hf_token: Optional[str] | bool) -> Optional[str] | bool
 
 
 def _exact_model_name_for_load(config: ModelConfig, load_in_4bit: bool) -> Optional[str]:
-    """The repo id to hand the loader verbatim, or None to let Unsloth's mapper choose.
+    """The repo id to hand the loader verbatim, or None to let LABZ's mapper choose.
 
     ``config.path`` when the mapped repo is not on disk and the user's own weights are.
     The mapped repo's cached spelling when it IS on disk under another case: the mapper
@@ -109,7 +109,7 @@ def _exact_model_name_for_load(config: ModelConfig, load_in_4bit: bool) -> Optio
         if target and not loader.ALLOW_PREQUANTIZED_MODELS:
             target = loader._strip_unsloth_bnb_4bit_suffix(target)
     except Exception as e:
-        logger.debug(f"Could not resolve the Unsloth mapping for {config.path}: {e}")
+        logger.debug(f"Could not resolve the LABZ mapping for {config.path}: {e}")
         return None
     if not target or target.lower() == name:
         return None
@@ -651,7 +651,7 @@ class InferenceBackend:
         # Keep the token so the native-template fallback can fetch a
         # gated model's repo template later during generation.
         self._hf_token = hf_token
-        # GGUF uses max_seq_length=0 as "model default"; Unsloth crashes on it.
+        # GGUF uses max_seq_length=0 as "model default"; LABZ crashes on it.
         if max_seq_length <= 0:
             max_seq_length = 2048
 
@@ -985,7 +985,7 @@ class InferenceBackend:
                 import sys as _sys
                 from utils.cache_cleanup import clear_unsloth_compiled_cache
 
-                _preserve = ["Unsloth*Trainer.py"] if _sys.platform in ("win32", "darwin") else None
+                _preserve = ["LABZ*Trainer.py"] if _sys.platform in ("win32", "darwin") else None
                 clear_unsloth_compiled_cache(preserve_patterns = _preserve)
 
                 logger.info(f"Model '{model_name}' successfully unloaded.")
@@ -1485,7 +1485,7 @@ class InferenceBackend:
                     logger.warning(f"Could not refresh chat turn-end eos after template: {e}")
             else:
                 logger.info(
-                    f"No registered Unsloth template for {self.active_model_name}, using tokenizer default"
+                    f"No registered LABZ template for {self.active_model_name}, using tokenizer default"
                 )
         except Exception as e:
             logger.warning(f"Could not apply get_chat_template: {e}")

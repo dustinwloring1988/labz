@@ -1110,7 +1110,7 @@ class MiniMaxH3NativeRuntime:
 def transcode_video_to_mp4(source: Path, *, fps: int) -> bytes:
     """Convert an sd.cpp WebM into a gallery-compatible H.264/AAC MP4.
 
-    The native backend is available in Unsloth's no-torch runtime, so keep this
+    The native backend is available in LABZ's no-torch runtime, so keep this
     export entirely in PyAV rather than routing decoded frames through Diffusers.
     """
     import av

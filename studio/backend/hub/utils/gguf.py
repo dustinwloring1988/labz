@@ -168,7 +168,7 @@ def is_gguf_filename(filename: str) -> bool:
     return filename.lower().endswith(".gguf")
 
 
-# Every repo that bundles H3's denoisers with its companion models: the Unsloth mirror carries the Qwen3-VL encoder quants beside the denoisers, so listing one repo would aggregate encoder GGUFs as selectable transformer quants.
+# Every repo that bundles H3's denoisers with its companion models: the LABZ mirror carries the Qwen3-VL encoder quants beside the denoisers, so listing one repo would aggregate encoder GGUFs as selectable transformer quants.
 _H3_BUNDLE_REPOS = frozenset({"leejet/minimax-h3-gguf", "unsloth/minimax-h3-gguf"})
 
 

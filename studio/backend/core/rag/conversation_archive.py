@@ -740,7 +740,7 @@ def _branch_seed(
 
     # A LIST, in order, not a set: sets lose repetition and ordering, so an abandoned sibling with the same distinct
     # texts tied with the request's own branch and, being newer, won. A multiset fixes the repeat case but not the
-    # reordered one, so this scores an in-order run. System and developer messages are excluded: Unsloth's prepended
+    # reordered one, so this scores an in-order run. System and developer messages are excluded: LABZ's prepended
     # chat and project instructions are not part of the stored chain.
     def _key(message):
         """What a message matches ON. Role-blind let a rewound, unstored "Continue." match an

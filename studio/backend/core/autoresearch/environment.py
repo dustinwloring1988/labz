@@ -520,7 +520,7 @@ def init_git(emit: Callable[[str], None]) -> None:
     # A fresh copy of a .git-less folder has no identity, and a commit fails
     # without one. Set it locally on the copy so the user's global config is
     # neither required nor modified.
-    _git(["config", "user.name", "Unsloth autoresearch"], root)
+    _git(["config", "user.name", "LABZ autoresearch"], root)
     _git(["config", "user.email", "autoresearch@unsloth.local"], root)
     _git(["config", "commit.gpgsign", "false"], root)
 
@@ -553,7 +553,7 @@ def _gitignore_additions() -> str:
     ever would be a false alarm about work the user has not done.
     """
     return (
-        "\n# Added by Unsloth Studio\n"
+        "\n# Added by LABZ Studio\n"
         ".checkpoints/\n"
         "reports/\n"
         ".autoresearch/\n"
@@ -709,7 +709,7 @@ def install(on_line: Callable[[str], None] | None = None, *,
 
 def _ensure_gitignore(root: Path, emit: Callable[[str], None]) -> None:
     """Add the studio's artefacts to the copy's .gitignore, once."""
-    marker = "# Added by Unsloth Studio"
+    marker = "# Added by LABZ Studio"
     path = root / ".gitignore"
     try:
         existing = path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""

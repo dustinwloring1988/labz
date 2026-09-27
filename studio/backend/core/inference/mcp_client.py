@@ -307,7 +307,7 @@ def stdio_mcp_disabled_reason() -> str:
             )
     return (
         "Local commands aren't enabled on this server. To allow them, set "
-        "UNSLOTH_STUDIO_ALLOW_STDIO_MCP=1 and restart Unsloth, or use an "
+        "UNSLOTH_STUDIO_ALLOW_STDIO_MCP=1 and restart LABZ, or use an "
         "http:// or https:// URL instead."
     )
 
@@ -1831,7 +1831,7 @@ def _call_session_tool(
     def _remaining() -> Optional[float]:
         return None if deadline is None else max(0.0, deadline - time.monotonic())
 
-    # Callers without an Unsloth session id must retain the former one-shot behavior: no browser/cookie/tool state can
+    # Callers without an LABZ session id must retain the former one-shot behavior: no browser/cookie/tool state can
     # leak into another request. Use an ephemeral key (and close it below) rather than the shared empty scope that the
     # persistent-session cache used previously.
     def _config_ok() -> bool:

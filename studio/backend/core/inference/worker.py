@@ -1175,7 +1175,7 @@ def run_inference_process(
 
     # These architectures use their publishers' native Transformers/Diffusers
     # interfaces. Select that backend before the Apple MLX fast-path and before
-    # importing Unsloth; native_audio itself has no eager ML imports.
+    # importing LABZ; native_audio itself has no eager ML imports.
     from core.inference.native_audio import is_native_audio_model
 
     _native_audio_worker = is_native_audio_model(model_name)
@@ -1461,7 +1461,7 @@ def run_inference_process(
                 "message": (
                     "Importing native audio runtime..."
                     if _native_audio_worker
-                    else "Importing Unsloth..."
+                    else "Importing LABZ..."
                 ),
             },
         )
@@ -1471,7 +1471,7 @@ def run_inference_process(
         if _native_audio_worker:
             from core.inference.native_audio import NativeAudioBackend as InferenceBackend
         else:
-            # Recover from any namespace-package shadow before importing Unsloth.
+            # Recover from any namespace-package shadow before importing LABZ.
             from core.import_guards import ensure_real_packages
             ensure_real_packages("unsloth_zoo", "unsloth")
 

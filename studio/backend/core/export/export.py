@@ -68,7 +68,7 @@ def _export_runtime_message() -> str:
         )
     return (
         "Export requires an NVIDIA, AMD, or Intel GPU, or Apple Silicon (MLX). No supported "
-        "accelerator was found on this host. (PyTorch is installed, but Unsloth cannot export on "
+        "accelerator was found on this host. (PyTorch is installed, but LABZ cannot export on "
         "CPU only.)"
     )
 
@@ -595,7 +595,7 @@ def _publish_unsloth_model_card(hf_api, repo_id, model, hf_token):
             method = "",
             extra = "trl",
         )
-        ModelCard(content).push_to_hub(repo_id, token = hf_token, commit_message = "Unsloth Model Card")
+        ModelCard(content).push_to_hub(repo_id, token = hf_token, commit_message = "LABZ Model Card")
     except Exception as exception:
         logger.warning(f"Could not publish the model card: {exception}")
 
@@ -968,7 +968,7 @@ class ExportBackend:
                 if not _compressed_export_supported():
                     return (
                         False,
-                        "Compressed-tensors (FP8/FP4) export requires an Unsloth build with "
+                        "Compressed-tensors (FP8/FP4) export requires an LABZ build with "
                         "compressed-tensors support. Upgrade unsloth, or choose 16-bit.",
                         None,
                     )
@@ -1150,7 +1150,7 @@ class ExportBackend:
                                     extra = "unsloth",
                                 )
                                 ModelCard(content).push_to_hub(
-                                    repo_id, token = hf_token, commit_message = "Unsloth Model Card"
+                                    repo_id, token = hf_token, commit_message = "LABZ Model Card"
                                 )
                         except Exception as exception:
                             logger.warning(f"Could not publish the model card: {exception}")
@@ -1283,7 +1283,7 @@ class ExportBackend:
                         )
                         card = ModelCard(content)
                         card.push_to_hub(
-                            repo_id, token = hf_token, commit_message = "Unsloth Model Card"
+                            repo_id, token = hf_token, commit_message = "LABZ Model Card"
                         )
 
                         if save_directory:
@@ -1335,7 +1335,7 @@ class ExportBackend:
         if imatrix_file and not _imatrix_export_supported(self.current_model.save_pretrained_gguf):
             return (
                 False,
-                "This Unsloth build does not support GGUF imatrix export. "
+                "This LABZ build does not support GGUF imatrix export. "
                 "Upgrade unsloth and unsloth_zoo, or disable the imatrix option.",
                 None,
             )
@@ -1546,7 +1546,7 @@ class ExportBackend:
                             path_in_repo = "config.json",
                             repo_id = repo_id,
                             repo_type = "model",
-                            commit_message = "Unsloth config.json",
+                            commit_message = "LABZ config.json",
                         )
                     if exported_modelfile_bytes is not None:
                         hf_api.upload_file(
@@ -1554,7 +1554,7 @@ class ExportBackend:
                             path_in_repo = "Modelfile",
                             repo_id = repo_id,
                             repo_type = "model",
-                            commit_message = "Unsloth Ollama Modelfile",
+                            commit_message = "LABZ Ollama Modelfile",
                         )
                     # Last (advertises the files), best-effort: RepoCard hardcodes huggingface.co.
                     try:
@@ -1567,7 +1567,7 @@ class ExportBackend:
                                     f"- `{os.path.basename(f)}`" for f in exported_ggufs
                                 ),
                             )
-                        ).push_to_hub(repo_id, token = hf_token, commit_message = "Unsloth Model Card")
+                        ).push_to_hub(repo_id, token = hf_token, commit_message = "LABZ Model Card")
                     except Exception as exception:
                         logger.warning(f"Could not publish the model card: {exception}")
                 else:
@@ -1661,7 +1661,7 @@ class ExportBackend:
             if _save_gguf_fn is None or not _supports_kwarg(_save_gguf_fn, "save_method"):
                 return (
                     False,
-                    "This Unsloth build does not support GGUF LoRA adapter export. "
+                    "This LABZ build does not support GGUF LoRA adapter export. "
                     "Upgrade unsloth and unsloth_zoo, or export the safetensors adapter.",
                     None,
                 )

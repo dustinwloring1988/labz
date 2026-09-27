@@ -29,7 +29,7 @@ def _field(source: Any, name: str) -> Any:
 
 
 def _attached_window(model: Any) -> Any:
-    """What Unsloth attached: getattr only, so a Mapping model's parameters cannot pose as it."""
+    """What LABZ attached: getattr only, so a Mapping model's parameters cannot pose as it."""
     try:
         return getattr(model, "max_seq_length", None)
     except Exception:

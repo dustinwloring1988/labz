@@ -7,7 +7,7 @@ A shared HF datasets cache can contain subtrees owned by another user (for
 example populated by an earlier root-run job). datasets then raises
 "[Errno 13] Permission denied: ..._builder.lock" while locking the cached
 builder, killing the training run even though the dataset itself is fine.
-Retry such loads in an Unsloth-owned cache so the run proceeds; the worst case
+Retry such loads in an LABZ-owned cache so the run proceeds; the worst case
 is one rebuild of the dataset in the fallback location.
 
 On Windows, huggingface_hub's concurrent symlink capability probe can also
@@ -102,7 +102,7 @@ def load_dataset_cache_safe(*args, **kwargs):
                 return load_dataset(*args, **kwargs)
             except OSError as retry_error:
                 # A second 1314 is a cache dir Hub had not probed; the
-                # Unsloth-owned cache is probed fresh and clears both cases.
+                # LABZ-owned cache is probed fresh and clears both cases.
                 if _is_retryable_cache_error(retry_error):
                     return _retry_in_studio_cache(load_dataset, args, kwargs, retry_error)
                 raise

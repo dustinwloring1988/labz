@@ -293,7 +293,7 @@ def _verify_sha256(path: Path, expected_digest: Optional[str]) -> None:
 
 
 def default_install_dir() -> Path:
-    """``<UNSLOTH_STUDIO_HOME>/stable-diffusion.cpp``, else the legacy ``~/.unsloth/stable-diffusion.cpp``. The same placement ``install_llama_prebuilt.default_managed_llama_dir`` uses for llama.cpp and the whisper.cpp / node installs use for theirs: the tree goes *under* the Unsloth home, so side-by-side instances stay isolated and nothing outside the home is ever claimed. The legacy default home ``~/.unsloth/studio`` still maps to ``~/.unsloth/stable-diffusion.cpp`` so an existing install is reused. Kept byte-identical in meaning to ``sd_cpp_engine.managed_install_root``; separate because this script must run standalone, before the backend package is importable. Derived from an absolute home, so a relative ``UNSLOTH_STUDIO_HOME`` cannot leave the install dir relative to the working directory."""
+    """``<UNSLOTH_STUDIO_HOME>/stable-diffusion.cpp``, else the legacy ``~/.unsloth/stable-diffusion.cpp``. The same placement ``install_llama_prebuilt.default_managed_llama_dir`` uses for llama.cpp and the whisper.cpp / node installs use for theirs: the tree goes *under* the LABZ home, so side-by-side instances stay isolated and nothing outside the home is ever claimed. The legacy default home ``~/.unsloth/studio`` still maps to ``~/.unsloth/stable-diffusion.cpp`` so an existing install is reused. Kept byte-identical in meaning to ``sd_cpp_engine.managed_install_root``; separate because this script must run standalone, before the backend package is importable. Derived from an absolute home, so a relative ``UNSLOTH_STUDIO_HOME`` cannot leave the install dir relative to the working directory."""
     home = (os.environ.get("UNSLOTH_STUDIO_HOME") or os.environ.get("STUDIO_HOME") or "").strip()
     legacy = Path.home() / ".unsloth" / "stable-diffusion.cpp"
     if not home:
@@ -514,7 +514,7 @@ def _safe_extractall(zf: zipfile.ZipFile, target: Path) -> None:
         key = keys[str(dest)]
         if key in reserved:
             raise RuntimeError(f"symlink at a reserved installer path: {member.filename!r}")
-        # Nor may one POINT at them: the marker is already there on a root Unsloth owns, so sd-cli -> marker leaves _locate_sd_cli reporting an empty file as the executable.
+        # Nor may one POINT at them: the marker is already there on a root LABZ owns, so sd-cli -> marker leaves _locate_sd_cli reporting an empty file as the executable.
         landing = _plan_resolve(
             Path(os.path.normpath(key.parent / link_target)), base, replaced, archive
         )
@@ -721,10 +721,10 @@ def install(
     # Refuse to extract into a pre-existing non-empty dir we do not own: merging would overwrite the user's files.
     if not _may_own:
         raise RuntimeError(
-            f"sd.cpp install target already exists and is not an Unsloth-managed directory: {target}. "
+            f"sd.cpp install target already exists and is not an LABZ-managed directory: {target}. "
             f"Refusing to extract prebuilt binaries into it to avoid overwriting or mixing them "
             f"into your files. Remove or move that directory, or install into a different, empty "
-            f"location (pass a different --install-dir / set the Unsloth sd.cpp install dir)."
+            f"location (pass a different --install-dir / set the LABZ sd.cpp install dir)."
         )
     used_repo, release, chosen = _resolve_with_fallback(accelerator, token)
 

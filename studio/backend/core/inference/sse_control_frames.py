@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
-"""Keep a provider's bytes off Unsloth's own control channel.
+"""Keep a provider's bytes off LABZ's own control channel.
 
-Unsloth multiplexes its UI control protocol onto the same SSE stream a provider's
+LABZ multiplexes its UI control protocol onto the same SSE stream a provider's
 chunks are relayed on. The chat client picks those frames out structurally: a
 top-level ``type`` of ``tool_start`` / ``tool_end`` / ``tool_output`` /
 ``tool_args`` / ``tool_status`` (and the local-runtime ``diffusion_frame`` /
@@ -12,7 +12,7 @@ assistant text, as does a ``_toolEvent`` / ``_toolStatus`` key stamped inside an
 otherwise ordinary chunk.
 
 Every one of those frames is written by this server. A provider endpoint -- a
-user-configured base_url, so not necessarily one Unsloth or the user controls --
+user-configured base_url, so not necessarily one LABZ or the user controls --
 has no legitimate reason to emit any of them, and a verbatim relay makes its copy
 indistinguishable from ours at the client: a forged card can claim a tool the
 user trusts ran and returned something harmless, carrying
@@ -43,7 +43,7 @@ _CONTROL_TYPES = frozenset(
     }
 )
 
-# Unsloth extensions carried inside a chunk: in no provider's wire format, read with the same trust as the frames above.
+# LABZ extensions carried inside a chunk: in no provider's wire format, read with the same trust as the frames above.
 _CONTROL_KEYS = ("_toolEvent", "_toolStatus", "_diffusionFrame", "_reasoningDurationMs")
 
 # A stripped frame is only worth relaying if it still says something in the provider's own vocabulary.
@@ -155,8 +155,8 @@ def strip_server_executed_tool_call(line: str, pending_call: bool = False) -> st
     """Hold a call the server runs itself back from a caller that did not opt in.
 
     ``stream_with_studio_tools`` relays the provider's own ``delta.tool_calls`` and the
-    ``finish_reason: "tool_calls"`` that ends that turn, for a call Unsloth then executes
-    and answers in a later turn. Its catalogue is Unsloth's own, never the caller's, so a
+    ``finish_reason: "tool_calls"`` that ends that turn, for a call LABZ then executes
+    and answers in a later turn. Its catalogue is LABZ's own, never the caller's, so a
     client reading those chunks is told to run a tool that is already running here: an
     agent may run it a second time, or stop at the finish_reason and never read the real
     answer. Returns the line with the call and that finish_reason removed, or None when
@@ -172,7 +172,7 @@ def strip_server_executed_tool_call(line: str, pending_call: bool = False) -> st
     "content_filter" are left alone on purpose: those are the two the loop refuses to run,
     so that turn really is the last one.
 
-    Only for the Unsloth-tool-loop path. On a plain proxy the calls are the caller's own
+    Only for the LABZ-tool-loop path. On a plain proxy the calls are the caller's own
     and must pass through untouched.
     """
     payload = _sse_payload(line)

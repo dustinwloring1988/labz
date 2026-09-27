@@ -684,7 +684,7 @@ class LlamaAdmissionQueue:
     The pool mirrors llama-server's own ``--parallel`` slots: ``capacity`` slot ids are each either
     free or held by exactly one caller, and a caller that finds every slot busy waits in arrival
     order and is handed the next slot to free, so no caller is starved. This bounds only the callers
-    that reserve: chat completions and messages do, while /v1/completions, Unsloth's own chat
+    that reserve: chat completions and messages do, while /v1/completions, LABZ's own chat
     endpoint and RAG captioning all reach llama-server directly, so it is not a global cap.
 
     Waiting is unbounded in time by default (``queue_timeout_s`` None); the wait line itself is

@@ -2,12 +2,12 @@
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
 """Interactive terminal prompt that forces a bootstrap password change before
-Unsloth becomes reachable: a public Cloudflare URL (``--secure`` / ``--cloudflare``)
+LABZ becomes reachable: a public Cloudflare URL (``--secure`` / ``--cloudflare``)
 or a raw non-loopback bind such as ``-H 0.0.0.0``.
 
 Masked input echoes one ``*`` per keystroke (unlike ``getpass``). Works on Windows (``msvcrt``) and Linux/macOS
 (``termios``). All output goes to stderr so redirected stdout never swallows the prompt. Mirrored for the CLI at
-``unsloth_cli/commands/_password_prompt.py`` (the CLI cannot import the Unsloth backend package); keep the two
+``unsloth_cli/commands/_password_prompt.py`` (the CLI cannot import the LABZ backend package); keep the two
 in sync.
 """
 
@@ -297,11 +297,11 @@ def prompt_for_password_change(
     refusal = (
         "Ctrl+C to abort."
         if refusal_aborts
-        else "Ctrl+C to skip, and Unsloth starts with the auto-generated password."
+        else "Ctrl+C to skip, and LABZ starts with the auto-generated password."
     )
     out.write(
         "\n"
-        f"Unsloth Studio will be reachable {exposure}, so set a\n"
+        f"LABZ Studio will be reachable {exposure}, so set a\n"
         f"password now. {refusal}\n\n"
     )
     out.flush()
@@ -345,7 +345,7 @@ def prompt_for_password_change(
     except (KeyboardInterrupt, EOFError):
         # Must agree with the banner: a caller that continues cannot claim otherwise.
         out.write(
-            "Password change aborted; not exposing Unsloth.\n"
+            "Password change aborted; not exposing LABZ.\n"
             if refusal_aborts
             else "Password change skipped; leaving the auto-generated admin password in place.\n"
         )

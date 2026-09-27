@@ -795,7 +795,7 @@ def local_load_dir(path: Optional[str]) -> Optional[str]:
 def _build_index() -> dict[str, _LocalGgufEntry]:
     """Map normalized id/model_id/display_name -> local model entry.
 
-    Scans the same roots Unsloth's model picker lists (./models, the active plus
+    Scans the same roots LABZ's model picker lists (./models, the active plus
     legacy/default HF caches, LM Studio and Hermes dirs, and user scan folders) so a named
     local model is never missed and silently served as the loaded one. The Ollama scan only reads
     manifests: the ``.gguf`` link its blobs need is materialized by the load.
@@ -866,7 +866,7 @@ def _build_index() -> dict[str, _LocalGgufEntry]:
     except Exception as exc:
         logger.debug("auto-switch: LM Studio scan failed: %s", exc)
     # Read-only like the LM Studio scan, so it is safe on the request path. This is the path Hermes
-    # itself takes: it downloads the GGUF, then asks Unsloth for it by name.
+    # itself takes: it downloads the GGUF, then asks LABZ for it by name.
     try:
         from hub.services.models.hermes import scan_hermes_dir
         from utils.paths import hermes_model_dirs
@@ -902,7 +902,7 @@ def _build_index() -> dict[str, _LocalGgufEntry]:
         raw_id = getattr(info, "id", None)
         if not raw_id:
             continue
-        # Skip what Unsloth hides from its pickers (validation probe, RAG embed weights): not chat models, so never an
+        # Skip what LABZ hides from its pickers (validation probe, RAG embed weights): not chat models, so never an
         # auto-switch target.
         if _is_hidden_model(
             raw_id,

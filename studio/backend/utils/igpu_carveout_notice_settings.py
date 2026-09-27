@@ -4,7 +4,7 @@
 """Whether the "enlarge the integrated GPU's memory" notice has been dismissed.
 
 Server-side rather than localStorage, for the reason xet_notice_settings.py gives:
-an Unsloth origin is not stable, so a per-origin store hands out a fresh notice
+an LABZ origin is not stable, so a per-origin store hands out a fresh notice
 every time the port moves.
 
 Dismissal records the allocation it was dismissed AT, not a bare boolean: someone who

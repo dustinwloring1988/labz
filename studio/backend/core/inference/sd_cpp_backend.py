@@ -145,7 +145,7 @@ def _tree_reader(
     replacing is the exact race this exists to prevent.
 
     The wait is cancellable. The caller already holds the generate lock here, so an unload or a
-    cancel that could not get out of this would read as a hung Unsloth for up to the whole timeout
+    cancel that could not get out of this would read as a hung LABZ for up to the whole timeout
     while nothing has even started. Nothing notifies the condition on cancel, so the wait is
     re-checked on a short tick rather than once.
     """
@@ -180,7 +180,7 @@ def _tree_reader(
             _tree_state.notify_all()
 
 
-# Max images per img_gen job; larger Unsloth batches (up to 32) are split into these chunks
+# Max images per img_gen job; larger LABZ batches (up to 32) are split into these chunks
 _MAX_SERVER_BATCH = 8
 
 
@@ -244,8 +244,8 @@ def _usable_or_discard_managed(binary: str) -> bool:
         return True
     if not is_managed_binary(binary):
         logger.warning(
-            "sd.cpp binary %s is not runnable; leaving it alone (not an Unsloth-owned install we may "
-            "replace). Delete its directory to have Unsloth reinstall the prebuilt.",
+            "sd.cpp binary %s is not runnable; leaving it alone (not an LABZ-owned install we may "
+            "replace). Delete its directory to have LABZ reinstall the prebuilt.",
             binary,
         )
         return True  # not ours to replace; the router's own probe still refuses it
@@ -684,7 +684,7 @@ def _h3_replacement_hint(binary: str) -> str:
             Path(binary).resolve().relative_to(root.resolve())
         except (OSError, ValueError):
             continue
-        return f", or move {root} aside so Unsloth can install the pinned prebuilt there"
+        return f", or move {root} aside so LABZ can install the pinned prebuilt there"
     return ""
 
 
@@ -1538,7 +1538,7 @@ def _record_mismatch(mod, root: Path, want: str) -> bool:
 
 def _superseded_legacy_server(binary: Optional[str], accelerator: str) -> bool:
     """True when ``binary`` is a MISMATCHED sd-server out of the tree an older build left beside the
-    Unsloth home, while the CURRENT managed root holds a completed install for ``accelerator`` whose
+    LABZ home, while the CURRENT managed root holds a completed install for ``accelerator`` whose
     bundle shipped no sd-server.
 
     That install is the authoritative one, and the recorded fact that its bundle is serverless makes
@@ -1723,7 +1723,7 @@ def _installed_accelerator_of(binary: Optional[str]) -> Optional[str]:
     get replaced underneath it.
     """
     # From the root the binary is actually IN, not the current default. The finder also serves a tree an older build
-    # left beside the Unsloth home, and reading the current root for a binary out of that one reports "unrecorded" on
+    # left beside the LABZ home, and reading the current root for a binary out of that one reports "unrecorded" on
     # both sides of the comparison, so a swap underneath this load reads as no change at all.
     root = owning_managed_root(binary)
     if root is None:
@@ -1897,7 +1897,7 @@ def ensure_sd_server_binary(
                     _note_failed_upgrade(accelerator)
                 return fallback
         installed = find_sd_server_binary()
-        # The finder also probes the tree an older build left beside the Unsloth home, so when the bundle just
+        # The finder also probes the tree an older build left beside the LABZ home, so when the bundle just
         # installed ships no sd-server the hit here can be that legacy server, built for a different accelerator.
         # None, not the fallback: an install just completed, so the router's next step resolves the sd-cli it landed,
         # and a one-shot run on the right build beats a resident server on the wrong one. The fallback stays for the

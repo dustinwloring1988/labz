@@ -57,7 +57,7 @@ def precache_helper_gguf():
         )
         from utils.hf_cache_settings import active_hf_hub_cache
 
-        # Remember whether bars were already off: Unsloth turns them off for the whole server, so enabling them unconditionally on the way out would undo that for every later in-process download.
+        # Remember whether bars were already off: LABZ turns them off for the whole server, so enabling them unconditionally on the way out would undo that for every later in-process download.
         _bars_were_off = bool(are_progress_bars_disabled())
         disable_progress_bars()
         logging.getLogger("huggingface_hub").setLevel(logging.WARNING)

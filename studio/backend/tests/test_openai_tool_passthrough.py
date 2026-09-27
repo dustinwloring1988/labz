@@ -147,7 +147,7 @@ class TestFriendlyUpstreamError:
         raw = '{"error":{"code":400,"message":"Failed to initialize samplers: failed to parse grammar","type":"invalid_request_error"}}'
         msg = _friendly_upstream_error(raw)
         assert "failed to parse grammar" not in msg  # raw body is not surfaced verbatim
-        assert "compile a grammar" in msg and "Update Unsloth" in msg
+        assert "compile a grammar" in msg and "Update LABZ" in msg
 
     def test_sampler_failure_without_a_grammar_keeps_its_own_text(self):
         # llama-server prefixes every sampler failure the same way, so a bad penalty

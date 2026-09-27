@@ -56,19 +56,19 @@ def get_existing_cache_dirs() -> List[Path]:
     return found
 
 
-# Written when Unsloth creates the directory, so "we made this" is a fact rather than an inference from the contents.
+# Written when LABZ creates the directory, so "we made this" is a fact rather than an inference from the contents.
 CACHE_MARKER = ".unsloth_compiled_cache"
 
-# Names only the compiler produces, so a cache Unsloth did not create is still recognised once it has been written into.
+# Names only the compiler produces, so a cache LABZ did not create is still recognised once it has been written into.
 import re as _re
 
-_GENERATED_NAME_RE = _re.compile(r"\A(unsloth_compiled_module_.+|Unsloth.+Trainer)\.py\Z")
-# What may be deleted from a directory we do not own. Unsloth*Trainer.py is a convention a user's own subclass can match, and there the marker is the only thing that would say we wrote it.
+_GENERATED_NAME_RE = _re.compile(r"\A(unsloth_compiled_module_.+|LABZ.+Trainer)\.py\Z")
+# What may be deleted from a directory we do not own. LABZ*Trainer.py is a convention a user's own subclass can match, and there the marker is the only thing that would say we wrote it.
 _OWNED_DELETE_RE = _re.compile(r"\Aunsloth_compiled_module_.+\.py\Z")
 
 
 def _is_dedicated_cache(path: Path) -> bool:
-    """True only for a directory Unsloth created for the cache and nothing else. A real file, not a link: exists() follows one, so a marker symlinked at any existing path would license the rmtree below over somebody's own directory."""
+    """True only for a directory LABZ created for the cache and nothing else. A real file, not a link: exists() follows one, so a marker symlinked at any existing path would license the rmtree below over somebody's own directory."""
     marker = path / CACHE_MARKER
     try:
         return marker.is_file() and not marker.is_symlink()
@@ -103,7 +103,7 @@ def _holds_generated_modules(path: Path) -> bool:
 
 
 def _builtin_cache_paths() -> set:
-    """Paths that are ours by construction, so they need no marker. The CWD candidate is deliberately not one: Unsloth is launched from wherever the shell happens to be, and a directory there is only ours if it says so."""
+    """Paths that are ours by construction, so they need no marker. The CWD candidate is deliberately not one: LABZ is launched from wherever the shell happens to be, and a directory there is only ours if it says so."""
     return {str(p) for p in _CACHE_DIRS}
 
 
@@ -120,7 +120,7 @@ def _cleanable_cache_dirs() -> "List[tuple]":
             cleanable.append((cache_dir, False))
         else:
             logger.warning(
-                "Not clearing %s: Unsloth did not create it and it holds no generated "
+                "Not clearing %s: LABZ did not create it and it holds no generated "
                 "modules. Point UNSLOTH_COMPILE_LOCATION at a directory used only for "
                 "the compiled cache.",
                 cache_dir,
@@ -136,7 +136,7 @@ def register_compiled_cache_on_path() -> None:
     pypath = os.environ.get("PYTHONPATH", "")
     pypath_entries = [p for p in pypath.split(os.pathsep) if p]
 
-    # Iterate in reverse so earlier _CACHE_DIRS entries (higher priority) are inserted last and thus end up first in sys.path / PYTHONPATH. Same ownership test as cleanup: a directory in the launch dir needs a file only the compiler writes, since Unsloth*Trainer.py is a name a user's own subclass can carry and that directory goes on sys.path.
+    # Iterate in reverse so earlier _CACHE_DIRS entries (higher priority) are inserted last and thus end up first in sys.path / PYTHONPATH. Same ownership test as cleanup: a directory in the launch dir needs a file only the compiler writes, since LABZ*Trainer.py is a name a user's own subclass can carry and that directory goes on sys.path.
     trusted = _trusted_cache_paths()
     registrable = [
         d
@@ -256,7 +256,7 @@ def compiled_cache_lock(timeout: float = _LOCK_TIMEOUT):
 
 
 def clear_compiled_cache_unless_shared(sibling_probe = None) -> None:
-    """Clear the compiled cache, unless another backend of this install is live. The cache sits in the install tree, not the studio home, so two of our own backends share it and the wipe would delete modules the other one is still importing, including the Unsloth*Trainer.py that the in-process clears preserve for spawn workers. run_server supplies the probe; without it (tests, an embedded app) the old unconditional clear stands. The probe and the clear run under `compiled_cache_lock` so a sibling cannot publish itself in between and lose the modules it has already compiled. Two launches that overlap from cold both keep a cache neither has cleaned, so stale modules can survive until the next start that finds itself alone: that is the deliberate direction, since the failure this replaces was the two of them deleting each other's modules mid-run."""
+    """Clear the compiled cache, unless another backend of this install is live. The cache sits in the install tree, not the studio home, so two of our own backends share it and the wipe would delete modules the other one is still importing, including the LABZ*Trainer.py that the in-process clears preserve for spawn workers. run_server supplies the probe; without it (tests, an embedded app) the old unconditional clear stands. The probe and the clear run under `compiled_cache_lock` so a sibling cannot publish itself in between and lose the modules it has already compiled. Two launches that overlap from cold both keep a cache neither has cleaned, so stale modules can survive until the next start that finds itself alone: that is the deliberate direction, since the failure this replaces was the two of them deleting each other's modules mid-run."""
     if not callable(sibling_probe):
         clear_unsloth_compiled_cache()
         return
@@ -277,7 +277,7 @@ def clear_compiled_cache_unless_shared(sibling_probe = None) -> None:
 
 
 def clear_unsloth_compiled_cache(preserve_patterns: Optional[List[str]] = None) -> None:
-    """Remove compiled files from the cache directory (idempotent). ``preserve_patterns`` are glob patterns for files to keep (e.g. ["Unsloth*Trainer.py"]); None or empty deletes the entire cache directory (legacy behavior)."""
+    """Remove compiled files from the cache directory (idempotent). ``preserve_patterns`` are glob patterns for files to keep (e.g. ["LABZ*Trainer.py"]); None or empty deletes the entire cache directory (legacy behavior)."""
     for cache_dir, dedicated in _cleanable_cache_dirs():
         if not dedicated:
             # A shared directory we only ever wrote generated modules into, so they are the only thing here that may be removed.

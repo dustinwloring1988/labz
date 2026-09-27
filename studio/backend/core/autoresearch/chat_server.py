@@ -41,7 +41,7 @@ from __future__ import annotations
 CHAT_SERVER_SOURCE = r'''"""
 Generation worker for an autoresearch checkpoint.
 
-Written into this checkout by Unsloth Studio. Not part of autoresearch.
+Written into this checkout by LABZ Studio. Not part of autoresearch.
 
 Protocol: newline-delimited JSON on stdin and stdout. One request per line, each
 carrying an id; replies carry the same id. A reply is either {"text": ...} for a

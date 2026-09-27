@@ -500,7 +500,7 @@ def invalidate_hf_cache_scans() -> None:
 
 
 def _is_hidden_infra_repo(*values: str | None) -> bool:
-    """True for infra-only repos (the RAG embedder and the llama.cpp install validation probe) that are cached as a side effect of Unsloth itself and are not usable chat models."""
+    """True for infra-only repos (the RAG embedder and the llama.cpp install validation probe) that are cached as a side effect of LABZ itself and are not usable chat models."""
     return is_hidden_model(*values)
 
 
@@ -755,7 +755,7 @@ async def _shared_cached_inventory_scan(name: str, scanner) -> _CachedInventoryS
 
 
 async def list_cached_gguf_response(hf_token: Optional[str] = None):
-    """List GGUF repos downloaded to HF cache, legacy Unsloth cache, and HF default cache."""
+    """List GGUF repos downloaded to HF cache, legacy LABZ cache, and HF default cache."""
     try:
         scan = await _shared_cached_inventory_scan("gguf", _scan_cached_gguf)
         rows = (
@@ -1234,7 +1234,7 @@ def _scan_cached_models(
 
 
 async def list_cached_models_response(hf_token: Optional[str] = None):
-    """List non-GGUF model repos downloaded to HF cache, legacy Unsloth cache, and HF default cache."""
+    """List non-GGUF model repos downloaded to HF cache, legacy LABZ cache, and HF default cache."""
     try:
         scan = await _shared_cached_inventory_scan("models", _scan_cached_models)
         rows = (

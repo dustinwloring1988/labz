@@ -182,7 +182,7 @@ def _mlx_distributed_launch_detected() -> bool:
 def _install_httpcore_asyncgen_silencer() -> None:
     """Silence benign httpx/httpcore asyncgen GC noise on Python 3.13.
 
-    When Unsloth proxies a llama-server stream via httpx, the innermost
+    When LABZ proxies a llama-server stream via httpx, the innermost
     ``HTTP11ConnectionByteStream.__aiter__`` async generator is finalised by
     the asyncgen GC hook on a task different from the one that opened it. Its
     ``aclose`` calls ``anyio.Lock.acquire`` → ``cancel_shielded_checkpoint``,
@@ -350,7 +350,7 @@ def _friendly_upstream_error(text: str) -> str:
         return (
             "The model couldn't compile a grammar for this request. A tool or response_format "
             "schema in it carries a constraint llama-server's grammar engine cannot compile, "
-            "which does not depend on the model or quant. Update Unsloth, which drops the "
+            "which does not depend on the model or quant. Update LABZ, which drops the "
             "constraints known to break it, and report the schemas if it still fails."
         )
     return f"llama-server error: {text}"
@@ -518,7 +518,7 @@ def _tts_max_new_tokens(
 
     ``prompt`` shares the loaded context with the output, so a Max tokens slider near the
     ceiling plus a long prompt overflowed the context the page loaded with. Capped here so
-    both the Unsloth and OpenAI routes inherit it.
+    both the LABZ and OpenAI routes inherit it.
     """
     moss_generation = audio_type in ("moss_tts_local", "moss_tts_nano")
     context_length = _monitor_context_length() if moss_generation or prompt else None
@@ -746,7 +746,7 @@ def _choice_seed(
 def _raise_unsupported_n(path_label: str, monitor_id: Optional[str] = None) -> None:
     """Refuse n > 1 on a path that cannot sample twice.
 
-    Pass the monitor row when one is already open, or Unsloth keeps reporting a
+    Pass the monitor row when one is already open, or LABZ keeps reporting a
     generation that was refused before it began.
     """
     message = f"n > 1 is not supported for {path_label}."
@@ -1268,7 +1268,7 @@ def _openai_passthrough_sse_line_terminal_state(raw_line: str) -> Optional[str]:
 
     Some llama-server builds can emit the logical final chunk (``finish_reason``)
     and optional usage chunk, then keep the HTTP stream open without sending the
-    OpenAI ``data: [DONE]`` sentinel. Classifying those chunks lets Unsloth close
+    OpenAI ``data: [DONE]`` sentinel. Classifying those chunks lets LABZ close
     the client stream promptly while preserving an optional trailing usage chunk.
     """
     if not raw_line.startswith("data:"):
@@ -1804,7 +1804,7 @@ def _openai_llama_admission_budget(llama_backend) -> Optional[int]:
     has it. ``context_length`` is NOT that once the server has been read back:
     ``_reconcile_effective_ctx_with_server`` adopts the PER-SLOT ``n_ctx`` from
     ``default_generation_settings`` into it, and computes the total alongside as
-    ``n_ctx * slots`` (slots being 1 only under ``--kv-unified``). Unsloth appends
+    ``n_ctx * slots`` (slots being 1 only under ``--kv-unified``). LABZ appends
     that flag only when ``n_parallel > 1`` and the binary supports it, so a build
     without it, or a user ``--no-kv-unified``, gives N private caches while
     ``context_length`` names one of them: an N-fold under-budget that collapses
@@ -1959,7 +1959,7 @@ def _openai_llama_admission_image_tokens(llama_backend) -> int:
     Two things move the ceiling off the default. The loaded projector sets its own:
     measured on b10639, a max-resolution image is 4098 KV positions on Qwen3-VL-4B and
     258 on Gemma 3 4B, and clip.cpp's own table runs from 256 (lfm2) to 62500 (youtuvl).
-    And ``--image-max-tokens`` is not an Unsloth-managed flag, so ``llama_extra_args``
+    And ``--image-max-tokens`` is not an LABZ-managed flag, so ``llama_extra_args``
     forwards one verbatim: with ``--image-max-tokens 8192`` that same Qwen3-VL image
     costs 8102.
 
@@ -2211,9 +2211,9 @@ def _openai_llama_admission_media_tokens(
 
 
 def _openai_llama_admission_injected_tool_tokens(injected_tools) -> int:
-    """The tool catalogue Unsloth adds itself, in tokens.
+    """The tool catalogue LABZ adds itself, in tokens.
 
-    ``payload.tools`` is what the CLIENT sent, and for Unsloth's own tool loop that is
+    ``payload.tools`` is what the CLIENT sent, and for LABZ's own tool loop that is
     usually nothing: Web Search and the rest resolve server-side and render into the
     prompt after admission has priced the request. Measured on Qwen3.5-4B-MTP-GGUF, the
     same user turn is 1716 prompt tokens with tools off and 2969 with them on, so the
@@ -2320,7 +2320,7 @@ def _openai_llama_admission_tokens(
     # Keyed on the resolved execution path, NOT on payload.tools. The loop opens on
     # `enable_tools`, `mcp_enabled`, the CLI --enable-tools policy or a checkpoint
     # repair, none of which need a client `tools` array, so keying on the array
-    # undercharged Unsloth's own tool traffic; and a passthrough or /responses request
+    # undercharged LABZ's own tool traffic; and a passthrough or /responses request
     # that merely forwards `tools` to llama-server runs ONE generation per HTTP call.
     if tool_loop:
         # Exactly what the same request without tools is charged, floored at an equal
@@ -3621,7 +3621,7 @@ def _request_has_api_key(request: Any) -> bool:
 
 
 def _request_is_internal_workflow(request: Any) -> bool:
-    """True only for Unsloth's own workflow keys (Deep Research, data recipes).
+    """True only for LABZ's own workflow keys (Deep Research, data recipes).
 
     Checked against the stored internal-key hashes, never a prefix, so a caller
     cannot mint one by sending an sk-unsloth-looking bearer. Fails closed when the
@@ -3641,7 +3641,7 @@ def _request_is_internal_workflow(request: Any) -> bool:
 def _request_is_saved_credential_workflow(request: Any) -> bool:
     """True only for the one workflow key allowed to spend a saved provider credential.
 
-    "Internal" is not the licence: Unsloth mints internal keys for data recipes
+    "Internal" is not the licence: LABZ mints internal keys for data recipes
     too, and ``routes/data_recipe/jobs.py`` writes that key straight into the
     recipe's own provider block so a user-authored recipe subprocess holds it.
     Granting every internal key the saved-connection exception would therefore
@@ -3671,19 +3671,19 @@ def _request_is_saved_credential_workflow(request: Any) -> bool:
 def _request_used_api_key(request: Any) -> bool:
     """True when this request authenticated with a third party's sk-unsloth key.
 
-    Unsloth's own chat hits these same endpoints with a session JWT, so this is
-    what separates "someone is using Unsloth as an API server" from "someone is
-    using Unsloth". Internal workflow keys (Deep Research, data recipes) are Unsloth
+    LABZ's own chat hits these same endpoints with a session JWT, so this is
+    what separates "someone is using LABZ as an API server" from "someone is
+    using LABZ". Internal workflow keys (Deep Research, data recipes) are LABZ
     itself and are excluded, or every research step would pop the API monitor open.
     """
     # Total by construction: this must never fail a load. It also gates durable API
-    # usage receipts, so an indeterminate key origin must not attribute Unsloth's own
+    # usage receipts, so an indeterminate key origin must not attribute LABZ's own
     # workflow traffic to an external caller. Saved-secret authorization uses
     # _request_has_api_key instead, narrowed by _request_is_internal_workflow where a
-    # Unsloth workflow needs its own connection.
+    # LABZ workflow needs its own connection.
     token = _request_api_key_token(request)
     if token is None:
-        # keyless traffic is someone using Unsloth as an API server too
+        # keyless traffic is someone using LABZ as an API server too
         from auth.authentication import admitted_without_session
         return admitted_without_session(request)
     try:
@@ -3773,7 +3773,7 @@ if TYPE_CHECKING:
     import numpy as np
 
 router = APIRouter()
-# Unsloth-only router (not mounted on /v1 OpenAI-compat).
+# LABZ-only router (not mounted on /v1 OpenAI-compat).
 studio_router = APIRouter()
 
 
@@ -4314,9 +4314,9 @@ def _request_states_tool_intent(payload) -> bool:
 
 
 def _explicit_studio_tool_loop_requested(payload) -> bool:
-    """True when the request itself asks Unsloth to execute local tools.
+    """True when the request itself asks LABZ to execute local tools.
 
-    Process-wide CLI policy can default Unsloth's tool loop on for ordinary chat,
+    Process-wide CLI policy can default LABZ's tool loop on for ordinary chat,
     but it must not steal OpenAI-compatible client tools or response_format
     requests from the llama-server passthrough path. A policy of ``False``
     (--disable-tools) vetoes even an explicit ``enable_tools: true`` ask.
@@ -4337,13 +4337,13 @@ def _selects_only_provider_hosted_tools(
 
     ``enable_tools: true`` plus ``enabled_tools: ["web_search", ...]`` is the
     documented way to ask a provider for its hosted tools, and it is what every
-    bundle shipped before Unsloth's loop reached external providers. Read only by
+    bundle shipped before LABZ's loop reached external providers. Read only by
     name, the same bytes now also describe a local-loop request, and taking the
-    loop would swap the provider's search for Unsloth's and silently drop the
-    hosted-only names (code_execution, image_generation, web_fetch) that Unsloth
+    loop would swap the provider's search for LABZ's and silently drop the
+    hosted-only names (code_execution, image_generation, web_fetch) that LABZ
     has no implementation of.
 
-    Anything that names an Unsloth-only tool (python, terminal,
+    Anything that names an LABZ-only tool (python, terminal,
     search_knowledge_base) or asks for MCP is unambiguous and keeps the loop, and
     so does every self-hosted provider, which declares no hosted tools at all.
 
@@ -4376,13 +4376,13 @@ def _selects_only_provider_hosted_tools(
         return False
     # Matched against the whole hosted vocabulary rather than this provider's own
     # slice: the pre-PR bundle sent one list of hosted names per turn, and a name
-    # the provider does not implement was simply ignored by it. Unsloth has no
+    # the provider does not implement was simply ignored by it. LABZ has no
     # local implementation of those names either, so reading such a request as
     # "local" would drop them just the same, only after also replacing the
     # provider's search with ours.
     if not all(isinstance(name, str) and name in HOSTED_TOOL_NAMES for name in enabled):
         return False
-    # run_tools_locally only decides the ambiguous names, the ones Unsloth can
+    # run_tools_locally only decides the ambiguous names, the ones LABZ can
     # also run itself. A selection with no SELECTED local stand-in stays hosted
     # whatever the flag says: honouring it would enter the loop, find an empty
     # catalog, fall back to the same passthrough, and skip the confirmation
@@ -4419,7 +4419,7 @@ def _tool_call_names(message) -> list[Optional[str]]:
 
 
 def _only_studio_tool_history(payload) -> bool:
-    """True when the request's ONLY tool history was produced by Unsloth's own loop.
+    """True when the request's ONLY tool history was produced by LABZ's own loop.
 
     Once a Studio-local tool runs, the branch keeps an assistant `tool_calls` turn and its
     `role="tool"` result and the client replays both forever. Read as a CLIENT tool
@@ -4480,7 +4480,7 @@ def _takes_tool_passthrough(payload, llama_backend) -> bool:
 
 
 def _folds_studio_tool_history(payload, llama_backend) -> bool:
-    """True when Unsloth's own replayed tool turns must be rewritten as user text.
+    """True when LABZ's own replayed tool turns must be rewritten as user text.
 
     The client replays that history forever, so refusing it 400s every later turn of the
     thread. Same ownership test and first guard as ``_takes_tool_passthrough``.
@@ -4548,7 +4548,7 @@ def _admit_tool_access(payload) -> None:
 
 
 def _permission_mode_confirm(payload) -> bool:
-    """Effective confirm-gate intent for Unsloth's own local tool loop.
+    """Effective confirm-gate intent for LABZ's own local tool loop.
 
     An explicit confirm_tool_calls (True or False) wins; explicit ask/auto always
     engage the gate (a non-streaming one is then rejected, since it cannot prompt);
@@ -4581,7 +4581,7 @@ def _catalog_names(tools) -> list[str]:
 
 
 def _confirm_gate_needs_stream(payload, selected_names = None) -> bool:
-    """Whether Unsloth's local tool-loop confirm gate still requires stream=true.
+    """Whether LABZ's local tool-loop confirm gate still requires stream=true.
 
     The gate can only prompt while streaming, so a non-streaming request that will
     prompt must 400 up front. auto ("Approve for me") only prompts for a call the
@@ -5317,7 +5317,7 @@ def _full_access_tip(code_tools: list[str]) -> str:
         # Three names now, so only the last pair takes the "and".
         subject = "The " + ", ".join(code_tools[:-1]) + f" and {code_tools[-1]} tools run"
     return (
-        subject + " where Unsloth Studio is running, with the code sandbox and the "
+        subject + " where LABZ Studio is running, with the code sandbox and the "
         "approval prompts disabled, so you can inspect and change whatever that "
         "process can reach. That is not necessarily the device the user is viewing "
         "this on, and it may be a remote host or a container that mounts only some "
@@ -5410,7 +5410,7 @@ def _skill_tool_tip(*, can_create: bool, compact: bool = False) -> str:
         "message mentions an enabled skill as @skill-name, call read_skill for that named skill "
         "before answering."
         + create_tip
-        + " Skill allowed-tools metadata never overrides Unsloth tool permissions.\n"
+        + " Skill allowed-tools metadata never overrides LABZ tool permissions.\n"
         + catalog
     )
 
@@ -5834,10 +5834,10 @@ async def _select_request_tools(
     # tool is still absent (the archive is written mid-request) and the forced recall
     # covers that turn. getattr because the count request model reaches here too; it
     # carries the same thread_id so both price the archive alike.
-    # Follows the ARCHIVE, not the caller's allowlist: Unsloth always sends an explicit
+    # Follows the ARCHIVE, not the caller's allowlist: LABZ always sends an explicit
     # enabled_tools array and has no reason to name an internal tool it shows no pill for,
     # so the filter above removed search_conversation and neither it nor the compaction
-    # nudge gated on it ever reached an Unsloth chat. It is read-only and always-safe, so it
+    # nudge gated on it ever reached an LABZ chat. It is read-only and always-safe, so it
     # is added on that condition rather than requested.
     has_archive = _thread_has_conversation_archive(getattr(payload, "thread_id", None))
     tools = [t for t in tools if t["function"]["name"] != "search_conversation"]
@@ -6995,9 +6995,9 @@ def _monitor_anthropic_response(
 
 
 def _standard_models_still_held() -> list[str]:
-    """Unsloth models the registry still holds, whoever is active.
+    """LABZ models the registry still holds, whoever is active.
 
-    A GGUF load unloads only the ACTIVE Unsloth model, so a Transformers model
+    A GGUF load unloads only the ACTIVE LABZ model, so a Transformers model
     cached behind it keeps its weights while llama.cpp answers. Reported so the
     memory is visible, and releasable, rather than stranded.
     """
@@ -7397,7 +7397,7 @@ def _should_strip_tensor_split(request: LoadRequest) -> bool:
     pattern as ``-ngl`` -> ``gpu_layers``) or the strip would discard the only
     copy of an asymmetric MoE split (#11330). Unlike _should_strip_split_mode
     this leaves --split-mode untouched, so a user's row/none/layer mode survives
-    an Unsloth split-ratio edit. When the Tensor Parallelism toggle IS overriding
+    an LABZ split-ratio edit. When the Tensor Parallelism toggle IS overriding
     the mode, _should_strip_split_mode (called alongside this at every site)
     strips --split-mode anyway.
     """
@@ -7421,7 +7421,7 @@ def _is_explicit_tensor_drop(request: LoadRequest) -> bool:
     """True only when the request explicitly selects a non-tensor --split-mode (e.g.
     layer/row/none), a deliberate departure from a preserved tensor->layer fallback.
 
-    A bare tensor_parallel field is NOT a drop: the Unsloth UI always sends it and echoes
+    A bare tensor_parallel field is NOT a drop: the LABZ UI always sends it and echoes
     the /load response's resolved value back, so after a fallback every reload carries
     tensor_parallel=false even though the user never changed it -- treating that as a drop
     would collapse the preserved multi-GPU placement on the next ctx/settings reload. An
@@ -8122,7 +8122,7 @@ def _llama_status_model_ids(llama_backend) -> "tuple[Optional[str], Optional[str
 
 
 def _llama_status_checkpoint_id(llama_backend) -> Optional[str]:
-    """The exact string an Unsloth client holds as ``params.checkpoint`` for the loaded
+    """The exact string an LABZ client holds as ``params.checkpoint`` for the loaded
     GGUF: ``status.model_identifier ?? status.active_model``. Built from the same pair the
     status handler returns so the two cannot drift."""
     display_model_id, model_identifier = _llama_status_model_ids(llama_backend)
@@ -9031,16 +9031,16 @@ async def _unavailable_model_message(requested_model: str) -> str:
             # catalog would claim an empty machine on a full one.
             return (
                 f"The model '{requested_model}' is not downloaded on this server, and none of "
-                "the downloaded models is a chat model. Download one in Unsloth Studio, "
+                "the downloaded models is a chat model. Download one in LABZ Studio, "
                 "or list what is here with GET /v1/models."
             )
         return (
             f"The model '{requested_model}' is not downloaded on this server, and no "
-            "models are downloaded yet. Download one in Unsloth Studio."
+            "models are downloaded yet. Download one in LABZ Studio."
         )
     return (
         f"The model '{requested_model}' is not downloaded on this server. "
-        f"Available models: {available}. Download more in Unsloth Studio, "
+        f"Available models: {available}. Download more in LABZ Studio, "
         "or list them with GET /v1/models."
     )
 
@@ -9149,7 +9149,7 @@ async def _maybe_auto_download_model(
             require_vision = require_vision,
             require_speech = require_speech,
             subject = current_subject,
-            # These endpoints also serve Unsloth's chat on a JWT, so only mark real API traffic.
+            # These endpoints also serve LABZ's chat on a JWT, so only mark real API traffic.
             via_api_key = _request_used_api_key(fastapi_request),
         )
     except Exception as exc:
@@ -9190,7 +9190,7 @@ def _record_refused_request(
     never runs. Only the caller that dispatched a download gets a row from
     ``record_lifecycle``; anyone refused while it runs left no trace at all, and a
     download some other caller started carries their attribution, so an API-key
-    client waiting on it never opened the overlay and read as Unsloth's own traffic.
+    client waiting on it never opened the overlay and read as LABZ's own traffic.
     """
     state = getattr(fastapi_request, "state", None)
     if getattr(state, "skip_api_monitor", False):
@@ -9607,7 +9607,7 @@ async def _reject_unservable_model(
     if is_npu_model_path(requested_model) and not await asyncio.to_thread(
         _loaded_satisfies, requested_model
     ):
-        message = f"The NPU model '{requested_model}' is not loaded. Load it in Unsloth Studio."
+        message = f"The NPU model '{requested_model}' is not loaded. Load it in LABZ Studio."
         path = getattr(getattr(fastapi_request, "url", None), "path", None)
         raise HTTPException(
             status_code = 404,
@@ -9720,14 +9720,14 @@ async def _reject_unservable_model(
         status_code, code = 503, "model_switch_failed"
         message = (
             f"The model '{requested_model}' is downloaded, but this server could not "
-            "switch to it. Retry shortly, or load it in Unsloth Studio."
+            "switch to it. Retry shortly, or load it in LABZ Studio."
         )
     elif downloaded:
         status_code, code = 404, "model_not_found"
         message = (
             f"The model '{requested_model}' is downloaded but not loaded, and "
             "'Switch model by request' is off, so this server can only serve the "
-            "loaded model. Turn it on in Unsloth Studio under Settings > API."
+            "loaded model. Turn it on in LABZ Studio under Settings > API."
         )
     else:
         status_code, code = 404, "model_not_found"
@@ -9839,7 +9839,7 @@ async def _maybe_auto_switch_model(
     marker) at the no-load exits; a route that still has its own capability/backend
     checks that can reject (e.g. GGUF-only /v1/completions, /audio/generate) passes
     ``False`` and claims itself only after those checks pass, so a later rejection
-    can't strand a preview-owned model as Unsloth-owned. ``require_image`` makes that
+    can't strand a preview-owned model as LABZ-owned. ``require_image`` makes that
     rejection modality-aware for a GGUF, whose one projector carries both, and
     ``require_audio_input`` covers a non-GGUF checkpoint, which declares the two
     separately, and ``require_video`` asks a non-GGUF target for a video placeholder
@@ -9911,7 +9911,7 @@ async def _maybe_auto_switch_model(
     _swap_scope = getattr(fastapi_request, "scope", None)
     note_admitted_inference(_swap_scope)
     # A preview swapped a different checkpoint in since this request entered; running now
-    # would serve the preview's model to Unsloth, so reject and let the client retry. Covers a
+    # would serve the preview's model to LABZ, so reject and let the client retry. Covers a
     # request that waited on the gate through the swap AND one that passed the gate before it
     # but is still pre-admission. Deferred here (not a middleware 503) so an external-provider
     # request that untracks and returns before this hook is never rejected for a swap it never
@@ -9927,7 +9927,7 @@ async def _maybe_auto_switch_model(
     # absent so it falls through instead of raising in the membership checks below.
     if not isinstance(requested_model, str) or not requested_model:
         # Omitted/default model on a non-preview call runs against the resident model,
-        # so claim it for Unsloth (a preview keeps its own ownership).
+        # so claim it for LABZ (a preview keeps its own ownership).
         if claim_resident:
             _claim_slot_for_non_preview(fastapi_request)
         return
@@ -9972,7 +9972,7 @@ async def _maybe_auto_switch_model(
             _claim_slot_for_non_preview(fastapi_request)
         return
 
-    # The common Unsloth path names the model that is already serving. Resolve that
+    # The common LABZ path names the model that is already serving. Resolve that
     # from resident state before consulting the filesystem index: rebuilding a stale
     # multi-root index here used to hold the request for seconds before streaming.
     if auto_switch_on and await asyncio.to_thread(_loaded_identity_satisfies, requested_model):
@@ -10044,7 +10044,7 @@ async def _maybe_auto_switch_model(
                 )
             ):
                 # Unknown name, model already resident: the non-preview call uses it,
-                # so claim it for Unsloth.
+                # so claim it for LABZ.
                 if claim_resident:
                     _claim_slot_for_non_preview(fastapi_request)
                 return
@@ -10185,7 +10185,7 @@ async def _maybe_auto_switch_model(
                 target_backend._openai_advertised_id = override_id
 
         if _already_serving():
-            # A non-preview request adopting this model claims it for Unsloth, so a later
+            # A non-preview request adopting this model claims it for LABZ, so a later
             # preview can't swap it out from under an active OpenAI caller.
             if claim_resident:
                 _set_preview_resident(None)
@@ -10255,7 +10255,7 @@ async def _maybe_auto_switch_model(
                 raise HTTPException(
                     status_code = 400,
                     detail = openai_error_body(
-                        "The requested text-to-speech model requires Python 3.10 or newer in Unsloth.",
+                        "The requested text-to-speech model requires Python 3.10 or newer in LABZ.",
                         status = 400,
                         code = "unsupported_runtime",
                         param = "model",
@@ -10560,7 +10560,7 @@ async def _auto_switch_from_request_body(
     # Serves the GGUF-only /v1/completions and /v1/embeddings routes, which still 503 "No
     # GGUF model loaded" after this returns. Don't claim here (claim_resident=False); the
     # caller claims only once it confirms a GGUF is loaded, so that 503 can't strand a
-    # preview-owned non-GGUF model as Unsloth-owned.
+    # preview-owned non-GGUF model as LABZ-owned.
     await _maybe_auto_switch_model(
         model, request, current_subject, claim_resident = False, gguf_only = gguf_only
     )
@@ -10627,7 +10627,7 @@ def _should_validate_before_switch() -> bool:
     and also when the slot is preview-owned: with both features off no load runs, but
     _maybe_auto_switch_model still claims the slot (clears the preview marker) for a
     non-preview turn. A request rejected after that claim would have converted the
-    preview-owned model into an Unsloth-owned one for nothing, stranding the next
+    preview-owned model into an LABZ-owned one for nothing, stranding the next
     preview for a different checkpoint on the 503 slot guard, so validate first.
     """
     return _automatic_model_load_may_run() or _preview_slot_is_owned()
@@ -10671,7 +10671,7 @@ def _preview_same_checkpoint(loaded: str, requested: str) -> bool:
     """True when the resident slot already serves the preview's checkpoint. Exact string
     match first: it is the fast path and the only comparison that makes sense for a non-path
     identifier (an HF repo id like ``org/model``). Otherwise compare resolved filesystem
-    paths, so a checkpoint Unsloth loaded through an equivalent spelling -- a relative
+    paths, so a checkpoint LABZ loaded through an equivalent spelling -- a relative
     ``outputs/run`` vs the absolute path the preview resolver produces -- still borrows the
     slot instead of 503'ing. realpath preserves case-sensitive distinct paths (it never
     lowercases, so /outputs/Run and /outputs/run stay distinct); a non-path identifier just
@@ -10685,7 +10685,7 @@ def _preview_same_checkpoint(loaded: str, requested: str) -> bool:
 
 
 def _claim_slot_for_non_preview(fastapi_request) -> None:
-    """Non-preview local generation adopts the resident model for Unsloth.
+    """Non-preview local generation adopts the resident model for LABZ.
 
     Clearing the preview marker means a later preview for another checkpoint gets a
     503 instead of swapping the model out from under an active Unsloth/OpenAI turn. A
@@ -10720,7 +10720,7 @@ async def load_model_for_preview(
     from utils.transformers_version import sidecar_swap_in_progress
 
     # A refused preview never touches the model, so it must not stamp keep-warm
-    # activity (public /p spam could otherwise pin an idle Unsloth model in VRAM);
+    # activity (public /p spam could otherwise pin an idle LABZ model in VRAM);
     # untrack also balances the preview in-flight counter for the dropped request.
     scope = getattr(fastapi_request, "scope", None)
     async with _auto_switch_lock():
@@ -10749,7 +10749,7 @@ async def load_model_for_preview(
                 def _refuse_studio_owned_model() -> None:
                     if loaded is None or _is_preview_resident(loaded):
                         return
-                    # A LoRA preview forces adapters on. Borrowing an Unsloth-owned LoRA
+                    # A LoRA preview forces adapters on. Borrowing an LABZ-owned LoRA
                     # would mutate its shared adapter state, so require an unload instead.
                     if (
                         same_target
@@ -10759,7 +10759,7 @@ async def load_model_for_preview(
                     untrack_current_request(scope)
                     raise HTTPException(
                         status_code = 503,
-                        detail = "Unsloth already has a different model loaded. Unload it before using this preview.",
+                        detail = "LABZ already has a different model loaded. Unload it before using this preview.",
                         headers = {"Retry-After": "10"},
                     )
 
@@ -10767,23 +10767,23 @@ async def load_model_for_preview(
                 # For a real load (not a same-target borrow) mark the swap in progress BEFORE
                 # the admitted-count check below so the two are atomic against a concurrent
                 # non-preview request: preview_swapped_since_entry() keys on the live
-                # _preview_swap_inflight, so an Unsloth request reaching _maybe_auto_switch_model
+                # _preview_swap_inflight, so an LABZ request reaching _maybe_auto_switch_model
                 # after this marker is rejected, while one admitted before it is caught by the
-                # busy check. Setting it only after the check left a gap where an Unsloth request
+                # busy check. Setting it only after the check left a gap where an LABZ request
                 # admitted between the check and the marker ran against the slot this preview
                 # is about to replace. Skip it for a same-target borrow: that changes nothing
-                # (no counter bump), so marking would 503 concurrent Unsloth requests for no
+                # (no counter bump), so marking would 503 concurrent LABZ requests for no
                 # reason. Cleared only after the lifecycle gate releases.
                 if not same_target:
                     note_preview_swap_begin()
                     _swap_begun = True
-                # A same-checkpoint request would still restart an Unsloth-owned GGUF whose
+                # A same-checkpoint request would still restart an LABZ-owned GGUF whose
                 # live settings differ from these bare defaults (#5401), so admitted
-                # (post-auth) Unsloth inference blocks first. Only admitted local inference
+                # (post-auth) LABZ inference blocks first. Only admitted local inference
                 # is counted, not raw _inflight: the middleware tracks a POST before
                 # FastAPI auth, so a pre-auth or unauthenticated non-preview request would
                 # otherwise starve previews. Queued (pending) requests are likewise not
-                # counted; a genuinely queued Unsloth request is protected by the swap
+                # counted; a genuinely queued LABZ request is protected by the swap
                 # reject (it wakes to a retryable 503 rather than the swapped-in model).
                 if other_admitted_inference_count() > 0:
                     untrack_current_request(scope)
@@ -10797,13 +10797,13 @@ async def load_model_for_preview(
                 if same_target:
                     # The resident model already serves this exact checkpoint, so
                     # borrow it as-is instead of reloading with bare preview settings
-                    # (which would reconfigure/restart an idle Unsloth-owned GGUF,
-                    # #5401). Ownership is unchanged: Unsloth's model stays Unsloth's, a
+                    # (which would reconfigure/restart an idle LABZ-owned GGUF,
+                    # #5401). Ownership is unchanged: LABZ's model stays LABZ's, a
                     # preview-owned one stays preview-owned.
                     return
                 # A real load reclaims the GPU for chat (_load_model_impl's acquire_for(CHAT)),
                 # which evicts a resident Images/Video pipeline -- unloading the engine out from
-                # under an in-flight Unsloth generation. Those routes never reach
+                # under an in-flight LABZ generation. Those routes never reach
                 # note_admitted_inference (they don't touch the llama slot), and a video clip
                 # generates in the background after its POST returns, so the admitted-count guard
                 # above sees nothing; gate on GPU ownership instead, which is exactly what the
@@ -10822,16 +10822,16 @@ async def load_model_for_preview(
                     raise HTTPException(
                         status_code = 503,
                         detail = (
-                            "Unsloth is using the GPU for image or video generation. "
+                            "LABZ is using the GPU for image or video generation. "
                             "Unload that model before using this preview."
                         ),
                         headers = {"Retry-After": "10"},
                     )
                 # _load_model_impl clears the preview marker mid-load (it reclaims the
-                # slot for Unsloth). If the load then fails while the prior model is
+                # slot for LABZ). If the load then fails while the prior model is
                 # still resident (e.g. a GPU-selection or pre-spawn error), leaving the
                 # marker cleared would make the next preview for another checkpoint see
-                # that still-preview model as Unsloth-owned and 503. Restore the prior
+                # that still-preview model as LABZ-owned and 503. Restore the prior
                 # ownership on failure; only a successful load takes the new marker.
                 prior_marker = _get_preview_resident()
                 loaded_ok = False
@@ -10846,7 +10846,7 @@ async def load_model_for_preview(
                         current_request_counted = True,
                         # Same active-generation gate load_model_gated applies, which the
                         # preview would otherwise bypass by calling the impl directly. Never
-                        # forced: a public preview must refuse rather than stop Unsloth chats.
+                        # forced: a public preview must refuse rather than stop LABZ chats.
                         on_reload_confirmed = lambda *, cancel: _raise_or_cancel_active_generations(
                             force = False,
                             action = "Loading a model",
@@ -10860,7 +10860,7 @@ async def load_model_for_preview(
                     raise HTTPException(
                         status_code = 503,
                         detail = (
-                            "Unsloth is using the GPU for image or video generation. "
+                            "LABZ is using the GPU for image or video generation. "
                             "Unload that model before using this preview."
                         ),
                         headers = {"Retry-After": "10"},
@@ -11066,7 +11066,7 @@ def _remote_gguf_companion_bytes(
 
 
 # What an unreadable remote drafter costs the guard. Sized to the largest drafter
-# class Unsloth knows of (a DSpark sidecar is about 11 GB) rather than a typical one,
+# class LABZ knows of (a DSpark sidecar is about 11 GB) rather than a typical one,
 # since --spec-draft-hf names any repo and over-estimating is this guard's direction.
 # Only reached when the listing cannot be read, where llama-server may still open the
 # repo from the local HF cache and make every one of those bytes resident.
@@ -11177,7 +11177,7 @@ def _cached_repo_gguf_bytes(repo: str, hint: str = "") -> int:
         from core.inference.llama_cpp import _gguf_extra_shards
         from utils.models.drafters import dflash_budget_bytes
 
-        # The cache Unsloth is pointed at now, not the one huggingface_hub resolved at
+        # The cache LABZ is pointed at now, not the one huggingface_hub resolved at
         # import: a moved cache is where the drafter that will load actually is.
         try:
             from utils.hf_cache_settings import active_hf_hub_cache
@@ -11888,12 +11888,12 @@ def _estimate_gguf_required_gb(
         # still arrive by a route this cannot see.
         _extras_own_draft_path = _extra_args_mtp_draft_path(llama_extra_args, env = {})
         # An extras draft path wins whether or not they own --spec-type: the launch
-        # appends the caller's flags after Unsloth's, so last-wins leaves exactly one
+        # appends the caller's flags after LABZ's, so last-wins leaves exactly one
         # --model-draft resident. It is charged as _extras_bytes below, so charging
         # the repository's sidecar too is a double count that 409s a load that fits.
         _extras_own_drafter = bool(_extras_own_draft_path)
         # -ngld 0 / --spec-draft-device cpu applies to whichever separate drafter
-        # launches, Unsloth's included, so none of them belongs in a VRAM budget. An
+        # launches, LABZ's included, so none of them belongs in a VRAM budget. An
         # embedded head ignores draft-only flags and is inside the weights anyway.
         _draft_pinned_to_cpu = _extra_args_draft_offloaded_to_cpu(llama_extra_args, env = os.environ)
         _forced_dspark = bool(
@@ -12008,7 +12008,7 @@ def _estimate_gguf_required_gb(
         # switch so the inherited-projector gate below can read it either way.
         _dv_opens_projector = True
         if extra_args_disable_mmproj(llama_extra_args):
-            # llama_cpp.py skips the resolve entirely, so nothing of Unsloth's own goes
+            # llama_cpp.py skips the resolve entirely, so nothing of LABZ's own goes
             # on the command line and nothing is downloaded. (It does NOT unload an
             # inherited path, which is charged below.)
             _dv_opens_projector = False
@@ -12046,7 +12046,7 @@ def _estimate_gguf_required_gb(
             elif dflash_requested:
                 # Only when extras own --spec-type: _build_speculative_flags then
                 # returns before discovery's sidecar is emitted, so llama-server opens
-                # theirs alone. Without it Unsloth emits its own too and which lands is
+                # theirs alone. Without it LABZ emits its own too and which lands is
                 # unknown, so both stay charged.
                 _manual_draft = (
                     _extra_args_mtp_draft_path(llama_extra_args, env = {})
@@ -12112,13 +12112,13 @@ def _estimate_gguf_required_gb(
 
         # A projector this config never named: llama-server reads LLAMA_ARG_MMPROJ
         # straight into params.mmproj.path, so an inherited one loads and takes VRAM
-        # nothing above charged. Exactly two things stop it. Unsloth's own --mmproj
+        # nothing above charged. Exactly two things stop it. LABZ's own --mmproj
         # overrides the env (argv is applied after set_env), so one file loads and
         # charging both bills a projector twice; and under the vision switch the loader
         # keeps only an audio-only file, asked through the loader's own helper.
         #
         # NOT the extras opt-out on its own: --no-mmproj sets params.no_mmproj, which
-        # stops Unsloth resolving one and stops the HF auto-download, but
+        # stops LABZ resolving one and stops the HF auto-download, but
         # server-context.cpp gates the load on a non-empty mmproj.path and never reads
         # that field, so an inherited path loads straight through it. What it does do is
         # empty the command line, which is why it feeds _studio_mmproj_on_argv.
@@ -12130,7 +12130,7 @@ def _estimate_gguf_required_gb(
         #
         # argv overrides the env only when there IS argv -- a suppressed projector or
         # extras that skipped the resolve both leave it empty and let the inherited path
-        # load -- so this asks what Unsloth emits, not what the config names.
+        # load -- so this asks what LABZ emits, not what the config names.
         _studio_mmproj_on_argv = bool(
             getattr(config, "gguf_mmproj_file", None) and _dv_opens_projector
         )
@@ -14189,7 +14189,7 @@ async def _unload_llama_before_standard_load(llama_backend) -> None:
     """Tear down llama-server and wait for asynchronous driver VRAM reclaim."""
     if not llama_backend.is_loaded:
         return
-    logger.info("Unloading GGUF model before loading Unsloth model")
+    logger.info("Unloading GGUF model before loading LABZ model")
     kill_started = time.monotonic()
     await asyncio.to_thread(llama_backend.unload_model)
     await asyncio.to_thread(
@@ -14453,7 +14453,7 @@ async def _preflight_native_audio_placement(
     if audio_type in ("higgs_tts2", "higgs_tts3") and sys.version_info < (3, 10):
         raise HTTPException(
             status_code = 400,
-            detail = "Higgs TTS requires Python 3.10 or newer in Unsloth.",
+            detail = "Higgs TTS requires Python 3.10 or newer in LABZ.",
         )
 
     # Before every VRAM question: sizing a CPU load refuses it on a full GPU.
@@ -14489,7 +14489,7 @@ async def _preflight_native_audio_placement(
                     "MiniMax Music 3 requires an NVIDIA CUDA GPU in its official local runtime."
                 )
             if sys.version_info < (3, 10):
-                raise ValueError("MiniMax Music 3 requires Python 3.10 or newer in Unsloth.")
+                raise ValueError("MiniMax Music 3 requires Python 3.10 or newer in LABZ.")
         if device not in (hardware.DeviceType.CUDA, hardware.DeviceType.XPU):
             if placement.requested_gpu_ids:
                 raise ValueError(
@@ -15036,7 +15036,7 @@ def _resolve_inherited_extra_args(
         # chat_template_override. A bundled family template (e.g. gemma-4) counts as
         # a first-class template even when the request omits chat_template_override,
         # so strip the inherited --chat-template-file then too -- else the stale arg
-        # (appended last) shadows the bundled template while Unsloth reports its caps.
+        # (appended last) shadows the bundled template while LABZ reports its caps.
         fields_set = getattr(request, "model_fields_set", set())
         # A MATCHING inherited -c/--ctx-size is the user's opt-in to exceed the
         # VRAM-fit estimate, so it survives here as it does on auto-switch.
@@ -15134,7 +15134,7 @@ _NVFP4_INFERENCE_UNSUPPORTED_MESSAGE = (
 # Said instead of transformers' "pip install compressed-tensors", which no user can act on:
 # Studio runs from its own environment (#8246). Names no scheme: these errors carry none.
 _COMPRESSED_TENSORS_INFERENCE_UNSUPPORTED_MESSAGE = (
-    "This model is quantized with compressed-tensors, which Unsloth cannot run yet. "
+    "This model is quantized with compressed-tensors, which LABZ cannot run yet. "
     "Installing compressed-tensors will not help. Try a GGUF or a bitsandbytes 4-bit "
     "build of this model instead."
 )
@@ -15786,7 +15786,7 @@ async def load_model(
     config (temperature, top_p, top_k, min_p) from the model's YAML, falling
     back to default.yaml for missing values.
 
-    GGUF models load via llama-server (llama.cpp) instead of Unsloth.
+    GGUF models load via llama-server (llama.cpp) instead of LABZ.
     """
     return await _tunnel_safe_json(
         load_model_gated(request, fastapi_request, current_subject, user_initiated = True),
@@ -16074,7 +16074,7 @@ async def _load_npu_model(
     backend = _peek_inference_backend()
     if backend is not None and backend.active_model_name:
         logger.info(
-            f"Unloading Unsloth model '{backend.active_model_name}' before loading on the NPU"
+            f"Unloading LABZ model '{backend.active_model_name}' before loading on the NPU"
         )
         await asyncio.to_thread(backend.unload_model, backend.active_model_name)
     # Nothing to reload once idle: this model is not the one the idle stash names.
@@ -16349,7 +16349,7 @@ async def _load_model_impl(
                 return None
             api_monitor.discard(_load_event)
             logger.info("Model already loaded (GGUF): %s, skipping reload", model_log_label)
-            # A no-op Unsloth load of a preview-owned checkpoint still claims it.
+            # A no-op LABZ load of a preview-owned checkpoint still claims it.
             _set_preview_resident(None)
             if ollama_advertised_id:
                 llama_backend._openai_advertised_id = ollama_advertised_id
@@ -16398,8 +16398,8 @@ async def _load_model_impl(
                 and _resident_audio_placement_matches(backend, request)
             ):
                 api_monitor.discard(_load_event)  # nothing loaded, no monitor row
-                logger.info(f"Model already loaded (Unsloth): {model_log_label}, skipping reload")
-                # A no-op Unsloth load of a preview-owned checkpoint still claims it.
+                logger.info(f"Model already loaded (LABZ): {model_log_label}, skipping reload")
+                # A no-op LABZ load of a preview-owned checkpoint still claims it.
                 _set_preview_resident(None)
                 inference_config = load_inference_config(backend.active_model_name)
                 _model_info = backend.models.get(backend.active_model_name, {})
@@ -16613,8 +16613,8 @@ async def _load_model_impl(
             raise HTTPException(
                 status_code = 400,
                 detail = (
-                    "Unsloth does not support distributed MLX inference under "
-                    "mlx.launch. Use `mlx.launch ... unsloth chat` or run Unsloth "
+                    "LABZ does not support distributed MLX inference under "
+                    "mlx.launch. Use `mlx.launch ... unsloth chat` or run LABZ "
                     "without the distributed launcher."
                 ),
             )
@@ -16842,7 +16842,7 @@ async def _load_model_impl(
             # A failed load can leave the prior preview checkpoint resident though the marker
             # was cleared before teardown (a non-GGUF load unloads only the new entry; a GGUF load can
             # raise before tearing down the old llama-server). Restore its ownership so a later
-            # preview isn't 503'd against a model Unsloth never adopted. Guarded on the prior
+            # preview isn't 503'd against a model LABZ never adopted. Guarded on the prior
             # model still being resident, so it never mis-marks a torn-down/replaced model.
             if _prior_preview_marker is not None and _loaded_slot_ident() == _prior_preview_marker:
                 _set_preview_resident(_prior_preview_marker)
@@ -16883,10 +16883,10 @@ async def _load_model_impl(
             # every rejection and drain has completed. the load now owns the slot for studio.
             _set_preview_resident(None)
 
-            # Unload any active Unsloth model only after every hub conflict check.
+            # Unload any active LABZ model only after every hub conflict check.
             if unsloth_backend.active_model_name:
                 logger.info(
-                    f"Unloading Unsloth model '{unsloth_backend.active_model_name}' before loading GGUF"
+                    f"Unloading LABZ model '{unsloth_backend.active_model_name}' before loading GGUF"
                 )
                 try:
                     await asyncio.to_thread(
@@ -16894,7 +16894,7 @@ async def _load_model_impl(
                     )
                 except Exception:
                     # This teardown runs after the marker was cleared above; if it raises
-                    # with the prior preview-owned Unsloth model still resident, restore its
+                    # with the prior preview-owned LABZ model still resident, restore its
                     # ownership so a later preview for another checkpoint is not 503'd.
                     _restore_marker_if_prior_preview_still_resident()
                     raise
@@ -17034,7 +17034,7 @@ async def _load_model_impl(
         )
         _raise_if_sidecar_swap_in_progress()
 
-        # Point of no return for the Unsloth path: cancel only once nothing can still reject the load.
+        # Point of no return for the LABZ path: cancel only once nothing can still reject the load.
         _raise_if_scoped_load_cancelled()
         if on_reload_confirmed is not None:
             on_reload_confirmed(cancel = True)
@@ -17308,7 +17308,7 @@ async def _load_model_impl(
         if isinstance(e, SidecarSwapInProgress):
             # Lost the spawn-time race to a sidecar install/repair: retryable 409.
             raise HTTPException(status_code = 409, detail = str(e))
-        # Friendlier message for models Unsloth cannot load.
+        # Friendlier message for models LABZ cannot load.
         redacted_msg = redact_native_paths(str(e))
         _unsupported_quantization = _unsupported_quantization_detail(redacted_msg)
         if _unsupported_quantization is not None:
@@ -17392,7 +17392,7 @@ def _requires_trust_remote_code_for_model(
     model_identifier: str, hf_token: Optional[str] = None
 ) -> bool:
     """Whether loading this model would execute custom repo code, so the consent
-    dialog must run first. True if the Unsloth YAML default enables
+    dialog must run first. True if the LABZ YAML default enables
     ``trust_remote_code`` OR a raw config at any model load root declares an
     ``auto_map``. Reads raw JSON only; never imports model code."""
     from utils.inference import load_inference_config
@@ -18039,7 +18039,7 @@ def _install_breaks_exact_resume(run_id: str) -> bool:
         return False
 
 
-# studio_router only: an Unsloth preflight, kept off the OpenAI-compatible /v1 mount.
+# studio_router only: an LABZ preflight, kept off the OpenAI-compatible /v1 mount.
 @studio_router.post("/transformers-upgrade-check", response_model = TransformersUpgradeCheckResponse)
 async def check_transformers_upgrade_route(
     request: TransformersUpgradeCheckRequest, current_subject: str = Depends(get_current_subject)
@@ -18706,7 +18706,7 @@ async def unload_model(request: UnloadRequest, current_subject: str = Depends(ge
 async def _unload_model_impl(request: UnloadRequest, current_subject: str):
     """
     Unload a model from memory.
-    Routes to the correct backend (llama-server for GGUF, Unsloth otherwise).
+    Routes to the correct backend (llama-server for GGUF, LABZ otherwise).
     """
     if (
         request.cancel_load_request_id is None
@@ -18863,7 +18863,7 @@ async def _unload_model_impl(request: UnloadRequest, current_subject: str):
                 cancel = False,
             )
 
-        # Serialize with /load under the same lifecycle gate: the Unsloth unload now runs
+        # Serialize with /load under the same lifecycle gate: the LABZ unload now runs
         # off the event loop (asyncio.to_thread), so without this a concurrent /load could
         # swap in a fresh subprocess mid-unload and the unload command would land on the
         # new worker. The gate makes load and unload exclusive.
@@ -18917,7 +18917,7 @@ async def _unload_model_impl(request: UnloadRequest, current_subject: str):
                 # under different names made the reload count ungreppable.
                 return UnloadResponse(status = "unloaded", model = request.model_path)
 
-            # Unload from Unsloth backend off the event loop: unload takes _gen_lock, which
+            # Unload from LABZ backend off the event loop: unload takes _gen_lock, which
             # a slow SSE stream paused between tokens still holds, so a sync call would block
             # the loop that drives the stream's next token and the lock release.
             backend = await asyncio.to_thread(get_inference_backend)
@@ -19022,7 +19022,7 @@ async def tool_approval_status(
 
 @studio_router.get("/monitor")
 async def get_api_monitor(current_subject: str = Depends(get_current_subject)):
-    """Return recent OpenAI-compatible API activity for Unsloth."""
+    """Return recent OpenAI-compatible API activity for LABZ."""
     # Off-loop: both helpers reach get_inference_backend(), whose first call waits on
     # hardware detection, and this is polled from first paint.
     active_model, context_length, queue, direct_busy = await asyncio.to_thread(
@@ -19049,7 +19049,7 @@ async def get_api_monitor(current_subject: str = Depends(get_current_subject)):
     else:
         operating_status = "idle"
     # With request logging off, ``snapshot()`` returns an empty list -- the same shape
-    # as an Unsloth that simply hasn't served a request yet. Signal the disabled state so
+    # as an LABZ that simply hasn't served a request yet. Signal the disabled state so
     # the UI can explain the empty list instead of claiming there was no API traffic.
     return {
         "status": operating_status,
@@ -19174,7 +19174,7 @@ async def generate_stream(
     ):
         raise HTTPException(status_code = 404, detail = "Model not found")
     # Enforce the preview-swap reject FIRST, before reading any backend state. If a public
-    # preview loaded a different checkpoint while this native Unsloth request waited on the
+    # preview loaded a different checkpoint while this native LABZ request waited on the
     # keep-warm gate, the middleware flagged the scope; the loaded-model and image-capability
     # checks below would otherwise run against the swapped-in model and return a hard 400
     # instead of the intended retryable 503. generate_stream skips _maybe_auto_switch_model,
@@ -19285,7 +19285,7 @@ async def generate_stream(
                     # A backend sentinel (subprocess down, no active model, model being
                     # unloaded) delivered in-band under the already-sent 200. The stream ends
                     # cleanly, so flag it failed or the middleware reads this failed generation
-                    # as a successful Unsloth turn and claims a preview-owned model.
+                    # as a successful LABZ turn and claims a preview-owned model.
                     mark_response_failed(_gs_scope)
                     yield f"data: {json.dumps({'error': _friendly_gen_stream_error(chunk)})}\n\n"
                     yield "data: [DONE]\n\n"
@@ -19395,7 +19395,7 @@ async def get_llama_flags(
     A failed probe answers ``probe_ok = false`` with no flags rather than erroring, so
     the editor degrades to "cannot verify" instead of blocking every argument.
 
-    ``managed_only`` skips the probe entirely. The denylist is Unsloth's own and needs
+    ``managed_only`` skips the probe entirely. The denylist is LABZ's own and needs
     no binary to read, while the caller that needs it most is the panel sanitizing a
     stored list before it becomes an explicit request: making that wait on a cold
     ``--help`` would leave a legacy flag in the request for as long as the probe runs.
@@ -19493,7 +19493,7 @@ async def inference_status(
 async def get_status(current_subject: str):
     """
     Get current inference backend status.
-    Reports whichever backend (Unsloth or llama-server) is active.
+    Reports whichever backend (LABZ or llama-server) is active.
     """
     if account_access.resident_hidden("chat"):
         return account_access.hidden_chat_status_response()
@@ -19570,7 +19570,7 @@ async def get_status(current_subject: str):
             # Shared with /chat/count_tokens, so a client can tell whose tokenizer counted.
             _display_model_id, _reported_model_identifier = _llama_status_model_ids(llama_backend)
             _inference_cfg = load_inference_config(_model_id) if _model_id else None
-            # Don't surface Unsloth's auto-applied bundled family template (e.g. the
+            # Don't surface LABZ's auto-applied bundled family template (e.g. the
             # gemma-4 override) as a user-authored override: the frontend adopts
             # status.chat_template_override as editable state and would otherwise
             # re-send it as an explicit override for a later, unrelated model. Only
@@ -19601,7 +19601,7 @@ async def get_status(current_subject: str):
                 gguf_variant = llama_backend.hf_variant,
                 memory_warning = llama_backend.last_load_warning,
                 loading = _loading,
-                # Plus anything the Unsloth registry still holds: the GGUF load
+                # Plus anything the LABZ registry still holds: the GGUF load
                 # only unloaded the ACTIVE one, so a model cached behind it is
                 # still in VRAM and was invisible to every client reading this.
                 loaded = ([_display_model_id] if _display_model_id else [])
@@ -19627,7 +19627,7 @@ async def get_status(current_subject: str):
                 llama_cpp_latest_tag = _latest_tag,
             )
 
-        # Otherwise report Unsloth backend status. Peek rather than build: no singleton means
+        # Otherwise report LABZ backend status. Peek rather than build: no singleton means
         # nothing is loaded, and the chat UI polls this from first paint.
         if backend is None:
             return InferenceStatusResponse(
@@ -19927,7 +19927,7 @@ async def _generate_tts_wav(
 
     # Audio-capable backend confirmed. The middleware claims the slot on a 2xx, so no claim
     # here: claiming before the audio backend runs could strand a preview-owned checkpoint
-    # as Unsloth-owned if generation then fails.
+    # as LABZ-owned if generation then fails.
     # Apply per-model recommended sampling + any operator UNSLOTH_SAMPLING_* pin before
     # generating, so `unsloth run --temperature` (and the other pins) and per-model
     # recommendations reach audio (TTS) generation too, not just chat. The gen lambdas read
@@ -20170,7 +20170,7 @@ async def _external_tts_speech(body: AudioSpeechRequest, request: Request) -> Re
             allow_saved_key = not _request_has_api_key(request),
             prefer_saved_key = True,
         )
-        # The guard coordinates this process, while Unsloth can also be edited by
+        # The guard coordinates this process, while LABZ can also be edited by
         # another backend process. Provider updates write routing metadata before
         # the replacement secret, so a final row check prevents an old URL from
         # being paired with the newly written key.
@@ -23089,7 +23089,7 @@ def _build_external_messages(
              metadata; strip it for providers that can't parse the unknown key.
           2. Marked server-side builtin cards (`_server_tool: true` on a
              canonical builtin name, or a Gemini `native_part` payload) are
-             Unsloth-internal tool cards from a prior native Gemini turn;
+             LABZ-internal tool cards from a prior native Gemini turn;
              forwarding them to OpenAI / Anthropic / custom OAI-compat gateways
              sends an orphan `tool_calls` entry (no matching tool declaration,
              often no matching `role="tool"` reply) that can be rejected. We
@@ -23554,7 +23554,7 @@ async def _proxy_to_external_provider(
             detail = "Either provider_id or provider_type is required for external provider routing.",
         )
 
-    # Unsloth's tools run on this host, so any provider whose wire format can
+    # LABZ's tools run on this host, so any provider whose wire format can
     # carry a tool schema out and a result back can use them. The capability is
     # declared per provider type in the registry, not hardcoded here.
     #
@@ -23583,7 +23583,7 @@ async def _proxy_to_external_provider(
     _drop_keepalive = _DroppedFrameKeepalive()
     # One per request: carries the withheld-call state across the lines of a turn.
     _tool_call_stripper = ServerToolCallStripper()
-    # Unsloth's UI asks for the gate by permission_mode, not by confirm_tool_calls,
+    # LABZ's UI asks for the gate by permission_mode, not by confirm_tool_calls,
     # so reading the raw flag admits the exact request the local routes reject: a
     # non-streaming permission_mode="ask" with the flag omitted proxies through
     # with its tools live and no confirmation the caller explicitly asked for.
@@ -23630,7 +23630,7 @@ async def _proxy_to_external_provider(
             detail = f"Base URL is required for provider type: {provider_type}",
         )
     # Validate the proxy destination before the API key is decrypted, so a
-    # refused target never sees a credential. A managed upstream is Unsloth's own loopback.
+    # refused target never sees a credential. A managed upstream is LABZ's own loopback.
     if managed is None:
         try:
             base_url = validate_provider_base_url(base_url)
@@ -23668,7 +23668,7 @@ async def _proxy_to_external_provider(
         if _request_has_api_key(request) and not _request_is_saved_credential_workflow(request):
             raise HTTPException(
                 status_code = 403,
-                detail = "ChatGPT subscriptions are available only to Unsloth UI and internal workflows.",
+                detail = "ChatGPT subscriptions are available only to LABZ UI and internal workflows.",
             )
         if not payload.provider_id or payload.encrypted_api_key:
             raise HTTPException(
@@ -23837,7 +23837,7 @@ async def _proxy_to_external_provider(
                 _reject_confirm_gate_without_channel(
                     payload, _ui_events, selected_names = _catalog_names(studio_tool_payloads)
                 )
-            # The Unsloth loop owns its schemas. Do not also expose a caller-supplied
+            # The LABZ loop owns its schemas. Do not also expose a caller-supplied
             # catalog: Codex would return calls that this server is not authorized to run.
             tool_payloads = studio_tool_payloads
             # This path runs python/terminal locally too (disable_sandbox =
@@ -24116,7 +24116,7 @@ async def _proxy_to_external_provider(
             # connection was already validated as an enabled saved one by
             # research_runs._sanitize_config, and the key is verified against storage.
             # Scoped to that one workflow rather than to "internal", because the other
-            # internal key Unsloth mints is held by a user-authored recipe subprocess.
+            # internal key LABZ mints is held by a user-authored recipe subprocess.
             allow_saved_key = (
                 not _request_has_api_key(request) or _request_is_saved_credential_workflow(request)
             ),
@@ -24187,7 +24187,7 @@ async def _proxy_to_external_provider(
         else None
     )
 
-    # Unsloth-owned tool loop for every non-Codex provider that declares the
+    # LABZ-owned tool loop for every non-Codex provider that declares the
     # capability. The catalog comes from the same selector the local and Codex
     # paths use, so an omitted enabled_tools means "all allowed built-ins" and an
     # explicit empty list stays empty.
@@ -24269,10 +24269,10 @@ async def _proxy_to_external_provider(
         # A managed runtime that drops a reply still closes with [DONE]; it is cut short, not done.
         managed_finish = _TurnFinish()
         if run_studio_tool_loop:
-            # The Unsloth loop owns the tool surface for this turn. The caller's
+            # The LABZ loop owns the tool surface for this turn. The caller's
             # own catalog is dropped for the same reason the Codex path drops it
             # (the model would return calls this server is not authorized to
-            # run), and the hosted names Unsloth runs itself are withheld so the
+            # run), and the hosted names LABZ runs itself are withheld so the
             # provider's builtins do not double up on the local web_search.
             # Hosted-only tools still ride along: Images and Fetch have their own
             # toggles and no local stand-in, so dropping them would turn a lit
@@ -25250,7 +25250,7 @@ def _chat_cancel_event(request: Request) -> threading.Event:
     return event if event is not None else threading.Event()
 
 
-# Unsloth multiplexes its own UI control frames (tool_start / tool_end / tool_output /
+# LABZ multiplexes its own UI control frames (tool_start / tool_end / tool_output /
 # tool_args / tool_status / reasoning_summary / diffusion_frame) onto the SSE stream of
 # /v1/chat/completions. They carry no `choices`, so strict OpenAI clients -- openai-python,
 # the Vercel AI SDK, opencode -- fail schema validation mid-stream and drop the response
@@ -25260,7 +25260,7 @@ UI_STREAM_EVENTS_HEADER = "X-Unsloth-Events"
 
 
 def _ui_stream_events_enabled(request: Optional[Request]) -> bool:
-    """Whether this request opted into Unsloth's UI control frames on an OpenAI stream."""
+    """Whether this request opted into LABZ's UI control frames on an OpenAI stream."""
     if request is None:
         return False
     headers = getattr(request, "headers", None)
@@ -25328,7 +25328,7 @@ async def openai_chat_completions(
     ):
         raise HTTPException(
             status_code = 403,
-            detail = "External providers can only be used from the Unsloth UI or with an API key.",
+            detail = "External providers can only be used from the LABZ UI or with an API key.",
         )
     return await produce_openai_chat_completions(
         payload,
@@ -25401,7 +25401,7 @@ async def produce_openai_chat_completions(
         if request_admitted_without_credential(request):
             raise HTTPException(
                 status_code = 403,
-                detail = "External providers can only be used from the Unsloth UI or with an API key.",
+                detail = "External providers can only be used from the LABZ UI or with an API key.",
             )
         # External provider: this request won't touch the local GGUF, so drop it
         # from the keep-warm count or its in-flight stream would falsely block a
@@ -25482,7 +25482,7 @@ async def produce_openai_chat_completions(
         # is invalid and must not evict the resident model first.
         #
         # Enter the local-loop arm exactly when the passthrough router below would
-        # run Unsloth's own tool loop. That gate is `_tools_on or _mcp_allowed`
+        # run LABZ's own tool loop. That gate is `_tools_on or _mcp_allowed`
         # (see the use_tools block): _effective_enable_tools (which lets a
         # process-wide --enable-tools policy force the loop on) plus mcp_enabled
         # honoring --disable-tools, and tool_choice="none" disabling it unless the
@@ -25507,7 +25507,7 @@ async def produce_openai_chat_completions(
             or bool(payload.openai_code_exec_container_id)
             or bool(payload.anthropic_code_exec_container_id)
             # A JSON-schema response_format is guided-decoding structured output the
-            # router forwards to the llama-server passthrough, not Unsloth's tool
+            # router forwards to the llama-server passthrough, not LABZ's tool
             # loop, so a --enable-tools policy must not 400 it as a local-confirm
             # request under ask/auto. Read with the predicate the router itself
             # uses, so this gate cannot admit a request the router then rejects
@@ -25852,7 +25852,7 @@ async def produce_openai_chat_completions(
         # ── Audio INPUT path: decode WAV and route to audio input generation ──
         if payload.audio_base64 and model_info.get("has_audio_input"):
             # This route re-listens to the recording and answers afresh, so there is
-            # no boundary to resume from; the Unsloth UI already hides Continue here.
+            # no boundary to resume from; the LABZ UI already hides Continue here.
             if _continue_final_message(payload):
                 raise HTTPException(
                     status_code = 400,
@@ -26153,7 +26153,7 @@ async def produce_openai_chat_completions(
 
     # ── Standard OpenAI function-calling pass-through (GGUF only) ────
     # When a client (opencode / Claude Code via OpenAI compat / Cursor /
-    # Continue / ...) sends standard OpenAI `tools` without Unsloth's
+    # Continue / ...) sends standard OpenAI `tools` without LABZ's
     # `enable_tools` shorthand, forward the request to llama-server
     # verbatim so structured `tool_calls` flow back to the client. This
     # branch runs BEFORE `_extract_content_parts` because that helper is
@@ -26165,11 +26165,11 @@ async def produce_openai_chat_completions(
     _has_tool_messages = _has_openai_tool_history(payload.messages)
     _has_tool_catalog = bool(payload.tools and len(payload.tools) > 0)
     _has_active_tool_catalog = _has_tool_catalog and payload.tool_choice != "none"
-    # Read the same way `_takes_tool_passthrough` reads it: history Unsloth's own loop
+    # Read the same way `_takes_tool_passthrough` reads it: history LABZ's own loop
     # produced is not a client contract.
     _has_client_tool_history = _has_tool_messages and not _only_studio_tool_history(payload)
     _has_client_tool_contract = _has_active_tool_catalog or _has_client_tool_history
-    # The Unsloth tool loop needs a tool-capable backend, so a request that asks
+    # The LABZ tool loop needs a tool-capable backend, so a request that asks
     # for it on a backend that can't run it (DiffusionGemma forces supports_tools
     # off) must not steal client tools from the passthrough (#6851).
     _studio_tool_loop_requested = (
@@ -26203,7 +26203,7 @@ async def produce_openai_chat_completions(
     _supports_tool_passthrough = getattr(
         llama_backend, "supports_tool_passthrough", llama_backend.supports_tools
     )
-    # Before the route split, so the passthrough and the Unsloth tool loop both read a tool
+    # Before the route split, so the passthrough and the LABZ tool loop both read a tool
     # result's image as a note on a text-only GGUF, as /v1/messages does.
     if using_gguf and not llama_backend.is_vision:
         _omit_tool_images(payload.messages)
@@ -26484,14 +26484,14 @@ async def produce_openai_chat_completions(
                 use_tools = False
 
         if _response_format_constrains_decoding(payload):
-            # Only an explicit request for Unsloth's tool loop reaches here with a
+            # Only an explicit request for LABZ's tool loop reaches here with a
             # contract; every other GGUF request took the passthrough above. Neither
             # the loop nor the generator below forwards one, so serving it would
             # answer with text that violates it silently.
             raise _reject(
                 400,
                 openai_error_body(
-                    "response_format is not supported with Unsloth tool execution; "
+                    "response_format is not supported with LABZ tool execution; "
                     "send the request without enable_tools to use guided decoding.",
                     status = 400,
                     code = "unsupported_parameter",
@@ -26500,7 +26500,7 @@ async def produce_openai_chat_completions(
             )
 
         if use_tools:
-            # permission_mode ask/auto require the confirm gate for Unsloth's own
+            # permission_mode ask/auto require the confirm gate for LABZ's own
             # tool loop. The request validator self-enables confirm only for
             # request-level tool signals (enable_tools/enabled_tools/mcp_enabled);
             # when a CLI policy (--enable-tools) forces the loop on without those,
@@ -26680,7 +26680,7 @@ async def produce_openai_chat_completions(
                     request = request,
                     llama_backend = llama_backend,
                     payload = payload,
-                    # The catalogue Unsloth resolves server-side: payload.tools does not
+                    # The catalogue LABZ resolves server-side: payload.tools does not
                     # carry it and it is roughly 1250 prompt tokens.
                     injected_tools = tools_to_use,
                     # This branch IS the resolved server-side loop (use_tools is true
@@ -28133,7 +28133,7 @@ async def produce_openai_chat_completions(
                 if admission_lease is not None:
                     admission_lease.release()
                 _tracker.__exit__(None, None, None)
-    # ── Standard Unsloth path ─────────────────────────────────
+    # ── Standard LABZ path ─────────────────────────────────
 
     # Re-derived, not reused from the pre-switch parse: an auto-switch may have changed models.
     served_images: list[str] = []
@@ -28271,7 +28271,7 @@ async def produce_openai_chat_completions(
     )
 
     # Named templates may expose native reasoning only in their ``tool_use``
-    # branch. Use a truthy placeholder for Unsloth-managed tools, whose concrete
+    # branch. Use a truthy placeholder for LABZ-managed tools, whose concrete
     # schemas are selected below, and the request schemas for client passthrough.
     # A withdrawn catalogue renders plain here too, so the probe and the completion agree on
     # which branch the conversation is in.
@@ -28432,7 +28432,7 @@ async def produce_openai_chat_completions(
         #
         # Except when the caller sent its own catalog. #10092 routes image-plus-tools
         # to the client passthrough so those schemas are the ones rendered; claiming
-        # the request here would answer it with Unsloth's built-ins instead, which is
+        # the request here would answer it with LABZ's built-ins instead, which is
         # the client's tools silently gone. Studio's own chat names tools through
         # enabled_tools rather than sending schemas, so the picture still reaches the
         # loop there -- which is the request this whole path exists for.
@@ -28464,7 +28464,7 @@ async def produce_openai_chat_completions(
         _raise_unsupported_n("non-GGUF tool chat completions", monitor_id)
 
     if _sf_use_tools:
-        # permission_mode ask/auto require the confirm gate for Unsloth's own tool
+        # permission_mode ask/auto require the confirm gate for LABZ's own tool
         # loop; when a CLI policy (--enable-tools) forces the loop on without a
         # request-level tool signal, derive confirm here so the mode still gates
         # the call (matching the GGUF path). off/full never prompt.
@@ -29981,7 +29981,7 @@ async def serve_sandbox_file(
     or image/svg+xml would be same-origin script execution. nosniff plus a
     Content-Disposition filename is what makes serving them safe.
 
-    Accepts auth via an Authorization header or a query token. Unsloth uses an
+    Accepts auth via an Authorization header or a query token. LABZ uses an
     authenticated fetch and object URL; query auth remains for older clients.
     """
     # ── Authentication (header or query param) ──────────────────
@@ -30972,7 +30972,7 @@ async def openai_completions(request: Request, current_subject: str = Depends(ge
         elif _pre is not _UNPARSEABLE_BODY:
             # A valid JSON body that is not an object (e.g. [] or null) is rejected below as
             # "Request body must be a JSON object"; reject it here, before the switch, so the
-            # slot claim can't convert a preview-owned model to Unsloth-owned for a request
+            # slot claim can't convert a preview-owned model to LABZ-owned for a request
             # that never runs.
             raise HTTPException(status_code = 400, detail = "Request body must be a JSON object")
 
@@ -30996,7 +30996,7 @@ async def openai_completions(request: Request, current_subject: str = Depends(ge
     # GGUF is loaded and the body is valid. The middleware claims the slot on a successful
     # 2xx, so no claim here: llama-server can still return a non-2xx for a valid body (e.g. a
     # no-pooling error on /v1/embeddings against a non-embedding GGUF), so claiming before the
-    # upstream response would strand a preview-owned checkpoint as Unsloth-owned.
+    # upstream response would strand a preview-owned checkpoint as LABZ-owned.
 
     _resolved_max_tokens = _effective_openai_max_tokens_from_values(body.get("max_tokens"))
     body["max_tokens"] = (
@@ -31704,7 +31704,7 @@ async def openai_embeddings(request: Request, current_subject: str = Depends(get
         elif _pre is not _UNPARSEABLE_BODY:
             # A valid JSON body that is not an object (e.g. [] or null) is rejected below as
             # "Request body must be a JSON object"; reject it here, before the switch, so the
-            # slot claim can't convert a preview-owned model to Unsloth-owned for a request
+            # slot claim can't convert a preview-owned model to LABZ-owned for a request
             # that never runs.
             raise HTTPException(status_code = 400, detail = "Request body must be a JSON object")
     # Embeddings is a model-bearing inference path too, so honor auto-switch. Unlike
@@ -31758,7 +31758,7 @@ async def openai_embeddings(request: Request, current_subject: str = Depends(get
     # GGUF is loaded and the body is valid. The middleware claims the slot on a successful
     # 2xx, so no claim here: llama-server can still return a non-2xx for a valid body (e.g. a
     # no-pooling error on /v1/embeddings against a non-embedding GGUF), so claiming before the
-    # upstream response would strand a preview-owned checkpoint as Unsloth-owned.
+    # upstream response would strand a preview-owned checkpoint as LABZ-owned.
 
     target_url = f"{llama_backend.base_url}/v1/embeddings"
     prompt_text = _flatten_monitor_prompt(body.get("input", ""))
@@ -34147,7 +34147,7 @@ _ANTHROPIC_UNPROMPTED_SAFE_TOOLS = frozenset(
 def _anthropic_selects_server_tools(
     payload, requested_studio_tools: set[str], has_client_tool: bool
 ) -> bool:
-    """Whether THIS request asked Unsloth to run its own tools on the Messages channel.
+    """Whether THIS request asked LABZ to run its own tools on the Messages channel.
 
     A process-wide ``--enable-tools`` is a default for ordinary chat, not a selection: reading
     it as one made the permission gate reject every plain request on a default server, and
@@ -34213,7 +34213,7 @@ def _anthropic_requested_studio_tools(tools: Optional[list]) -> set[str]:
 def _select_anthropic_server_tools(
     all_tools: list[dict], requested_studio_tools: set[str], enabled_tools: Optional[list[str]]
 ) -> list[dict]:
-    """Select Unsloth tools requested through Anthropic tools and extensions."""
+    """Select LABZ tools requested through Anthropic tools and extensions."""
     available = list(all_tools)
     if _enabled_agent_skills():
         from core.inference.tools import READ_SKILL_TOOL
@@ -35519,7 +35519,7 @@ async def anthropic_messages(
             ),
         )
 
-    # Reject an unsupported confirm-gated permission mode for Unsloth's own
+    # Reject an unsupported confirm-gated permission mode for LABZ's own
     # ("server") Anthropic tools before the switch, mirroring the malformed- and
     # mixed-tool checks above. ask always wants a per-call pause this passthrough
     # cannot offer, so it 400s whenever server tools are selected. auto only needs
@@ -35534,7 +35534,7 @@ async def anthropic_messages(
     # confirm_tool_calls=False opt-out always pass.
     # A process-wide ``--enable-tools`` policy is only a default for ordinary
     # chat. It must not steal an explicit Anthropic client-tool catalog (Claude
-    # Code's Write/Edit/Bash tools) and turn it into Unsloth's local tool loop.
+    # Code's Write/Edit/Bash tools) and turn it into LABZ's local tool loop.
     # An explicit per-request server-tool ask was rejected as mixed mode above.
     _selects_server_tools = _anthropic_selects_server_tools(
         payload, requested_studio_tools, _has_client_tool
@@ -35699,7 +35699,7 @@ async def anthropic_messages(
 
     # ── Tool routing ──────────────────────────────────────────
     # Three paths:
-    # 1. enable_tools=true → server-side execution of built-in tools (Unsloth shorthand)
+    # 1. enable_tools=true → server-side execution of built-in tools (LABZ shorthand)
     # 2. tools=[...] only  → client-side pass-through (standard Anthropic behavior)
     # 3. neither           → plain chat
     # Match /v1/chat/completions: server tools reject caller attachments but
@@ -36456,7 +36456,7 @@ async def _anthropic_tool_stream(
                     elif etype == "tool_end":
                         tool_blocks_emitted += 1
                         _span_guard.tool_end()
-                        # Unsloth ran the tool server-side, so the response no longer ends on a pending
+                        # LABZ ran the tool server-side, so the response no longer ends on a pending
                         # client action; otherwise stop_reason "tool_use" tells the client to run it again.
                         ends_on_tool_use = False
                     elif etype == "content" and event.get("text"):
@@ -38357,7 +38357,7 @@ def _build_openai_passthrough_body(
 ) -> dict:
     """Assemble the llama-server request body from a ChatCompletionRequest.
 
-    Only known OpenAI / llama-server fields are forwarded, so Unsloth-specific
+    Only known OpenAI / llama-server fields are forwarded, so LABZ-specific
     extensions (``enable_tools``, ``enabled_tools``, ``session_id``, ...) never
     leak to the backend.
     """
@@ -38636,7 +38636,7 @@ async def _openai_passthrough_stream_admitted(
     admission_lease: LlamaAdmissionLease,
     tracker,
 ):
-    """Streaming client-side pass-through after Unsloth granted an upstream slot.
+    """Streaming client-side pass-through after LABZ granted an upstream slot.
 
     Forwards the client's OpenAI function-calling request to llama-server and
     relays the SSE stream back with minimal normalization (reasoning-only
@@ -39844,7 +39844,7 @@ async def _openai_passthrough_non_streaming_upstream(
 
 # ──────────────────────────────────────────────────────────────────────────
 
-# Diffusion (local text-to-image). Unsloth-only routes (studio_router is not mounted under /v1); the backend is in-process and
+# Diffusion (local text-to-image). LABZ-only routes (studio_router is not mounted under /v1); the backend is in-process and
 # synchronous, so blocking calls are offloaded with asyncio.to_thread. Single error boundary: the backend raises, we map to HTTP.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -40003,7 +40003,7 @@ async def diffusion_download_plan(
         # weights -- and then got the predictable 409. Both checks are network-free.
         # Not while a trainer holds the GPU. An UNCACHED scheme sends
         # assert_precision_available into a quantise-and-matmul smoke probe, which initialises
-        # CUDA and allocates in the Unsloth process -- the very thing the load route's training
+        # CUDA and allocates in the LABZ process -- the very thing the load route's training
         # guard exists to prevent, and the plan runs BEFORE that guard has had a say. Staging
         # files during training is legitimate and needs no GPU, so the plan is answered without
         # the precision check; /images/load still refuses the same pick afterwards.
@@ -40715,7 +40715,7 @@ async def get_gallery_image_file(
 ):
     from core.inference import image_gallery
 
-    # Ownership-gate the serve like delete/clear: resolve only an Unsloth-owned PNG, so a guessed stem cannot stream out a foreign file.
+    # Ownership-gate the serve like delete/clear: resolve only an LABZ-owned PNG, so a guessed stem cannot stream out a foreign file.
     path = await asyncio.to_thread(image_gallery.owned_image_path, image_id)
     if path is None:
         raise HTTPException(status_code = 404, detail = "Image not found.")
@@ -41232,7 +41232,7 @@ async def cancel_diffusion_generation(current_subject: str = Depends(get_current
 # ──────────────────────────────────────────────────────────────────────────
 
 # OpenAI-compatible images API (POST /v1/images/generations). The inference router is mounted at both /api/inference and /v1, so this
-# also answers /v1/images/generations for OpenAI clients. The Unsloth Image tab uses the richer /images/generate above; this is the spec shape.
+# also answers /v1/images/generations for OpenAI clients. The LABZ Image tab uses the richer /images/generate above; this is the spec shape.
 # ──────────────────────────────────────────────────────────────────────────
 
 
@@ -41477,7 +41477,7 @@ async def _generate_openai_images(
                 raise HTTPException(status_code = 503, detail = _NO_IMAGE_MODEL_MSG)
             # The activation refusal is the one message here written FOR the caller: it names the
             # resolution, the budget and the remedies. Sanitising it into "Image generation failed."
-            # left an OpenAI client with a 500 for a request only they can fix, while the Unsloth
+            # left an OpenAI client with a 500 for a request only they can fix, while the LABZ
             # route showed the reason. Typed, so no other ValueError's raw text escapes.
             if isinstance(exc, ImageActivationShortfallError):
                 raise HTTPException(

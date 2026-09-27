@@ -350,7 +350,7 @@ def _assert_video_precision_for_target(
     # schedule is rewritten to layerwise fp8 before support is consulted, and that path needs no torchao. Refusing on
     # the raw int8 rejected loads the runtime would run and report as fell_back -- Windows ROCm, where the torchao stub
     # kills int8 while fp8 still works. A family with a HOSTED quantized conditioner never touches the generic path this
-    # gate reasons about. Unsloth loads that artifact itself: INT8 storage, a Hadamard rotation and an ordinary
+    # gate reasons about. LABZ loads that artifact itself: INT8 storage, a Hadamard rotation and an ordinary
     # F.linear, no torchao and no fp8 tensor cores. Left to the code below, the request is first rewritten int8 -> fp8
     # by effective_te_quant (H3 has no keep-bf16 schedule) and then refused for want of hardware neither the rewrite nor
     # the real loader needs, so a supported CPU load comes back as a 409. Whether the artifact suits THIS base is
@@ -1548,8 +1548,8 @@ class VideoBackend:
                 import diffusers
                 if not hasattr(diffusers, fam.transformer_class):
                     raise ValueError(
-                        "MiniMax-H3 needs the Diffusers revision bundled with this Unsloth "
-                        "version. Reinstall Unsloth dependencies and retry."
+                        "MiniMax-H3 needs the Diffusers revision bundled with this LABZ "
+                        "version. Reinstall LABZ dependencies and retry."
                     )
         if kind != "gguf" and not _is_trusted_video_repo(repo_id):
             raise ValueError(
@@ -2363,7 +2363,7 @@ class VideoBackend:
         # does NOT help, so the type is imposed inside sd.cpp rather than by the file and cannot be fixed by shipping a
         # different checkpoint. low_vram is the one mode a small-card user reaches for, so drop the flag rather than the
         # mode; --offload-to-cpu and --clip-on-cpu, which are where the savings are, still apply. The abort itself is
-        # fixed in the Unsloth sd.cpp fork (it casts F32 conv1d kernels to F16 in-graph on CPU backends), so this is no
+        # fixed in the LABZ sd.cpp fork (it casts F32 conv1d kernels to F16 in-graph on CPU backends), so this is no
         # longer only a crash workaround, and it should not be reverted when that fix reaches the pinned prebuilt.
         # Measured on a build carrying the fix, 640x384, 25 frames, 4 steps, q4_K, with --offload-to-cpu --clip-on-cpu
         # already on: adding --vae-on-cpu moved peak VRAM 12.42 -> 12.42 GiB and wall time 20.9s -> 100.4s. Under
@@ -5007,7 +5007,7 @@ class VideoBackend:
                     local_files_only = local_files_only,
                     # Pin the live cache root, as every other loader call does: unset, the fetch lands under
                     # huggingface_hub's import-time constant and a later cache change re-downloads multiple GB into a
-                    # root Unsloth no longer reads.
+                    # root LABZ no longer reads.
                     cache_dir = hub_cache_dir(),
                     # The hosted H3 denoisers carry the PRUNED (curve-form) adaLN: the modulation is a rank-8
                     # factorization of the time-embedding curve plus a shared table, which is where ~40% of the released
@@ -5208,7 +5208,7 @@ class VideoBackend:
             )
         # cache_dir for the same reason as the token: load_components forwards extra kwargs through ComponentSpec.load
         # into each from_pretrained, and without it those ~145 GB of Hub-pinned components resolve against the
-        # import-time HF_HUB_CACHE snapshot rather than Unsloth's live cache folder, which the user can move.
+        # import-time HF_HUB_CACHE snapshot rather than LABZ's live cache folder, which the user can move.
         pipe.load_components(
             workflow = workflow,
             dtype = dtype,
@@ -5665,7 +5665,7 @@ class VideoBackend:
         """Validate cheaply, then run generate + gallery persist on a daemon thread.
 
         Returns at once, mirroring begin_load: a clip takes minutes to denoise, and
-        a proxy in front of Unsloth (secure mode's Cloudflare tunnel) caps the origin
+        a proxy in front of LABZ (secure mode's Cloudflare tunnel) caps the origin
         response window near 100 seconds, so the HTTP call must not span the
         generation. The terminal outcome (phase "completed" with the saved gallery
         record, or "failed" with a client-safe error) is reported by

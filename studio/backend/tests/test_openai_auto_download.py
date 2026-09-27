@@ -482,7 +482,7 @@ def test_remote_code_repo_is_refused(hub):
     hub["auto_map"] = True
     refusal = _run("someone/custom-arch-GGUF")
     assert refusal.status == 403 and refusal.code == "remote_code_consent_required"
-    assert "Unsloth Studio" in refusal.message
+    assert "LABZ Studio" in refusal.message
     assert hub["started"] == []
 
 

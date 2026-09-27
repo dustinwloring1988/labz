@@ -249,7 +249,7 @@ def _sanitize_config(
         ):
             raise HTTPException(
                 status_code = 400,
-                detail = "Durable research requires a saved connection whose provider supports Unsloth tools",
+                detail = "Durable research requires a saved connection whose provider supports LABZ tools",
             )
         provider = providers_db.get_provider(provider_id)
         if provider is None:
@@ -261,7 +261,7 @@ def _sanitize_config(
         if not provider_runs_local_tools(saved_provider_type) or not provider["is_enabled"]:
             raise HTTPException(
                 status_code = 400,
-                detail = "Durable research requires an enabled connection whose provider supports Unsloth tools",
+                detail = "Durable research requires an enabled connection whose provider supports LABZ tools",
             )
         request["providerType"] = saved_provider_type
 

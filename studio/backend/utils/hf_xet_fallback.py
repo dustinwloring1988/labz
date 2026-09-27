@@ -3,7 +3,7 @@
 
 """Unsloth shim over the shared ``unsloth_zoo.hf_xet_fallback`` Xet -> HTTP stall fallback.
 
-Re-exports the shared API and injects Unsloth's marker-aware cache purge
+Re-exports the shared API and injects LABZ's marker-aware cache purge
 (``prepare_cache_for_transport``) so the download manager keeps its ``.transport``
 marker semantics on the HTTP retry.
 
@@ -125,7 +125,7 @@ def _load_shared() -> bool:
                 _shared_available = True
                 _shared_import_error = None
                 return True
-            except Exception as exc2:  # noqa: BLE001 - degrade so Unsloth still boots with plain HF
+            except Exception as exc2:  # noqa: BLE001 - degrade so LABZ still boots with plain HF
                 _shared_import_error = exc2
                 _shared_available = False
                 import logging as _logging
@@ -229,7 +229,7 @@ def _xet_health_from(module: Any, **kwargs: Any) -> Any:
 def cached_xet_health(**kwargs: Any) -> Any:
     """Return Zoo's Xet verdict only when its health module is already loaded.
 
-    Capability reads use this path so opening Hub cannot initialize Unsloth Zoo. A real
+    Capability reads use this path so opening Hub cannot initialize LABZ Zoo. A real
     download calls :func:`xet_health`, which loads the optional module and populates this cache.
 
     Read without ``_load_lock`` on purpose. Taking it made this "already loaded?" question wait
@@ -259,7 +259,7 @@ def xet_health_is_forced(health: Any) -> bool:
     ``unsloth_zoo.hf_xet_health`` stamps ``source = "forced"`` on exactly the two env-var verdicts:
     ``UNSLOTH_DISABLE_XET`` / ``UNSLOTH_STABLE_DOWNLOADS`` / ``HF_HUB_DISABLE_XET`` turning Xet OFF,
     and ``UNSLOTH_FORCE_XET`` turning it ON. Callers already honour the off switches by returning
-    early, so this exists for the on switch: the free-RAM gate must stand down for it, or Unsloth
+    early, so this exists for the on switch: the free-RAM gate must stand down for it, or LABZ
     ships an escape hatch that only works in one direction.
 
     Anything unreadable (an older zoo whose verdict has no ``source``, a test double) answers False,
@@ -902,7 +902,7 @@ def _studio_prepare_for_http(
     *,
     cache_dir: Optional[str] = None,
 ) -> None:
-    """Unsloth's marker-aware purge before an HTTP resume, keeping the download manager's ``.transport``
+    """LABZ's marker-aware purge before an HTTP resume, keeping the download manager's ``.transport``
     accounting consistent (vs unsloth_zoo's generic default). Guarded: a purge failure is logged,
     not fatal to the retry."""
     try:
@@ -917,7 +917,7 @@ def _studio_prepare_for_http(
         try:
             from loggers import get_logger
             get_logger(__name__).debug(
-                "Unsloth prepare_cache_for_transport failed for %s: %s", repo_id, exc
+                "LABZ prepare_cache_for_transport failed for %s: %s", repo_id, exc
             )
         except ModuleNotFoundError as logger_exc:
             if logger_exc.name != "loggers":
@@ -941,8 +941,8 @@ def hf_hub_download_with_xet_fallback(
     reuse_other_cache_root: bool = False,
     local_files_only: bool = False,
 ) -> str:
-    """Single-file download via the shared fallback with Unsloth's marker-aware HTTP-retry prep.
-    ``force_download`` re-fetches a newer blob over a cached one (Unsloth's model-update path).
+    """Single-file download via the shared fallback with LABZ's marker-aware HTTP-retry prep.
+    ``force_download`` re-fetches a newer blob over a cached one (LABZ's model-update path).
 
     ``local_files_only`` resolves from the cache and never from the network, raising
     huggingface_hub's ``LocalEntryNotFoundError`` on a miss. It deliberately BYPASSES the shared
@@ -953,7 +953,7 @@ def hf_hub_download_with_xet_fallback(
     outcome this parameter exists to prevent, so it must not depend on the installed zoo.
 
     ``reuse_other_cache_root`` (opt-in) resolves a file cached ONLY under huggingface_hub's
-    import-time root through that root. Unsloth's cache folder is a setting, so after it changes every
+    import-time root through that root. LABZ's cache folder is a setting, so after it changes every
     cached asset is invisible to a call pinned to the new root: GBs re-download, and a gated base with
     no valid token 401s even though the bytes are there and the preflight (which checks both roots)
     already cleared it. Routed THROUGH the other root rather than returned raw, so the ref still
@@ -1021,7 +1021,7 @@ def hf_hub_download_with_xet_fallback(
 
 
 def snapshot_download_with_xet_fallback(repo_id: str, **kwargs: Any) -> str:
-    """Whole-repo download via the shared fallback with Unsloth's marker-aware HTTP-retry prep."""
+    """Whole-repo download via the shared fallback with LABZ's marker-aware HTTP-retry prep."""
     if kwargs.get("cache_dir") is None:
         from utils.hf_cache_settings import get_hf_cache_paths
         kwargs["cache_dir"] = str(get_hf_cache_paths().hub_cache)

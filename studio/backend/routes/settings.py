@@ -1268,7 +1268,7 @@ def update_llama_cpp_path(
     current_subject: str = Depends(get_current_subject),
     via_api_key: bool = Depends(authenticated_via_api_key),
 ) -> LlamaCppPathResponse:
-    # Only the interactive Unsloth UI may change this executable setting.
+    # Only the interactive LABZ UI may change this executable setting.
     require_ui_session(via_api_key)
     try:
         set_custom_llama_cpp_path(payload.path)
@@ -1467,7 +1467,7 @@ def post_igpu_carveout_notice_dismiss(
 ) -> IgpuCarveoutNoticeResponse:
     """Stop offering the integrated-GPU memory advice at this allocation.
 
-    Stored server-side rather than in the browser: an Unsloth origin is not stable,
+    Stored server-side rather than in the browser: an LABZ origin is not stable,
     so a per-origin store hands out a fresh notice every time the port moves.
     """
     from utils.igpu_carveout_notice_settings import dismiss_notice
@@ -3601,7 +3601,7 @@ def _require_ui_session_for_keyless(via_api_key: bool = Depends(authenticated_vi
     if via_api_key:
         raise HTTPException(
             status_code = 403,
-            detail = "Keyless API access can only be changed from the Unsloth UI.",
+            detail = "Keyless API access can only be changed from the LABZ UI.",
         )
 
 

@@ -1693,7 +1693,7 @@ def describe_resume_state(
 
 
 def resolve_resume_dir(path_value: str) -> Path:
-    """Contain a client-supplied resume path under the Unsloth outputs root. Accepts either the
+    """Contain a client-supplied resume path under the LABZ outputs root. Accepts either the
     run's ``output_dir`` (what the UI replays, matching the LLM resume flow) or an explicit
     ``checkpoint-<N>`` directory. Raises ResumeError with a user-facing message for a path that
     escapes outputs, comes from another operating system, or no longer exists."""
@@ -1707,7 +1707,7 @@ def resolve_resume_dir(path_value: str) -> Path:
         if not message.startswith("Resume checkpoint"):
             # The containment resolver's message quotes server paths at the user; replace it with the resume flow's
             # wording.
-            message = "Resume checkpoint must be inside Unsloth outputs."
+            message = "Resume checkpoint must be inside LABZ outputs."
         raise ResumeError(message) from error
     # A name that cleans away to nothing (".", "outputs", "./.") lands on the outputs ROOT, where the scan would sweep
     # checkpoint dirs across unrelated runs. Same guard the start route applies to output_dir.
@@ -1791,7 +1791,7 @@ def _assert_optimizer_buildable(path: Path, manifest: dict[str, Any]) -> None:
     without training.
 
     Deliberately one-directional, and deliberately import-free. ``find_spec`` answers "is
-    bitsandbytes installed" without creating a CUDA context in the Unsloth process, but it cannot
+    bitsandbytes installed" without creating a CUDA context in the LABZ process, but it cannot
     tell an installed-and-broken wheel (which the trainer catches and falls back from) from a
     working one. So only the case that cannot be wrong is refused here: 8-bit moments with no
     bitsandbytes to load them, or with the fp32 override forcing torch AdamW. The other direction
@@ -2015,7 +2015,7 @@ class LoadedCheckpoint:
 
     def torch_state(self, role: str) -> Optional[Any]:
         """A ``torch.save``d state dict (``optimizer`` / ``scheduler`` / ``rng``), or None. Loaded
-        with ``weights_only = True``: these files are written by Unsloth into its own outputs
+        with ``weights_only = True``: these files are written by LABZ into its own outputs
         directory, but a resume path is client-supplied, so the loader must never be able to
         execute pickled code. Verified to round-trip bitsandbytes AdamW8bit state, whose
         quantized moments and maps are plain uint8/fp32 tensors."""

@@ -5,7 +5,7 @@
 
 torchao's weight subclasses (``Float8Tensor``, ``Int8Tensor``, ``NVFP4Tensor``, ...) are wrapper
 tensors: several plain tensors plus reconstruction metadata behind one logical weight. safetensors
-stores flat tensors only, which is why every pre-quant artifact Unsloth has published so far is a
+stores flat tensors only, which is why every pre-quant artifact LABZ has published so far is a
 pickle. torchao >= 0.16 closes that gap with ``flatten_tensor_state_dict`` /
 ``unflatten_tensor_state_dict``, the same pair ``transformers`` and ``diffusers`` use for their own
 torchao checkpoints, so the subclass is split into ``<fqn>._weight_qdata`` / ``._weight_scale`` and a
@@ -227,7 +227,7 @@ def save_prequant_safetensors(path: str, *, fmt: str, state_dict: Any, metadata:
         raise ValueError(
             f"{exc}. This torchao ({_torchao_version() or 'unknown'}) still quantises to a legacy "
             "tensor subclass that cannot be written to safetensors; torchao >= 0.18 produces the "
-            "flattenable subclasses for every scheme Unsloth ships. Upgrade torchao to build this "
+            "flattenable subclasses for every scheme LABZ ships. Upgrade torchao to build this "
             "artifact, or write it as a .pt checkpoint."
         ) from exc
 
@@ -252,7 +252,7 @@ def read_prequant_header(path: str) -> Optional[dict]:
     """``{"format": ..., "metadata": {...}}`` read from the header alone, or None.
 
     No tensor is touched, so this is the cheap way to answer "what scheme is this artifact, and is
-    it even ours" on a multi-GB file. None means "not an Unsloth safetensors pre-quant checkpoint",
+    it even ours" on a multi-GB file. None means "not an LABZ safetensors pre-quant checkpoint",
     which every caller treats as unknown rather than as an error.
     """
     try:
@@ -440,7 +440,7 @@ def load_prequant_safetensors(path: str, *, device: str = "cpu") -> dict:
     fmt = raw.get(UNSLOTH_FORMAT_KEY)
     if not fmt:
         raise ValueError(
-            f"{path} is a safetensors file but not an Unsloth pre-quant checkpoint "
+            f"{path} is a safetensors file but not an LABZ pre-quant checkpoint "
             f"(no {UNSLOTH_FORMAT_KEY!r} in its header)"
         )
     metadata = json.loads(raw.get(UNSLOTH_METADATA_KEY) or "{}")

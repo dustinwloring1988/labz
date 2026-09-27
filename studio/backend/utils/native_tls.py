@@ -7,7 +7,7 @@ Python's ``ssl`` trusts only certifi's roots, so behind a TLS-inspecting proxy (
 
 ``truststore.inject_into_ssl()`` makes ``ssl.SSLContext`` verify against the OS store instead, the runtime counterpart of ``UV_NATIVE_TLS`` in install.sh. Injection is process-wide but does not survive a spawn, so every network-touching entry point calls :func:`activate_native_tls` before its first TLS connection; the ``python -c`` probes and the standalone prebuilt installers carry an inline copy of the gating because they cannot import backend modules.
 
-truststore is vendored at ``backend/vendor/`` rather than depended on, so no Unsloth user gains a package for a proxy they do not have (see the README there). Every consumer appends that directory to ``sys.path`` and imports the top-level name, which keeps a truststore the user installed themselves in front of ours.
+truststore is vendored at ``backend/vendor/`` rather than depended on, so no LABZ user gains a package for a proxy they do not have (see the README there). Every consumer appends that directory to ``sys.path`` and imports the top-level name, which keeps a truststore the user installed themselves in front of ours.
 
 On by default for macOS and Windows, and on Linux only for the desktop app's own
 backend (#9218); a headless ``unsloth studio`` keeps the
@@ -19,7 +19,7 @@ builds its context from ``SSL_CERT_FILE`` alone, so pointing it at a private CA
 still costs you the public roots and the Hub with them. Install the CA in the OS
 store instead, which is what this module then reaches.
 
-Client side only: the injected class verifies a peer chain on every handshake, so an ``SSLContext`` built after activation cannot serve TLS. Unsloth serves plain HTTP on loopback and ``test_native_tls_entrypoints.py`` keeps it that way; a future in-process HTTPS listener needs ``truststore.SSLContext`` for outbound connections instead of this process-wide injection.
+Client side only: the injected class verifies a peer chain on every handshake, so an ``SSLContext`` built after activation cannot serve TLS. LABZ serves plain HTTP on loopback and ``test_native_tls_entrypoints.py`` keeps it that way; a future in-process HTTPS listener needs ``truststore.SSLContext`` for outbound connections instead of this process-wide injection.
 """
 
 from __future__ import annotations

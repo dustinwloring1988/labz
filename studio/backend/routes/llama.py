@@ -82,7 +82,7 @@ class WhisperSubStatus(BaseModel):
 class LlamaUpdateStatusResponse(BaseModel):
     supported: bool = Field(
         False,
-        description = "True when the install came from an Unsloth prebuilt (has a marker).",
+        description = "True when the install came from an LABZ prebuilt (has a marker).",
     )
     update_available: bool = Field(
         False,
@@ -274,7 +274,7 @@ class LlamaBackendStatusResponse(BaseModel):
         "auto",
         description = (
             "The recorded choice; 'auto' means hardware detection. A name this "
-            "build does not know was written by a newer Unsloth and is read-only."
+            "build does not know was written by a newer LABZ and is read-only."
         ),
     )
     selection_applied: bool = Field(

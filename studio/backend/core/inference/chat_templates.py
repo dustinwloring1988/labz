@@ -4,13 +4,13 @@
 """Bundled chat-template selection for GGUF inference.
 
 Some shipped GGUF quants embed an older chat template. Rather than re-cutting and
-asking users to re-download every quant, Unsloth can override the embedded template
+asking users to re-download every quant, LABZ can override the embedded template
 at llama-server launch time with a bundled, up-to-date Jinja template for known
 model families. The override is wired through the existing ``chat_template_override``
 -> ``--chat-template-file`` path in ``LlamaCppBackend.load_model``.
 
 Currently this covers ``unsloth/gemma-4-*-GGUF``, which gains the upstream PR #118
-``preserve_thinking`` flag (defaulted OFF here) so the Unsloth "Preserve thinking"
+``preserve_thinking`` flag (defaulted OFF here) so the LABZ "Preserve thinking"
 toggle appears while staying disabled by default.
 """
 
@@ -51,7 +51,7 @@ def _canonical_repo_id(model_identifier: str) -> str:
 
 def is_unsloth_gemma4_gguf(model_identifier: Optional[str]) -> bool:
     """True for canonical ``unsloth/gemma-4-*-GGUF`` repo identifiers (and the
-    owner-less shorthand that resolves to the same Unsloth repo)."""
+    owner-less shorthand that resolves to the same LABZ repo)."""
     if not model_identifier:
         return False
     return bool(_GEMMA4_GGUF_RE.match(_canonical_repo_id(model_identifier)))

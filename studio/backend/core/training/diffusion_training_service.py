@@ -300,7 +300,7 @@ def get_diffusion_run(job_id: str) -> Optional[dict]:
 def _restate_live_job(rec: dict) -> dict:
     """Undo the interim record's pessimism for the job that is still running, in place.
 
-    An interim record is written as interrupted because that is the outcome if Unsloth never
+    An interim record is written as interrupted because that is the outcome if LABZ never
     comes back. While the process IS still here and still on that job, the honest answer is
     running -- and reporting it as errored would offer a Resume for a directory the live run is
     writing into."""
@@ -856,7 +856,7 @@ class DiffusionTrainingService:
         convenience, not part of the training contract.
 
         ``interim`` writes the same record for a run that is still going, which is what makes a
-        checkpoint survive Unsloth itself dying: the bundle is on disk but only a terminal event
+        checkpoint survive LABZ itself dying: the bundle is on disk but only a terminal event
         used to write the JSON that Previous runs and its Resume action are built from. The
         status recorded is the one that is true if nothing else ever happens -- the run was
         interrupted -- and the terminal write replaces it in place."""
@@ -870,7 +870,7 @@ class DiffusionTrainingService:
                 return
             if interim:
                 s["status"] = "error"
-                s["message"] = "Unsloth exited while this run was training."
+                s["message"] = "LABZ exited while this run was training."
             elif s.get("status") not in ("completed", "stopped", "error"):
                 return
             adapter = s.get("output_dir") or cfg.get("output_dir")
