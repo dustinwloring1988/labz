@@ -341,7 +341,7 @@ mod appimage_environment_tests {
 const STUDIO_MANAGED_RUNTIME_MUTEX_PREFIX: &str = "Global\\UnslothStudioManagedEnvironment-";
 
 pub(crate) const STUDIO_RUNTIME_GATE_HANDOFF_ENV: &str = "_UNSLOTH_STUDIO_RUNTIME_GATE_HANDOFF";
-pub(crate) const STUDIO_RUNTIME_GATE_BUSY: &str = "Unsloth installation is modifying the managed environment. Wait for it to finish, then start the backend again.";
+pub(crate) const STUDIO_RUNTIME_GATE_BUSY: &str = "LABZ installation is modifying the managed environment. Wait for it to finish, then start the backend again.";
 const STUDIO_RUNTIME_GATE_ACQUIRE_ENV: &str = "_UNSLOTH_STUDIO_RUNTIME_GATE_ACQUIRE";
 
 #[cfg(windows)]
@@ -780,7 +780,7 @@ pub(crate) fn ensure_managed_environment_is_idle(
                         break;
                     }
                     return Err(format!(
-                        "Could not finish enumerating running processes before Unsloth update: {}",
+                        "Could not finish enumerating running processes before LABZ update: {}",
                         std::io::Error::from_raw_os_error(error as i32)
                     ));
                 }

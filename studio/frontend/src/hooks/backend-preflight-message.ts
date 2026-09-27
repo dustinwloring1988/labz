@@ -41,13 +41,13 @@ export function preflightStaleMessage(
       typeof navigator !== "undefined" && /Win/i.test(navigator.platform ?? "")
         ? " This usually means a network or roaming profile is not available yet."
         : "";
-    return `Unsloth cannot reach your user folder, so it has nowhere to run from.${cause} Reconnect and try again.`;
+    return `LABZ cannot reach your user folder, so it has nowhere to run from.${cause} Reconnect and try again.`;
   }
   // Also not an install problem, and not the folder either: one of Unsloth's own
   // path settings names somewhere unresolvable, so the value is the fix.
   if (kind === PATH_SETTING_UNRESOLVABLE) {
-    const which = setting ? `${setting} points` : "One of Unsloth's folder settings points";
-    return `${which} somewhere that cannot be resolved, so Unsloth has nowhere safe to run from. Set it to a full path, such as D:\\unsloth-cache, and try again.`;
+    const which = setting ? `${setting} points` : "One of LABZ's folder settings points";
+    return `${which} somewhere that cannot be resolved, so LABZ has nowhere safe to run from. Set it to a full path, such as D:\\unsloth-cache, and try again.`;
   }
   // The install is current, some of its files are gone, so "too old" sends people
   // to an update that reports they are up to date. Name the usual cause: a
@@ -62,10 +62,10 @@ export function preflightStaleMessage(
       typeof navigator !== "undefined" && /Win/i.test(navigator.platform ?? "")
         ? "%USERPROFILE%\\.unsloth\\llama.cpp"
         : "~/.unsloth/llama.cpp";
-    return `Unsloth's llama.cpp runtime is missing files, which usually means security software quarantined them. Run \`unsloth studio update\` to reinstall it, and allow the folder it installs into, usually ${folder}, in your antivirus if it happens again.`;
+    return `LABZ's llama.cpp runtime is missing files, which usually means security software quarantined them. Run \`unsloth studio update\` to reinstall it, and allow the folder it installs into, usually ${folder}, in your antivirus if it happens again.`;
   }
   if (disposition === "owned_stale") {
-    return "Desktop-owned Unsloth backend is too old for this desktop app. Run `unsloth studio update`, then restart Unsloth.";
+    return "Desktop-owned LABZ backend is too old for this desktop app. Run `unsloth studio update`, then restart LABZ.";
   }
-  return "Managed Unsloth install is too old. Run `unsloth studio update`.";
+  return "Managed LABZ install is too old. Run `unsloth studio update`.";
 }

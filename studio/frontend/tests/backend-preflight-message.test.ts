@@ -18,8 +18,8 @@ import {
 
 const UNREACHABLE_PROFILE = /cannot reach your user folder/;
 const UPDATE_ADVICE = /unsloth studio update/;
-const MANAGED_TOO_OLD = /Managed Unsloth install is too old/;
-const OWNED_TOO_OLD = /Desktop-owned Unsloth backend is too old/;
+const MANAGED_TOO_OLD = /Managed LABZ install is too old/;
+const OWNED_TOO_OLD = /Desktop-owned LABZ backend is too old/;
 const TOO_OLD = /too old/;
 const RUNTIME_MISSING_FILES = /llama\.cpp runtime is missing files/;
 
@@ -98,7 +98,7 @@ test("the setting that could not be resolved is named", () => {
   assert.match(named, /full path/);
   // Without a name it still reads as a sentence, and still is not an update.
   const unnamed = preflightStaleMessage("managed_stale", PATH_SETTING_UNRESOLVABLE);
-  assert.match(unnamed, /One of Unsloth's folder settings points/);
+  assert.match(unnamed, /One of LABZ's folder settings points/);
   assert.doesNotMatch(unnamed, UPDATE_ADVICE);
 });
 

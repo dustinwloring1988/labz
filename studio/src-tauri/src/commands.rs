@@ -195,16 +195,16 @@ fn should_emit_repair_failed(msg: &str) -> bool {
 fn external_conflict_message(conflict: &crate::preflight::ExternalBackendConflict) -> String {
     match conflict.reason.as_str() {
         "desktop_owned_backend_active" => format!(
-            "A desktop-owned Unsloth server for this install is already running on port {}. Quit the other desktop app instance, then try again.",
+            "A desktop-owned LABZ server for this install is already running on port {}. Quit the other desktop app instance, then try again.",
             conflict.port
         ),
         // Do not describe a backend from an unknown install as terminal-started.
         "ambiguous_root_external_backend_active" => format!(
-            "An Unsloth server is already running on port {}, and this app cannot confirm which install it belongs to. Stop that server, then try again.",
+            "A LABZ server is already running on port {}, and this app cannot confirm which install it belongs to. Stop that server, then try again.",
             conflict.port
         ),
         _ => format!(
-            "An Unsloth server for this install is already running from a terminal on port {}. Stop that server, or run `unsloth studio update` from that terminal before using desktop repair/update.",
+            "A LABZ server for this install is already running from a terminal on port {}. Stop that server, or run `unsloth studio update` from that terminal before using desktop repair/update.",
             conflict.port
         ),
     }
