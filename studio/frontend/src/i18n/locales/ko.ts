@@ -368,7 +368,7 @@ export const ko = {
         },
         logOut: {
           label: "로그아웃",
-          description: "Unsloth에서 로그아웃합니다",
+          description: "LABZ에서 로그아웃합니다",
         },
         approveToolRequest: {
           label: "요청 승인",
@@ -820,7 +820,7 @@ export const ko = {
     },
     general: {
       title: "일반",
-      description: "Unsloth의 전역 환경설정입니다.",
+      description: "LABZ의 전역 환경설정입니다.",
       account: "계정",
       huggingFaceToken: "Hugging Face 토큰",
       huggingFaceTokenDescription:
@@ -905,7 +905,7 @@ export const ko = {
           "유휴 해제 전에 KV 캐시를 저장해, 이어서 하는 채팅이 기록을 다시 읽지 않도록 합니다. 디스크를 최대 10GB 사용합니다.",
         apiOnly: "API가 불러온 모델만 해제",
         apiOnlyDescription:
-          "유휴 해제 시 Unsloth에서 직접 불러온 모델은 메모리에 남기고, API 요청이 불러온 모델만 해제합니다.",
+          "유휴 해제 시 LABZ에서 직접 불러온 모델은 메모리에 남기고, API 요청이 불러온 모델만 해제합니다.",
       },
       previewSharing: {
         sectionTitle: "미리보기 공유",
@@ -952,11 +952,11 @@ export const ko = {
         sectionTitle: "시작",
         launchAtLogin: "로그인 시 LABZ 실행",
         launchAtLoginDescription:
-          "로그인하면 Unsloth를 백그라운드에서 시작합니다. 열기 전까지 메뉴 막대 또는 시스템 트레이에 남아 있습니다.",
+          "로그인하면 LABZ를 백그라운드에서 시작합니다. 열기 전까지 메뉴 막대 또는 시스템 트레이에 남아 있습니다.",
 
         closeToTray: "시스템 트레이로 닫기",
         closeToTrayDescription:
-          "기본 창을 닫아도 Unsloth와 서버가 백그라운드에서 계속 실행되도록 합니다.",
+          "기본 창을 닫아도 LABZ와 서버가 백그라운드에서 계속 실행되도록 합니다.",
         closeToTraySaveError: "시스템 트레이로 닫기 설정을 업데이트하지 못했습니다.",
         loadError: "로그인 시 실행 설정을 불러오지 못했습니다.",
         saveError: "로그인 시 실행 설정을 업데이트하지 못했습니다.",
@@ -1048,22 +1048,22 @@ export const ko = {
         action: "환경설정 재설정",
         confirmTitle: "모든 로컬 환경설정을 재설정하시겠습니까?",
         confirmDescription:
-          "로컬 전용 환경설정을 지우고 Unsloth를 다시 로드합니다. 채팅, API 접근 권한, DB 기반 설정은 유지됩니다.",
+          "로컬 전용 환경설정을 지우고 LABZ를 다시 로드합니다. 채팅, API 접근 권한, DB 기반 설정은 유지됩니다.",
         confirmAction: "재설정 후 다시 로드",
       },
       permissions: {
         sectionTitle: "권한",
         bypassLabel: "도구 권한",
         bypassDescription:
-          "채팅의 도구 호출(터미널, python, 웹, MCP)을 실행하기 전에 Unsloth가 승인하는 방식입니다. “Full access”를 선택하면 승인과 코드 샌드박스가 꺼집니다.",
+          "채팅의 도구 호출(터미널, python, 웹, MCP)을 실행하기 전에 LABZ가 승인하는 방식입니다. “Full access”를 선택하면 승인과 코드 샌드박스가 꺼집니다.",
       },
     },
     profile: {
       title: "프로필",
-      description: "Unsloth에서 프로필이 표시되는 방식입니다.",
+      description: "LABZ에서 프로필이 표시되는 방식입니다.",
       changePicture: "프로필 사진 변경",
       displayName: "표시 이름",
-      nickname: "Unsloth가 당신을 어떻게 부르면 될까요?",
+      nickname: "LABZ가 당신을 어떻게 부르면 될까요?",
       nicknamePlaceholder: "닉네임",
       nicknameSaved: "선호하는 이름이 저장되었습니다",
       avatarShape: "프로필 사진 모양",
@@ -1090,10 +1090,10 @@ export const ko = {
       stats: {
         title: "내 통계",
         subtitle:
-          "아래 내용은 모두 본인의 기록을 바탕으로 계산됩니다. 아무것도 수집하거나 Unsloth로 전송하지 않습니다.",
+          "아래 내용은 모두 본인의 기록을 바탕으로 계산됩니다. 아무것도 수집하거나 LABZ로 전송하지 않습니다.",
         retry: "다시 시도",
         privacyNote:
-          "통계는 LABZ 설치에 저장된 로컬 채팅, API 사용 및 학습 기록을 바탕으로 계산됩니다. 통계를 위해 API 프롬프트, 응답 또는 키를 저장하지 않습니다. Unsloth나 제3자에게 아무것도 전송하지 않습니다.",
+          "통계는 LABZ 설치에 저장된 로컬 채팅, API 사용 및 학습 기록을 바탕으로 계산됩니다. 통계를 위해 API 프롬프트, 응답 또는 키를 저장하지 않습니다. LABZ나 제3자에게 아무것도 전송하지 않습니다.",
         emptyChats:
           "아직 채팅 또는 API 사용 기록이 없습니다. 대화를 시작하거나 인증된 로컬 API 요청을 보내세요.",
         lifetimeTokens: "누적 토큰",
@@ -1153,7 +1153,7 @@ export const ko = {
     },
     appearance: {
       title: "외관",
-      description: "이 기기에서 Unsloth가 표시되는 방식입니다.",
+      description: "이 기기에서 LABZ가 표시되는 방식입니다.",
       theme: {
         title: "테마",
         label: "색상 구성",
@@ -1262,7 +1262,7 @@ export const ko = {
       language: {
         title: "언어",
         label: "표시 언어",
-        description: "Unsloth에서 사용하는 언어입니다.",
+        description: "LABZ에서 사용하는 언어입니다.",
         autoDetect: "자동 감지",
       },
       layout: {
@@ -1356,7 +1356,7 @@ export const ko = {
           description: "직접 빌드한 llama-server를 사용합니다.",
           hint: "llama-server가 들어 있는 llama.cpp 폴더 또는 build/bin 아래에 있는 빌드를 선택하세요. 사용자 지정 런타임은 GGUF 채팅, 임베딩, 지원되는 음성 모델에 사용됩니다. 환경 변수가 계속 우선합니다.",
           automatic: "자동(번들)",
-          bundled: "Unsloth가 설치한 llama.cpp 런타임을 사용합니다.",
+          bundled: "LABZ가 설치한 llama.cpp 런타임을 사용합니다.",
           active: "다음 모델 로드부터 사용자 지정 llama-server를 사용합니다.",
           environmentManaged: "{variable} 환경 변수로 관리됩니다.",
           missingBinary: "이 폴더에서 llama-server를 더 이상 사용할 수 없습니다. 다른 폴더를 선택하거나 번들 런타임을 사용하세요.",
@@ -1379,7 +1379,7 @@ export const ko = {
         },
         unsupported: {
           notInstalled: "관리되는 llama.cpp 설치를 찾을 수 없어 전환할 백엔드가 없습니다.",
-          localLink: "llama.cpp는 직접 연결한 로컬 디렉터리이므로 Unsloth가 교체하지 않습니다.",
+          localLink: "llama.cpp는 직접 연결한 로컬 디렉터리이므로 LABZ가 교체하지 않습니다.",
           sourceBuild: "이 llama.cpp는 소스에서 빌드되어 여기서 백엔드를 전환할 수 없습니다.",
           customPath: "사용자 지정 llama.cpp 폴더가 선택되어 있습니다. 해당 빌드가 컴퓨팅 백엔드를 결정합니다.",
           unresolved: "사용 가능한 백엔드를 확인하지 못했습니다. 연결을 확인한 뒤 다시 시도하세요.",
@@ -1426,7 +1426,7 @@ export const ko = {
           label: "캐시 파일",
           description:
             "캐시에 {size}이(가) 있으며 그중 {reclaimable}을(를) 지금 정리할 수 있습니다.",
-          hint: "패키지 다운로드, 컴파일된 커널, 전송 캐시로 Unsloth가 필요할 때 다시 만듭니다. 다운로드한 모델, 프로젝트, 채팅, 설정, Hugging Face 토큰은 여기서 절대 삭제되지 않습니다.",
+          hint: "패키지 다운로드, 컴파일된 커널, 전송 캐시로 LABZ가 필요할 때 다시 만듭니다. 다운로드한 모델, 프로젝트, 채팅, 설정, Hugging Face 토큰은 여기서 절대 삭제되지 않습니다.",
           keywords:
             "캐시 정리 삭제 비우기 청소 여유 공간 디스크 임시 컴파일 cache caches purge prune clear clean free space disk uv pip npm bun triton inductor cuda numba matplotlib vllm compiled xet temporary",
           measuring: "캐시 크기를 측정하는 중...",
@@ -1442,7 +1442,7 @@ export const ko = {
           confirmDescription: "약 {size}의 공간이 확보됩니다.",
           confirmOneTitle: "{name}을(를) 정리할까요?",
           safety:
-            "Unsloth는 다음에 필요할 때 캐시를 다시 만듭니다. 다운로드한 모델, 프로젝트, 채팅, 설정, Hugging Face 토큰은 그대로 유지됩니다.",
+            "LABZ는 다음에 필요할 때 캐시를 다시 만듭니다. 다운로드한 모델, 프로젝트, 채팅, 설정, Hugging Face 토큰은 그대로 유지됩니다.",
           hubCost:
             "모델 캐시입니다. 정리하면 다음에 사용할 때 해당 모델을 다시 다운로드합니다.",
           datasetsCost:
@@ -1506,7 +1506,7 @@ export const ko = {
       description:
         "unsloth start로 Claude Code, Codex 같은 코딩 에이전트를 로컬 모델에 연결하세요.",
       intro:
-        "명령은 Claude Code, Codex, DeepSeek Harness, Hermes, OpenClaw, OpenCode를 비롯한 에이전트를 Unsloth가 로컬에서 제공하는 모델에 완전히 오프라인으로 연결합니다. OpenAI 호환 서버를 실행하며 에이전트의 설정 파일은 전혀 건드리지 않습니다.",
+        "명령은 Claude Code, Codex, DeepSeek Harness, Hermes, OpenClaw, OpenCode를 비롯한 에이전트를 LABZ가 로컬에서 제공하는 모델에 완전히 오프라인으로 연결합니다. OpenAI 호환 서버를 실행하며 에이전트의 설정 파일은 전혀 건드리지 않습니다.",
       readDocs: "문서 보기",
       copy: "복사",
       copied: "복사됨",
@@ -1538,7 +1538,7 @@ export const ko = {
       configurationDocs: "docs",
       configurationFlagsSuffix: "for flags.",
       modelNote:
-        "Codex에는 llama-server가 제공하는 GGUF 모델이 필요합니다. 다른 에이전트는 transformers 기반 모델도 사용할 수 있습니다. Unsloth에 이미 로드된 모델을 쓰려면 --model을 빼세요.",
+        "Codex에는 llama-server가 제공하는 GGUF 모델이 필요합니다. 다른 에이전트는 transformers 기반 모델도 사용할 수 있습니다. LABZ에 이미 로드된 모델을 쓰려면 --model을 빼세요.",
       subagent: {
         title: "로컬 모델을 서브에이전트로 사용",
         description:
@@ -1553,7 +1553,7 @@ export const ko = {
       quickstart: {
         title: "명령 만들기",
         description:
-          "Unsloth에 현재 로드된 모델로 에이전트를 실행합니다. 먼저 모델을 로드한 다음 claude를 아래 지원되는 에이전트로 바꾸세요.",
+          "LABZ에 현재 로드된 모델로 에이전트를 실행합니다. 먼저 모델을 로드한 다음 claude를 아래 지원되는 에이전트로 바꾸세요.",
         noneDetected: "PATH에서 지원되는 에이전트 CLI를 찾지 못했습니다.",
         installed: "설치됨",
       },
@@ -1583,9 +1583,9 @@ export const ko = {
         serve: "자동 로컬 서버를 켜거나 끕니다.",
         launch: "에이전트를 실행하거나, 명령과 환경 변수만 출력합니다.",
         persist:
-          "Unsloth가 관리하는 에이전트 저장소를 실행 사이에 유지합니다.",
+          "LABZ가 관리하는 에이전트 저장소를 실행 사이에 유지합니다.",
         asSubagent:
-          "상위 에이전트는 현재 모델을 유지하고 Unsloth를 로컬 서브에이전트로 등록합니다(Claude Code, Codex, OpenCode).",
+          "상위 에이전트는 현재 모델을 유지하고 LABZ를 로컬 서브에이전트로 등록합니다(Claude Code, Codex, OpenCode).",
         apiKey:
           "LABZ API 키를 지정합니다(또는 UNSLOTH_API_KEY 환경 변수를 설정합니다).",
         reasoning:
@@ -1595,7 +1595,7 @@ export const ko = {
         yolo: "승인 확인을 건너뜁니다. 신뢰할 수 있는 환경에서만 사용하세요.",
       },
       remote: {
-        title: "원격 Unsloth에 연결",
+        title: "원격 LABZ에 연결",
         description:
           "실행 전에 다음을 설정하면 unsloth start를 다른 곳에서 실행 중인 Unsloth로 연결할 수 있습니다(또는 --api-key를 직접 전달):",
       },
@@ -1954,11 +1954,11 @@ export const ko = {
     remoteLan: {
       title: "원격 및 LAN",
       description:
-        "로컬 네트워크나 임시 공개 URL을 통해 다른 기기에서 이 Unsloth에 접속합니다.",
+        "로컬 네트워크나 임시 공개 URL을 통해 다른 기기에서 이 LABZ에 접속합니다.",
     },
     apiKeys: {
       title: "API",
-      description: "OpenAI 호환 API를 통해 Unsloth에 접근합니다.",
+      description: "OpenAI 호환 API를 통해 LABZ에 접근합니다.",
       readDocs: "API 문서 읽기",
       noAccess: "아직 액세스 토큰이 없습니다.",
       accessTokens: "액세스 토큰",
@@ -1986,7 +1986,7 @@ export const ko = {
       osWindows: "Windows",
       secureHttps: "보안 HTTPS",
       secureHttpsHint:
-        "0.0.0.0 포트는 여전히 전역에서 접근할 수 있습니다. 완전한 보안을 위해서는 --secure로 Unsloth를 실행하여 이 HTTPS 링크만 노출하세요.",
+        "0.0.0.0 포트는 여전히 전역에서 접근할 수 있습니다. 완전한 보안을 위해서는 --secure로 LABZ를 실행하여 이 HTTPS 링크만 노출하세요.",
       copyTunnelUrl: "터널 URL 복사",
       copySnippet: "스니펫 복사",
       copy: "복사",
@@ -2088,7 +2088,7 @@ export const ko = {
         commandCopied: "{label} 복사됨",
         copyNamedCommand: "{label} 복사",
         checkingInstall: "LABZ 설치 방식을 확인하는 중...",
-        installIntro: "Unsloth를 설치하거나 업데이트하려면:",
+        installIntro: "LABZ를 설치하거나 업데이트하려면:",
         localUpdateHeading: "로컬 업데이트",
         installCommandUnix: "macOS/Linux 설치 명령",
         installCommandWindows: "Windows 설치 명령",
@@ -2102,7 +2102,7 @@ export const ko = {
           "소스 또는 VCS 패키지 설치가 감지되었습니다. 원래의 로컬 경로 또는 Git URL에서 다시 설치하세요.",
         repoCheckoutFallback:
           "저장소 체크아웃이 아직 있다면 거기에서 로컬 설치 프로그램을 실행하세요:",
-        restartAfterUpdate: "업데이트 후 Unsloth를 다시 시작하세요.",
+        restartAfterUpdate: "업데이트 후 LABZ를 다시 시작하세요.",
         desktopManaged:
           "데스크톱 앱은 새 앱 버전을 자동으로 확인합니다. 여기서 언제든지 업데이트를 확인하거나 설치할 수도 있습니다.",
         desktopReady: "데스크톱 앱 업데이트",
@@ -2121,7 +2121,7 @@ export const ko = {
         desktopCheckFailedDescription:
           "연결 상태를 확인한 후 다시 시도하세요.",
         desktopCurrent: "데스크톱 앱이 최신 버전입니다",
-        desktopCurrentDescription: "Unsloth가 계속 자동으로 확인합니다.",
+        desktopCurrentDescription: "LABZ가 계속 자동으로 확인합니다.",
         checkForUpdates: "업데이트 확인",
         checkAgain: "다시 확인",
         retryCheck: "다시 시도",

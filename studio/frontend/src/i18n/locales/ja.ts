@@ -1411,7 +1411,7 @@ export const ja = {
           label: "キャッシュファイル",
           description:
             "キャッシュの合計は{size}で、そのうち{reclaimable}を今すぐ削除できます。",
-          hint: "パッケージのダウンロード、コンパイル済みカーネル、転送キャッシュなど、必要になったときにUnslothが再作成するものです。ダウンロード済みのモデル、プロジェクト、チャット、設定、Hugging Faceトークンがここで削除されることはありません。",
+          hint: "パッケージのダウンロード、コンパイル済みカーネル、転送キャッシュなど、必要になったときにLABZが再作成するものです。ダウンロード済みのモデル、プロジェクト、チャット、設定、Hugging Faceトークンがここで削除されることはありません。",
           keywords:
             "キャッシュ 削除 消去 クリア 掃除 空き容量 ディスク 一時 コンパイル cache caches purge prune clear clean free space disk uv pip npm bun triton inductor cuda numba matplotlib vllm compiled xet temporary",
           measuring: "キャッシュサイズを計測しています...",
@@ -1427,7 +1427,7 @@ export const ja = {
           confirmDescription: "約{size}の空き容量ができます。",
           confirmOneTitle: "{name}を削除しますか?",
           safety:
-            "Unslothは次に必要になったときにキャッシュを再作成します。ダウンロード済みのモデル、プロジェクト、チャット、設定、Hugging Faceトークンは変更されません。",
+            "LABZは次に必要になったときにキャッシュを再作成します。ダウンロード済みのモデル、プロジェクト、チャット、設定、Hugging Faceトークンは変更されません。",
           hubCost:
             "これはモデルキャッシュです。削除すると、次に使うときにそれらのモデルを再ダウンロードします。",
           datasetsCost:
@@ -1448,7 +1448,7 @@ export const ja = {
             numba: "Numbaコンパイルキャッシュ",
             matplotlib: "Matplotlibフォントキャッシュ",
             vllm: "vLLMキャッシュ",
-            unslothCompiled: "Unslothのコンパイル済みモジュール",
+            unslothCompiled: "LABZのコンパイル済みモジュール",
             hfXet: "Hugging Face転送キャッシュ",
             hfAssets: "Hugging Faceアセットキャッシュ",
             hfDatasets: "Hugging Faceデータセットキャッシュ",
@@ -1934,7 +1934,7 @@ export const ja = {
     remoteLan: {
       title: "リモートとLAN",
       description:
-        "ローカルネットワークまたは一時的な公開URLを介して、他のデバイスからこのUnslothにアクセスできます。",
+        "ローカルネットワークまたは一時的な公開URLを介して、他のデバイスからこのLABZにアクセスできます。",
     },
     apiKeys: {
       title: "API",

@@ -1598,7 +1598,7 @@ export const en = {
       remote: {
         title: "Connect to a remote LABZ",
         description:
-          "Point unsloth start at an LABZ instance running elsewhere by setting these before launching (or pass --api-key directly):",
+          "Point unsloth start at a LABZ instance running elsewhere by setting these before launching (or pass --api-key directly):",
       },
       passthrough: {
         title: "Passing agent arguments",
