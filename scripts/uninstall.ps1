@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 #
-# Unsloth Studio uninstaller for Windows PowerShell. Run -Help for details.
+# LABZ uninstaller for Windows PowerShell. Run -Help for details.
 # Custom roots (UNSLOTH_STUDIO_HOME / STUDIO_HOME) come from share\studio.conf.
 #
 # Usage: run -Help. The web one-liner is in that help text and is not repeated here: nothing
@@ -26,7 +26,7 @@ function Uninstall-UnslothStudio {
 
     function _Usage {
         Write-Host @'
-Unsloth Studio uninstaller (Windows PowerShell).
+LABZ uninstaller (Windows PowerShell).
 
 Usage:
   irm https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.ps1 | iex
@@ -36,7 +36,7 @@ RemoteSigned is enough for the second form: a git clone carries no mark of the
 web, so this script loads unsigned. From a downloaded zip it does carry one, so
 clear it first with:  Unblock-File .\scripts\uninstall.ps1
 
-Stops running Unsloth Studio servers, then removes the install dir, launcher
+Stops running LABZ servers, then removes the install dir, launcher
 data, CLI shim, desktop and Start Menu shortcuts, the user PATH entry and the
 PathBackup registry key. In a default-mode install it also removes the shared
 prebuilts that sit beside the install dir:
@@ -263,7 +263,7 @@ Environment:
             # delete below would take somebody else's tree by way of a redirected temp dir.
             #
             # How far up to look differs by spelling. For the profile this uninstall is FOR, the
-            # temp directory and the "Unsloth Studio" directory above it are the two this script
+            # temp directory and the "LABZ" directory above it are the two this script
             # created and the two that decide where the enumeration lands; a redirected
             # LocalAppData higher up is still that same user's own storage, and refusing there
             # would leave the installer's own temp tree behind on every host that uses folder
@@ -347,7 +347,7 @@ Environment:
                 }
             }
             # Only when empty, so a temp dir holding anything else is left alone, and likewise the
-            # "Unsloth Studio" parent, which on the second spelling may not be ours to delete.
+            # "LABZ" parent, which on the second spelling may not be ours to delete.
             foreach ($dir in @($temp, [System.IO.Path]::GetDirectoryName($temp))) {
                 try {
                     if ((Test-Path -LiteralPath $dir -PathType Container) -and
@@ -763,7 +763,7 @@ Environment:
             $confRoot = _RootFromConf (Join-Path $expandedEnv "share\studio.conf")
             if ($confRoot) { & $emit $confRoot }
         }
-        # Default-mode conf at LOCALAPPDATA\Unsloth Studio.
+        # Default-mode conf at LOCALAPPDATA\LABZ.
         if ($env:LOCALAPPDATA) {
             $confRoot = _RootFromConf (Join-Path $env:LOCALAPPDATA "Unsloth Studio\studio.conf")
             if ($confRoot) { & $emit $confRoot }
@@ -993,7 +993,7 @@ Environment:
     }
 
     # ── Stop running servers ──
-    _Step "Stopping any running Unsloth Studio servers..."
+    _Step "Stopping any running LABZ servers..."
     if ($defaultDataDir) {
         _StopByPortFile -PortFile (Join-Path $defaultDataDir "studio.port") -KnownRoots $ownedRoots
     }
@@ -1368,7 +1368,7 @@ Environment:
     } catch { }
 
     Write-Host ""
-    Write-Host "Unsloth Studio uninstalled."
+    Write-Host "LABZ uninstalled."
     if ($script:RemoveFailed) {
         Write-Host "Note: some paths could not be removed (see 'could not remove:' above), so the"
         Write-Host "      signed-in session and local chat history may still be on disk. Remove"
@@ -1402,7 +1402,7 @@ Environment:
     Write-Host "Remove it manually with 'Remove-Item -Recurse -Force `"$env:USERPROFILE\.cache\huggingface\hub`"' if desired."
     if (-not $env:UNSLOTH_STUDIO_HOME -and -not $env:STUDIO_HOME) {
         Write-Host ""
-        Write-Host "If you installed Unsloth Studio with UNSLOTH_STUDIO_HOME or STUDIO_HOME"
+        Write-Host "If you installed LABZ with UNSLOTH_STUDIO_HOME or STUDIO_HOME"
         Write-Host "pointing at a custom directory, re-run this script with the same variable"
         Write-Host "set to also remove that install tree, e.g.:"
         Write-Host "  `$env:UNSLOTH_STUDIO_HOME = 'C:\your\path'; irm https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.ps1 | iex"

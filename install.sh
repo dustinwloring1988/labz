@@ -1,5 +1,5 @@
 #!/bin/sh
-# Unsloth Studio Installer. Usage, supported options and the web one-liner live in the README under "Unsloth Studio (web UI)" and are deliberately not repeated here: this file ships inside the Linux desktop bundle, where a header rehearsing download-and-run command lines is the first thing a generic script classifier reads. A piped install takes options as environment variables after the pipe (UNSLOTH_NO_TORCH, UNSLOTH_SKIP_AUTOSTART, UNSLOTH_ISOLATE_UV_CACHE, UNSLOTH_INSTALL_NO_ROLLBACK, UNSLOTH_PYTHON, UNSLOTH_STUDIO_HOME), because a bare `--no-torch` after the pipe would be read as an option to sh itself; a local run takes the equivalent flags (--no-torch, --isolated-uv-cache, --no-rollback, --python, --local). Install dir priority: UNSLOTH_STUDIO_HOME > STUDIO_HOME > $HOME/.unsloth/studio
+# LABZ Installer. Usage, supported options and the web one-liner live in the README under "LABZ (web UI)" and are deliberately not repeated here: this file ships inside the Linux desktop bundle, where a header rehearsing download-and-run command lines is the first thing a generic script classifier reads. A piped install takes options as environment variables after the pipe (UNSLOTH_NO_TORCH, UNSLOTH_SKIP_AUTOSTART, UNSLOTH_ISOLATE_UV_CACHE, UNSLOTH_INSTALL_NO_ROLLBACK, UNSLOTH_PYTHON, UNSLOTH_STUDIO_HOME), because a bare `--no-torch` after the pipe would be read as an option to sh itself; a local run takes the equivalent flags (--no-torch, --isolated-uv-cache, --no-rollback, --python, --local). Install dir priority: UNSLOTH_STUDIO_HOME > STUDIO_HOME > $HOME/.unsloth/studio
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 set -e
@@ -777,7 +777,7 @@ _configure_uv_cache() {
         _UV_CACHE_MODE=isolated
         export UV_CACHE_DIR
         _uv_no_cache_requested || _record_uv_cache_choice
-        step "uv cache" "forced Unsloth Studio cache isolation ($UV_CACHE_DIR); already-cached packages may download again" "$C_WARN"
+        step "uv cache" "forced LABZ cache isolation ($UV_CACHE_DIR); already-cached packages may download again" "$C_WARN"
         return 0
     fi
 
@@ -959,17 +959,17 @@ _configure_uv_cache() {
             ;;
         studio)
             if [ -n "$_uv_chosen_cache" ]; then
-                step "uv cache" "reusing this install's Unsloth Studio cache ($UV_CACHE_DIR)"
+                step "uv cache" "reusing this install's LABZ cache ($UV_CACHE_DIR)"
             # Never about the directory we are falling back TO: the Studio cache is itself a
             # candidate now, so it can be the one refused, and naming it claims a fallback
             # that did not happen.
             elif [ "$_uv_scan_blocked" = true ] && [ "$_uv_blocked_cache" != "$UV_CACHE_DIR" ]; then
-                step "uv cache" "using new Unsloth Studio-owned cache ($UV_CACHE_DIR); part of $_uv_blocked_cache could not be read, so cached packages may download again" "$C_WARN"
+                step "uv cache" "using new LABZ-owned cache ($UV_CACHE_DIR); part of $_uv_blocked_cache could not be read, so cached packages may download again" "$C_WARN"
             # Warm and still here means the write probe refused it.
             elif [ -n "$_uv_warn_cache" ] && [ "$_uv_warn_cache" != "$UV_CACHE_DIR" ]; then
-                step "uv cache" "using new Unsloth Studio-owned cache ($UV_CACHE_DIR); $_uv_warn_cache is populated but not writable, so cached packages may download again" "$C_WARN"
+                step "uv cache" "using new LABZ-owned cache ($UV_CACHE_DIR); $_uv_warn_cache is populated but not writable, so cached packages may download again" "$C_WARN"
             else
-                step "uv cache" "using new Unsloth Studio-owned cache ($UV_CACHE_DIR)"
+                step "uv cache" "using new LABZ-owned cache ($UV_CACHE_DIR)"
             fi
             ;;
     esac
@@ -1437,7 +1437,7 @@ _smart_apt_install() {
             case "$REPLY" in
                 [nN]*)
                     echo ""
-                    echo "    Please install these packages first, then re-run Unsloth Studio setup:"
+                    echo "    Please install these packages first, then re-run LABZ setup:"
                     echo "    sudo apt-get update -y && sudo apt-get install -y $_STILL_MISSING"
                     exit 1
                     ;;
@@ -1450,7 +1450,7 @@ _smart_apt_install() {
                 echo ""
                 echo "    Could not install these packages: $_STILL_MISSING"
                 echo "    See the error above."
-                echo "    Please install them first, then re-run Unsloth Studio setup:"
+                echo "    Please install them first, then re-run LABZ setup:"
                 echo "    sudo apt-get update -y && sudo apt-get install -y $_STILL_MISSING"
                 exit 1
             fi
@@ -1468,7 +1468,7 @@ _smart_apt_install() {
                 echo "    Either sudo needs a password here, or apt-get itself"
                 echo "    failed; see the error above. With no terminal to"
                 echo "    authenticate on, this cannot be done unattended."
-                echo "    Please install them first, then re-run Unsloth Studio setup:"
+                echo "    Please install them first, then re-run LABZ setup:"
                 echo "    sudo apt-get update -y && sudo apt-get install -y $_STILL_MISSING"
                 exit 1
             fi
@@ -1476,7 +1476,7 @@ _smart_apt_install() {
     else
         echo ""
         echo "    sudo is not available on this system."
-        echo "    Please install these packages as root, then re-run Unsloth Studio setup:"
+        echo "    Please install these packages as root, then re-run LABZ setup:"
         echo "    apt-get update -y && apt-get install -y $_STILL_MISSING"
         exit 1
     fi
@@ -1586,7 +1586,7 @@ create_studio_shortcuts() {
     # ── Write launcher script ──
     cat > "$_css_launcher" << 'LAUNCHER_EOF'
 #!/usr/bin/env bash
-# Unsloth Studio Launcher
+# LABZ Launcher
 # Auto-generated by install.sh -- do not edit manually.
 set -euo pipefail
 
@@ -1936,7 +1936,7 @@ else
         sleep "$POLL_INTERVAL_SEC"
     done
 
-    echo "Unsloth Studio did not become healthy within ${TIMEOUT_SEC}s." >&2
+    echo "LABZ did not become healthy within ${TIMEOUT_SEC}s." >&2
     echo "Check logs at: $LOG_FILE" >&2
     exit 1
 fi
@@ -2086,7 +2086,7 @@ LAUNCHER_EOF
 Version=1.0
 Type=Application
 Name=Unsloth Studio
-Comment=Launch Unsloth Studio
+Comment=Launch LABZ
 Exec="$_css_exec_escaped"
 Icon=$_css_icon_escaped
 Terminal=true
@@ -2392,7 +2392,7 @@ foreach (\$dir in \$locations) {
     \$shortcut = \$WshShell.CreateShortcut(\$linkPath)
     \$shortcut.TargetPath = \$targetExe
     \$shortcut.Arguments = '$_css_sc_args_ps'
-    \$shortcut.Description = 'Launch Unsloth Studio (WSL)'
+    \$shortcut.Description = 'Launch LABZ (WSL)'
     if (\$hasIcon) { \$shortcut.IconLocation = "\$iconPath,0" }
     \$shortcut.Save()
     \$created += \$linkPath
@@ -2512,12 +2512,12 @@ WSLPS1_EOF
     fi
 
     if [ "$_css_created" -eq 1 ]; then
-        substep "Created Unsloth Studio shortcut"
+        substep "Created LABZ shortcut"
     fi
 }
 
 echo ""
-printf "  ${C_TITLE}%s${C_RST}\n" "🦥 Unsloth Studio Installer"
+printf "  ${C_TITLE}%s${C_RST}\n" "🦥 LABZ Installer"
 printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
 echo ""
 
@@ -3595,7 +3595,7 @@ if [ -x "$VENV_DIR/bin/python" ] || _dir_has_entries "$VENV_DIR"; then
        && [ ! -f "$VENV_DIR/.unsloth-studio-owned" ] \
        && [ ! -f "$STUDIO_HOME/share/studio.conf" ] \
        && [ ! -f "$STUDIO_HOME/bin/unsloth" ]; then
-        echo "ERROR: $VENV_DIR already exists but does not look like an Unsloth Studio install." >&2
+        echo "ERROR: $VENV_DIR already exists but does not look like a LABZ install." >&2
         echo "       Move it aside or choose an empty UNSLOTH_STUDIO_HOME." >&2
         exit 1
     fi
@@ -8045,7 +8045,7 @@ if [ -n "$_path_unsloth" ] && [ -x "$VENV_DIR/bin/python" ]; then
 fi
 
 echo ""
-printf "  ${C_TITLE}%s${C_RST}\n" "Unsloth Studio installed!"
+printf "  ${C_TITLE}%s${C_RST}\n" "LABZ installed!"
 printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
 echo ""
 
@@ -8053,14 +8053,14 @@ if [ "$_SKIP_AUTOSTART" != true ] && [ -t 1 ]; then
     echo ""
     # No readable answer (closed/EOF tty) defaults to no; Enter is still yes. Prompt only when something can answer: `test -r` passes on the unopenable /dev/tty found in containers, leaving a dangling question in the log.
     if _can_read_tty; then
-        printf "  Start Unsloth Studio now? [Y/n] "
+        printf "  Start LABZ now? [Y/n] "
         read -r _reply </dev/tty || _reply="n"
     else
         _reply="n"
     fi
     case "${_reply:-y}" in
         [Yy]*|"")
-            step "launch" "starting Unsloth Studio..."
+            step "launch" "starting LABZ..."
 
             _prepare_studio_uv_cache_for_launch
             # Detach stdin from the piped web install's pipe: as a foreground server the studio would otherwise drain the rest of this piped script, leaving the shell to die parsing the now-truncated tail (`unexpected fi`). trap '' INT waits for studio's shutdown instead of racing the prompt, and the subshell resets INT so the child still gets Ctrl+C.
@@ -8070,7 +8070,7 @@ if [ "$_SKIP_AUTOSTART" != true ] && [ -t 1 ]; then
             (trap - INT; exec "$VENV_DIR/bin/unsloth" studio -p 8888 </dev/null) || _LAUNCH_EXIT=$?
             if [ "$_LAUNCH_EXIT" -ne 0 ] && [ "$_MIGRATED" = true ]; then
                 echo ""
-                echo "⚠️  Unsloth Studio failed to start after migration."
+                echo "⚠️  LABZ failed to start after migration."
                 echo "   Your migrated environment may be incompatible."
                 echo "   To fix, remove the environment and reinstall:"
                 echo ""

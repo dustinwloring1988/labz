@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
-# Unsloth Studio uninstaller (macOS / Linux / WSL). Run --help for details.
+# LABZ uninstaller (macOS / Linux / WSL). Run --help for details.
 # Custom roots (UNSLOTH_STUDIO_HOME / STUDIO_HOME) come from studio.conf.
 # Usage: curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.sh | sh
 
@@ -9,7 +9,7 @@ set -e
 
 _usage() {
     cat <<'EOF'
-Unsloth Studio uninstaller (macOS / Linux / WSL).
+LABZ uninstaller (macOS / Linux / WSL).
 
 Usage:
   curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.sh | sh
@@ -24,7 +24,7 @@ Never pipe to `sh -h` expecting help. Neither form prints this message: where
 so the shell consumes it and the script uninstalls with no arguments; where it
 is not (dash, busybox sh) the shell exits with "Illegal option -h".
 
-Stops running Unsloth Studio servers, then removes the install dir, launcher
+Stops running LABZ servers, then removes the install dir, launcher
 data dir, CLI shim, desktop shortcut, macOS .app bundle and Launch Services
 entry. In a default-mode install it also removes the shared prebuilts that sit
 beside the install dir: ~/.unsloth/{llama.cpp,node,whisper.cpp,.cache}. The
@@ -173,7 +173,7 @@ _pkill_studio() {
         # No procps (install.sh never requires it): the PID sweep above is all we have. A live
         # app re-creates the profile right after the delete, so do not claim a clean removal.
         if _studio_app_running; then
-            echo "  pkill not found and Unsloth Studio is running; close it and re-run" >&2
+            echo "  pkill not found and LABZ is running; close it and re-run" >&2
             _set_marker "$_REMOVE_FAILED_FLAG"
         fi
         return 0
@@ -721,7 +721,7 @@ _unsloth_uninstall_main() {
     _is_wsl=0
     [ "$_os" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null && _is_wsl=1
 
-    echo "Stopping any running Unsloth Studio servers..."
+    echo "Stopping any running LABZ servers..."
     _pkill_studio
 
     echo "Removing data and install directories..."
@@ -911,8 +911,8 @@ _unsloth_uninstall_main() {
     _remove_cli_shim
 
     echo "Removing desktop shortcut and launcher lock..."
-    # install.sh creates Desktop/Unsloth Studio as a symlink; an unrelated regular dir is kept.
-    _desktop_link="$HOME/Desktop/Unsloth Studio"
+    # install.sh creates Desktop/LABZ as a symlink; an unrelated regular dir is kept.
+    _desktop_link="$HOME/Desktop/LABZ"
     if [ -L "$_desktop_link" ] || [ ! -e "$_desktop_link" ]; then
         _remove_path "$_desktop_link"
     else
@@ -982,7 +982,7 @@ _unsloth_uninstall_main() {
                         $ws = New-Object -ComObject WScript.Shell;
                         foreach ($d in $dirs) {
                             if (-not $d -or -not (Test-Path -LiteralPath $d)) { continue }
-                            Get-ChildItem -LiteralPath $d -Filter "Unsloth Studio*.lnk" -ErrorAction SilentlyContinue | ForEach-Object {
+                            Get-ChildItem -LiteralPath $d -Filter "LABZ*.lnk" -ErrorAction SilentlyContinue | ForEach-Object {
                                 try {
                                     $sc = $ws.CreateShortcut($_.FullName);
                                     if ("$($sc.TargetPath) $($sc.Arguments)" -notmatch "wsl\.exe") { return }
@@ -1003,7 +1003,7 @@ _unsloth_uninstall_main() {
                         $iconInUse = $false;
                         foreach ($d in $dirs) {
                             if (-not $d -or -not (Test-Path -LiteralPath $d)) { continue }
-                            if (Get-ChildItem -LiteralPath $d -Filter "Unsloth Studio*.lnk" -ErrorAction SilentlyContinue) { $iconInUse = $true; break }
+                            if (Get-ChildItem -LiteralPath $d -Filter "LABZ*.lnk" -ErrorAction SilentlyContinue) { $iconInUse = $true; break }
                         }
                         # Guard LOCALAPPDATA: empty on a service/SYSTEM account makes
                         # Join-Path throw, aborting the icon cleanup (mirror uninstall.ps1).
@@ -1019,7 +1019,7 @@ _unsloth_uninstall_main() {
                 # uninstall.ps1's _RemoveDataDirKeepingWslIcon.
                 _drop_shared_icon_if_unused() {
                     _du="$1"
-                    _icodir="$_du/AppData/Local/Unsloth Studio"
+                    _icodir="$_du/AppData/Local/LABZ"
                     _icon_in_use=0
                     for _sd in \
                         "$_du/Desktop" \
@@ -1027,7 +1027,7 @@ _unsloth_uninstall_main() {
                         "$_du"/OneDrive*/Desktop \
                         "$_du/AppData/Roaming/Microsoft/Windows/Start Menu/Programs"; do
                         [ -d "$_sd" ] || continue
-                        for _any in "$_sd"/"Unsloth Studio"*.lnk; do
+                        for _any in "$_sd"/"LABZ"*.lnk; do
                             [ -e "$_any" ] && { _icon_in_use=1; break; }
                         done
                         [ "$_icon_in_use" = "1" ] && break
@@ -1123,7 +1123,7 @@ _unsloth_uninstall_main() {
     esac
 
     echo ""
-    echo "Unsloth Studio uninstalled."
+    echo "LABZ uninstalled."
     if _markers_unavailable || _marker_set "$_REMOVE_FAILED_FLAG"; then
         # Also the no-marker-storage case: no record of a failed rm, so do not claim success.
         echo "Note: some paths could not be removed (see 'could not remove:' above), so the"
@@ -1161,7 +1161,7 @@ _unsloth_uninstall_main() {
     # user re-exports the variable. Hint when neither is set, so `curl | sh` does not silently miss.
     if [ -z "${UNSLOTH_STUDIO_HOME:-}" ] && [ -z "${STUDIO_HOME:-}" ]; then
         echo ""
-        echo "If you installed Unsloth Studio with UNSLOTH_STUDIO_HOME or STUDIO_HOME"
+        echo "If you installed LABZ with UNSLOTH_STUDIO_HOME or STUDIO_HOME"
         echo "pointing at a custom directory, re-run this script with the same variable"
         echo "set to also remove that install tree, e.g.:"
         echo "  UNSLOTH_STUDIO_HOME=/your/path sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.sh)\""

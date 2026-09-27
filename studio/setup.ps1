@@ -3,7 +3,7 @@
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 <#
 .SYNOPSIS
-    Full environment setup for Unsloth Studio on Windows (bundled version).
+    Full environment setup for LABZ on Windows (bundled version).
 .DESCRIPTION
     Uses an isolated, Unsloth-managed Node.js for the frontend build when the
     system Node/npm do not meet requirements (never modifies the system Node).
@@ -690,7 +690,7 @@ function Write-PathAccessDenied {
         substep "Unsloth cannot confirm this folder is its own install while it is unreadable, so it will not tell you to remove it" "Yellow"
         substep "Restore access with these two in an elevated PowerShell, or move the folder aside and re-run setup:" "Yellow"
     } else {
-        substep "This folder lives outside the app, so reinstalling Unsloth Studio, to any drive, reuses it and fails the same way" "Yellow"
+        substep "This folder lives outside the app, so reinstalling LABZ, to any drive, reuses it and fails the same way" "Yellow"
         substep "Simplest fix: close Unsloth, delete or rename $Path, then re-run setup (it is a managed cache and gets reinstalled)" "Yellow"
         substep "If deleting is also denied, run these two in an elevated PowerShell, then re-run setup:" "Yellow"
     }
@@ -2659,10 +2659,10 @@ function Show-NpmRegistryHint {
 # ─────────────────────────────────────────────
 Write-StudioLine ""
 if ($script:StudioVtOk -and -not $env:NO_COLOR) {
-    Write-StudioLine ("  " + (Get-StudioAnsi Title) + [char]::ConvertFromUtf32(0x1F9A5) + " Unsloth Studio Setup" + (Get-StudioAnsi Reset))
+    Write-StudioLine ("  " + (Get-StudioAnsi Title) + [char]::ConvertFromUtf32(0x1F9A5) + " LABZ Setup" + (Get-StudioAnsi Reset))
     Write-StudioLine ("  {0}{1}{2}" -f (Get-StudioAnsi Dim), $Rule, (Get-StudioAnsi Reset))
 } else {
-    Write-StudioLine ("  " + [char]::ConvertFromUtf32(0x1F9A5) + " Unsloth Studio Setup") -ForegroundColor Green
+    Write-StudioLine ("  " + [char]::ConvertFromUtf32(0x1F9A5) + " LABZ Setup") -ForegroundColor Green
     Write-StudioLine "  $Rule" -ForegroundColor DarkGray
 }
 
@@ -6486,9 +6486,9 @@ if ((Test-Path -LiteralPath $VenvDir -PathType Container) -and -not $NoTorchMode
         # policy's quarantine can take the unsigned .exe and leave a root that is still
         # ours. Content-checked, never by name -- this guard gates a recursive delete.
         if (-not $_studioRootIsOurs) {
-            Write-StudioLine "[ERROR] $VenvDir already exists but does not look like an Unsloth Studio install." -ForegroundColor Red
+            Write-StudioLine "[ERROR] $VenvDir already exists but does not look like a LABZ install." -ForegroundColor Red
             Write-StudioLine "        Move it aside or choose an empty UNSLOTH_STUDIO_HOME before re-running." -ForegroundColor Yellow
-            Exit-SetupFailure "$VenvDir is not an Unsloth Studio environment"
+            Exit-SetupFailure "$VenvDir is not a LABZ environment"
         }
         # Moved aside, then deleted: a rename takes the whole tree or fails and leaves it intact,
         # where Remove-Item -Recurse stops at the first locked file and leaves an environment that
@@ -9859,7 +9859,7 @@ if (-not $llamaCppIsLink -and (
 # ─────────────────────────────────────────────
 # Footer
 # ─────────────────────────────────────────────
-$DoneLabel = if ($env:SKIP_STUDIO_BASE -eq "1") { "Unsloth Studio Setup Complete" } else { "Unsloth Studio Updated" }
+$DoneLabel = if ($env:SKIP_STUDIO_BASE -eq "1") { "LABZ Setup Complete" } else { "LABZ Updated" }
 if ($script:StudioVtOk -and -not $env:NO_COLOR) {
     Write-StudioLine ("  {0}{1}{2}" -f (Get-StudioAnsi Dim), $Rule, (Get-StudioAnsi Reset))
     if ($script:LlamaCppDegraded) {

@@ -1,6 +1,6 @@
-# Unsloth Studio Installer for Windows PowerShell
+# LABZ Installer for Windows PowerShell
 #
-# Usage, options and the web one-liner: see "Unsloth Studio (web UI)" in the README
+# Usage, options and the web one-liner: see "LABZ (web UI)" in the README
 # (https://github.com/unslothai/unsloth#unsloth-studio-web-ui). Not repeated here: nothing reads
 # this header from inside the script, and the whole file is scanned before any of it runs.
 # Why several things below are written the long way: tests/studio/test_installer_av_shapes.py (AV_SHAPES_RECORD)
@@ -1829,7 +1829,7 @@ function Install-UnslothStudio {
 
     function Get-StudioPrivateTempRoots {
         # Only under paths scripts/uninstall.ps1 already reclaims (LOCALAPPDATA\
-        # "Unsloth Studio", ~\.unsloth\.cache): anywhere else would survive an
+        # "LABZ", ~\.unsloth\.cache): anywhere else would survive an
         # uninstall, and a leftover directly under ~\.unsloth would be worse, since
         # that is removed only when empty.
         $roots = @()
@@ -3394,7 +3394,7 @@ exit 1
             if (-not (Test-StudioUvNoCache)) {
                 Write-StudioUvCacheMarker -StudioRoot $StudioRoot -Cache $studioCache
             }
-            step "uv cache" "forced Unsloth Studio cache isolation ($studioCache); already-cached packages may download again" "Yellow"
+            step "uv cache" "forced LABZ cache isolation ($studioCache); already-cached packages may download again" "Yellow"
             return
         }
 
@@ -3521,19 +3521,19 @@ exit 1
             }
             "studio" {
                 if ($chosenCache) {
-                    step "uv cache" "reusing this install's Unsloth Studio cache ($selectedCache)"
+                    step "uv cache" "reusing this install's LABZ cache ($selectedCache)"
                 # Never about the directory we are falling back TO: the Studio cache is itself
                 # a candidate now, so it can be the one refused, and naming it claims a fallback
                 # that did not happen.
                 } elseif ($scanBlocked -and -not [string]::IsNullOrWhiteSpace([string]$blockedCache) -and $blockedCache -ne $selectedCache) {
-                    step "uv cache" "using new Unsloth Studio-owned cache ($selectedCache); part of $blockedCache could not be read, so cached packages may download again" "Yellow"
+                    step "uv cache" "using new LABZ-owned cache ($selectedCache); part of $blockedCache could not be read, so cached packages may download again" "Yellow"
                 } elseif ($scanBlocked -and [string]::IsNullOrWhiteSpace([string]$blockedCache)) {
-                    step "uv cache" "using new Unsloth Studio-owned cache ($selectedCache); the existing uv cache could not be inspected, so cached packages may download again" "Yellow"
+                    step "uv cache" "using new LABZ-owned cache ($selectedCache); the existing uv cache could not be inspected, so cached packages may download again" "Yellow"
                 # Warm and still here means the write probe refused it.
                 } elseif ($warnCache -and $warnCache -ne $selectedCache) {
-                    step "uv cache" "using new Unsloth Studio-owned cache ($selectedCache); $warnCache is populated but not writable, so cached packages may download again" "Yellow"
+                    step "uv cache" "using new LABZ-owned cache ($selectedCache); $warnCache is populated but not writable, so cached packages may download again" "Yellow"
                 } else {
-                    step "uv cache" "using new Unsloth Studio-owned cache ($selectedCache)"
+                    step "uv cache" "using new LABZ-owned cache ($selectedCache)"
                 }
             }
         }
@@ -3620,10 +3620,10 @@ exit 1
 
     Write-StudioLine ""
     if ($script:StudioVtOk -and -not $env:NO_COLOR) {
-        Write-StudioLine ("  " + (Get-StudioAnsi Title) + $Sloth + " Unsloth Studio Installer (Windows)" + (Get-StudioAnsi Reset))
+        Write-StudioLine ("  " + (Get-StudioAnsi Title) + $Sloth + " LABZ Installer (Windows)" + (Get-StudioAnsi Reset))
         Write-StudioLine ("  {0}{1}{2}" -f (Get-StudioAnsi Dim), $Rule, (Get-StudioAnsi Reset))
     } else {
-        Write-StudioLine ("  {0} Unsloth Studio Installer (Windows)" -f $Sloth) -ForegroundColor DarkGreen
+        Write-StudioLine ("  {0} LABZ Installer (Windows)" -f $Sloth) -ForegroundColor DarkGreen
         Write-StudioLine "  $Rule" -ForegroundColor DarkGray
     }
     Write-StudioLine ""
@@ -4096,7 +4096,7 @@ exit 1
             substep "Unsloth cannot confirm this folder is its own install while it is unreadable, so it will not tell you to remove it" "Yellow"
             substep "Restore access with these two in an elevated PowerShell, or move the folder aside and re-run setup:" "Yellow"
         } else {
-            substep "This folder lives outside the app, so reinstalling Unsloth Studio, to any drive, reuses it and fails the same way" "Yellow"
+            substep "This folder lives outside the app, so reinstalling LABZ, to any drive, reuses it and fails the same way" "Yellow"
             substep "Simplest fix: close Unsloth, delete or rename $Path, then re-run setup (it is a managed cache and gets reinstalled)" "Yellow"
             substep "If deleting is also denied, run these two in an elevated PowerShell, then re-run setup:" "Yellow"
         }
@@ -4727,7 +4727,7 @@ exit 1
             # Same escaping for the trampoline: it contains apostrophes of its own.
             $SingleQuotedTrampoline = $script:UnslothCliTrampoline -replace "'", "''"
 
-            # $StudioDataDir = LOCALAPPDATA\Unsloth Studio, or $StudioHome\share in env-mode.
+            # $StudioDataDir = LOCALAPPDATA\LABZ, or $StudioHome\share in env-mode.
             if (-not $StudioDataDir -or [string]::IsNullOrWhiteSpace($StudioDataDir)) {
                 substep "DataDir path unavailable; skipped shortcut creation" "Yellow"
                 return
@@ -4976,7 +4976,7 @@ try {
         `$msg = "No free port found in range `$basePort-`$(`$basePort + `$maxPortOffset)"
         try {
             Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
-            [System.Windows.Forms.MessageBox]::Show(`$msg, 'Unsloth Studio') | Out-Null
+            [System.Windows.Forms.MessageBox]::Show(`$msg, 'LABZ') | Out-Null
         } catch {}
         exit 1
     }
@@ -5001,10 +5001,10 @@ try {
     try {
         `$proc = Start-Process -FilePath `$powershellExe -ArgumentList `$launchArgs -WorkingDirectory `$env:USERPROFILE -PassThru
     } catch {
-        `$msg = "Could not launch Unsloth Studio terminal.`n`nError: `$(`$_.Exception.Message)"
+        `$msg = "Could not launch LABZ terminal.`n`nError: `$(`$_.Exception.Message)"
         try {
             Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
-            [System.Windows.Forms.MessageBox]::Show(`$msg, 'Unsloth Studio') | Out-Null
+            [System.Windows.Forms.MessageBox]::Show(`$msg, 'LABZ') | Out-Null
         } catch {}
         exit 1
     }
@@ -5027,13 +5027,13 @@ try {
     }
     if (-not `$browserOpened) {
         if (`$proc.HasExited) {
-            `$msg = "Unsloth Studio exited before becoming healthy. Check terminal output for errors."
+            `$msg = "LABZ exited before becoming healthy. Check terminal output for errors."
         } else {
-            `$msg = "Unsloth Studio is still starting but did not become healthy within `$timeoutSec seconds. Check the terminal window for the selected port and open it manually."
+            `$msg = "LABZ is still starting but did not become healthy within `$timeoutSec seconds. Check the terminal window for the selected port and open it manually."
         }
         try {
             Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
-            [System.Windows.Forms.MessageBox]::Show(`$msg, 'Unsloth Studio') | Out-Null
+            [System.Windows.Forms.MessageBox]::Show(`$msg, 'LABZ') | Out-Null
         } catch {}
     }
 } finally {
@@ -5215,7 +5215,7 @@ exit 0
                             ($shortcut.Arguments -eq $shortcutArgs) -and
                             ($shortcut.WorkingDirectory -eq $appDir) -and
                             ($shortcut.WindowStyle -eq 7) -and
-                            ($shortcut.Description -eq "Launch Unsloth Studio") -and
+                            ($shortcut.Description -eq "Launch LABZ") -and
                             ((-not $desiredIconLocation) -or ($shortcut.IconLocation -eq $desiredIconLocation))
                         if (-not $shortcutUnchanged) {
                             $shortcut.TargetPath = $shortcutTarget
@@ -5223,7 +5223,7 @@ exit 0
                             $shortcut.WorkingDirectory = $appDir
                             # Start minimized so the brief PowerShell console flash is muted.
                             $shortcut.WindowStyle = 7
-                            $shortcut.Description = "Launch Unsloth Studio"
+                            $shortcut.Description = "Launch LABZ"
                             if ($hasValidIcon) {
                                 $shortcut.IconLocation = $desiredIconLocation
                             }
@@ -5236,7 +5236,7 @@ exit 0
                     }
                 }
                 if ($createdShortcutCount -gt 0) {
-                    substep "Created Unsloth Studio shortcut"
+                    substep "Created LABZ shortcut"
                     # Per-item SHChangeNotify: the global broadcast misses a rewritten same-name .lnk.
                     try {
                         # Emitted, not compiled: -MemberDefinition runs csc.exe too.
@@ -5276,7 +5276,7 @@ exit 0
                         } catch {}
                     }
                 } else {
-                    substep "no Unsloth Studio shortcuts were created" "Yellow"
+                    substep "no LABZ shortcuts were created" "Yellow"
                 }
             } catch {
                 substep "shortcut creation unavailable: $($_.Exception.Message)" "Yellow"
@@ -5985,9 +5985,9 @@ exit 0
         return (Exit-InstallFailure "Could not create the Unsloth install lock")
     }
     if ($null -eq $studioInstallLock) {
-        Write-StudioLine "[ERROR] Another Unsloth Studio install or repair is already running." -ForegroundColor Red
+        Write-StudioLine "[ERROR] Another LABZ install or repair is already running." -ForegroundColor Red
         Write-StudioLine "        Wait for it to finish, then re-run install.ps1." -ForegroundColor Yellow
-        return (Exit-InstallFailure "Another Unsloth Studio install or repair is already running")
+        return (Exit-InstallFailure "Another LABZ install or repair is already running")
     }
 
     $studioRuntimeMutexes = @()
@@ -6012,8 +6012,8 @@ exit 0
                 foreach ($studioRuntimeMutexName in $studioRuntimeMutexNames) {
                     $mutex = Enter-StudioNamedMutex -Name $studioRuntimeMutexName
                     if ($null -eq $mutex) {
-                        Write-StudioLine "[ERROR] Unsloth Studio is starting or installation is already running." -ForegroundColor Red
-                        Write-StudioLine "        Close Unsloth Studio completely, wait for the other operation, then re-run install.ps1." -ForegroundColor Yellow
+                        Write-StudioLine "[ERROR] LABZ is starting or installation is already running." -ForegroundColor Red
+                        Write-StudioLine "        Close LABZ completely, wait for the other operation, then re-run install.ps1." -ForegroundColor Yellow
                         return (Exit-InstallFailure "The managed Unsloth environment is busy")
                     }
                     $studioRuntimeMutexes += $mutex
@@ -6052,9 +6052,9 @@ exit 0
         $runningVenvProcesses = @($runningVenvProcessesById.Values)
         if ($runningVenvProcesses.Count -gt 0) {
             $runningSummary = ($runningVenvProcesses | ForEach-Object { "$($_.ProcessName) (PID $($_.Id))" }) -join ", "
-            Write-StudioLine "[ERROR] Unsloth Studio is using the managed Python environment." -ForegroundColor Red
+            Write-StudioLine "[ERROR] LABZ is using the managed Python environment." -ForegroundColor Red
             Write-StudioLine "        Active processes: $runningSummary" -ForegroundColor Yellow
-            Write-StudioLine "        Close Unsloth Studio completely, including its tray process, then re-run install.ps1." -ForegroundColor Yellow
+            Write-StudioLine "        Close LABZ completely, including its tray process, then re-run install.ps1." -ForegroundColor Yellow
             return (Exit-InstallFailure "The managed Python environment is still in use")
         }
 
@@ -6062,9 +6062,9 @@ exit 0
             $runningDesktopApps = @(Get-StudioDesktopProcessesForCurrentUser)
             if ($runningDesktopApps.Count -gt 0) {
                 $desktopSummary = ($runningDesktopApps | ForEach-Object { "PID $($_.Id)" }) -join ", "
-                Write-StudioLine "[ERROR] The Unsloth Studio desktop app is still running ($desktopSummary)." -ForegroundColor Red
+                Write-StudioLine "[ERROR] The LABZ desktop app is still running ($desktopSummary)." -ForegroundColor Red
                 Write-StudioLine "        Close the app completely, including its tray process, then re-run install.ps1." -ForegroundColor Yellow
-                return (Exit-InstallFailure "The Unsloth Studio desktop app is still running")
+                return (Exit-InstallFailure "The LABZ desktop app is still running")
             }
         }
 
@@ -7248,7 +7248,7 @@ exit 0
                 Write-StudioLine "       still in place: $ExistingDir" -ForegroundColor Yellow
                 Write-StudioLine "       moved aside:    $candidate" -ForegroundColor Yellow
                 Write-StudioLine "       A running 'unsloth studio' process usually holds a file open here." -ForegroundColor Yellow
-                Write-StudioLine "       Close Unsloth Studio and re-run the installer to reverse the move." -ForegroundColor Yellow
+                Write-StudioLine "       Close LABZ and re-run the installer to reverse the move." -ForegroundColor Yellow
             }
             throw
         }
@@ -7446,7 +7446,7 @@ exit 0
                 Write-StudioLine "[WARN] The previous environment is still split in two." -ForegroundColor Yellow
                 Write-StudioLine "       still in place: $target" -ForegroundColor Yellow
                 Write-StudioLine "       moved aside:    $backup" -ForegroundColor Yellow
-                Write-StudioLine "       Close Unsloth Studio and re-run the installer to finish reversing the move." -ForegroundColor Yellow
+                Write-StudioLine "       Close LABZ and re-run the installer to finish reversing the move." -ForegroundColor Yellow
             }
             return
         }
@@ -7562,7 +7562,7 @@ exit 0
             -not (Test-Path -LiteralPath (Join-Path $StudioHome "bin\unsloth.exe") -PathType Leaf) -and
             -not (Test-UnslothCmdShimFile (Join-Path $StudioHome "bin\unsloth.cmd"))
         ) {
-            Write-StudioLine "[ERROR] $VenvDir already exists but does not look like an Unsloth Studio install." -ForegroundColor Red
+            Write-StudioLine "[ERROR] $VenvDir already exists but does not look like a LABZ install." -ForegroundColor Red
             Write-StudioLine "        Move it aside or choose an empty UNSLOTH_STUDIO_HOME." -ForegroundColor Yellow
             throw "Refusing to delete non-Unsloth venv at $VenvDir"
         }
@@ -7699,7 +7699,7 @@ exit 0
             }
         } catch {
             Write-StudioLine "[ERROR] Could not move the ARM64 environment aside: $($_.Exception.Message)" -ForegroundColor Red
-            Write-StudioLine "        Close Unsloth Studio, including its tray process, then re-run install.ps1." -ForegroundColor Yellow
+            Write-StudioLine "        Close LABZ, including its tray process, then re-run install.ps1." -ForegroundColor Yellow
             return (Exit-InstallFailure "Could not replace the native ARM64 environment at $VenvDir")
         }
         # Left set, the migrated-environment branch below would --no-deps into a fresh venv.
@@ -10987,7 +10987,7 @@ sys.exit(2 if conflict else (0 if installed else 1))
     $IsInteractive = (-not $SkipAutostart) -and [Environment]::UserInteractive -and (-not [Console]::IsInputRedirected)
     if ($IsInteractive) {
         Write-StudioLine ""
-        $reply = Read-Host "  Start Unsloth Studio now? [Y/n]"
+        $reply = Read-Host "  Start LABZ now? [Y/n]"
         if ([string]::IsNullOrWhiteSpace($reply) -or $reply -match '^[Yy]') {
             # Keep both locks until the process exists: a second installer can
             # then take them, but its scan sees Unsloth before it mutates.

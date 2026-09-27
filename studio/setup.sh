@@ -976,7 +976,7 @@ print_installed_llama_prebuilt_release() {
 
 # ── Banner ──
 echo ""
-printf "  ${C_TITLE}%s${C_RST}\n" "🦥 Unsloth Studio Setup"
+printf "  ${C_TITLE}%s${C_RST}\n" "🦥 LABZ Setup"
 printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
 verbose_substep "verbose diagnostics enabled"
 _LLAMA_ONLY="${UNSLOTH_STUDIO_LLAMA_ONLY:-0}"
@@ -1537,7 +1537,7 @@ _path_access_denied() {
         substep "Unsloth cannot confirm this folder is its own install while it is unreadable, so it will not tell you to remove it" "$C_WARN"
         substep "Restore access, or move the folder aside, then re-run setup:" "$C_WARN"
     else
-        substep "This folder lives outside the app, so reinstalling Unsloth Studio reuses it and fails the same way" "$C_WARN"
+        substep "This folder lives outside the app, so reinstalling LABZ reuses it and fails the same way" "$C_WARN"
         substep "Simplest fix: delete or rename $_pad_dir, then re-run setup (it is a managed cache and gets reinstalled)" "$C_WARN"
         substep "If deleting is denied too, it belongs to another user; restore access with:" "$C_WARN"
     fi
@@ -5278,9 +5278,9 @@ elif [ "$IS_COLAB" = true ]; then
     echo ""
     printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
     if [ "$_LLAMA_CPP_DEGRADED" = true ]; then
-        printf "  ${C_WARN}%s${C_RST}\n" "Unsloth Studio Setup Complete (limited: llama.cpp unavailable)"
+        printf "  ${C_WARN}%s${C_RST}\n" "LABZ Setup Complete (limited: llama.cpp unavailable)"
     else
-        printf "  ${C_TITLE}%s${C_RST}\n" "Unsloth Studio Setup Complete"
+        printf "  ${C_TITLE}%s${C_RST}\n" "LABZ Setup Complete"
     fi
     printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
     _print_llama_gpu_notes
@@ -5289,9 +5289,9 @@ elif [ "$IS_COLAB" = true ]; then
 else
     printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
     if [ "$_LLAMA_CPP_DEGRADED" = true ]; then
-        printf "  ${C_WARN}%s${C_RST}\n" "Unsloth Studio Installed (limited: llama.cpp unavailable)"
+        printf "  ${C_WARN}%s${C_RST}\n" "LABZ Installed (limited: llama.cpp unavailable)"
     else
-        printf "  ${C_TITLE}%s${C_RST}\n" "Unsloth Studio Installed"
+        printf "  ${C_TITLE}%s${C_RST}\n" "LABZ Installed"
     fi
     printf "  ${C_DIM}%s${C_RST}\n" "$RULE"
     _print_llama_gpu_notes
