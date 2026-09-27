@@ -237,7 +237,7 @@ Environment:
         }
     }
 
-    # Reclaim ONLY what install.ps1 puts under "<LocalAppData>\Unsloth Studio\temp": directories
+    # Reclaim ONLY what install.ps1 puts under "<LocalAppData>\Labz\temp": directories
     # named ust-<pid>-<hex>, then the temp dir and its parent if left empty. Deliberately narrow:
     # this runs against every LocalAppData spelling, including one that can name a different user's
     # profile, so it must never recursively delete anything it did not create. Nothing here follows
@@ -269,7 +269,7 @@ Environment:
             # would leave the installer's own temp tree behind on every host that uses folder
             # redirection. Any OTHER spelling may be another profile entirely, and a junction
             # anywhere along it -- LocalAppData, Users, the drive root -- is enough to redirect an
-            # ordinary-looking "Unsloth Studio\temp", so there every ancestor has to be ordinary.
+            # ordinary-looking "Labz\temp", so there every ancestor has to be ordinary.
             $ancestors = @()
             if ($isPrimary) {
                 $ancestors = @($temp, [System.IO.Path]::GetDirectoryName($temp))
@@ -418,7 +418,7 @@ Environment:
         $wslShortcuts = @()
         foreach ($d in $ShortcutDirs) {
             if ($d -and (Test-Path -LiteralPath $d)) {
-                $wslShortcuts += Get-ChildItem -LiteralPath $d -Filter "Unsloth Studio (WSL*.lnk" -ErrorAction SilentlyContinue
+                $wslShortcuts += Get-ChildItem -LiteralPath $d -Filter "LABZ (WSL*.lnk" -ErrorAction SilentlyContinue
             }
         }
         $keep = @()
@@ -639,7 +639,7 @@ Environment:
                 # environment. Read directly rather than through _CustomStudioRoots, which calls
                 # back into this function.
                 if ($env:LOCALAPPDATA) {
-                    $confRoot = _RootFromConf (Join-Path $env:LOCALAPPDATA "Unsloth Studio\studio.conf")
+                    $confRoot = _RootFromConf (Join-Path $env:LOCALAPPDATA "Labz\studio.conf")
                     if ($confRoot) { $noteRoots += $confRoot }
                 }
                 if ($env:USERPROFILE) {
@@ -765,7 +765,7 @@ Environment:
         }
         # Default-mode conf at LOCALAPPDATA\LABZ.
         if ($env:LOCALAPPDATA) {
-            $confRoot = _RootFromConf (Join-Path $env:LOCALAPPDATA "Unsloth Studio\studio.conf")
+            $confRoot = _RootFromConf (Join-Path $env:LOCALAPPDATA "Labz\studio.conf")
             if ($confRoot) { & $emit $confRoot }
         }
     }
@@ -939,10 +939,10 @@ Environment:
     # Default install root + default data dir.
     $defaultStudioHome = if ($env:USERPROFILE) { Join-Path $env:USERPROFILE ".unsloth\studio" } else { $null }
     $defaultDataRoot = _AppDataRoot $env:LOCALAPPDATA 'LocalApplicationData'
-    $defaultDataDir = if ($defaultDataRoot) { Join-Path $defaultDataRoot "Unsloth Studio" } else { $null }
+    $defaultDataDir = if ($defaultDataRoot) { Join-Path $defaultDataRoot "Labz" } else { $null }
     # The SECOND LocalAppData spelling gets the private temp tree only, never the data directory.
     # install.ps1 falls through from a set-but-unusable $env:LOCALAPPDATA to the known folder when
-    # it places "Unsloth Studio\temp", so that tree can outlive an uninstall; but the two spellings
+    # it places "Labz\temp", so that tree can outlive an uninstall; but the two spellings
     # differ mainly when they name a DIFFERENT USER's profile, and the data-dir delete is
     # recursive, sentinel-free and deny-list-free.
     $knownLocalAppData = $null
@@ -952,7 +952,7 @@ Environment:
     $privateTempDirs = @()
     foreach ($root in @($env:LOCALAPPDATA, $knownLocalAppData)) {
         if ([string]::IsNullOrWhiteSpace($root)) { continue }
-        $candidate = Join-Path $root "Unsloth Studio\temp"
+        $candidate = Join-Path $root "Labz\temp"
         if ($privateTempDirs -notcontains $candidate) { $privateTempDirs += $candidate }
     }
     # Default-mode ~/.unsloth holds a SHARED llama.cpp build + .cache that are siblings of studio,
@@ -1268,10 +1268,10 @@ Environment:
     _Step "Removing desktop and Start Menu shortcuts..."
     try {
         $desktop = [Environment]::GetFolderPath("Desktop")
-        if ($desktop) { _RemovePath (Join-Path $desktop "Unsloth Studio.lnk") }
+        if ($desktop) { _RemovePath (Join-Path $desktop "LABZ.lnk") }
     } catch { }
     if ($env:APPDATA) {
-        _RemovePath (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Unsloth Studio.lnk")
+        _RemovePath (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\LABZ.lnk")
     }
     # Invalidate the Win11 Start Menu tile cache so the removed shortcut's tile disappears instead
     # of lingering stale (mirrors install.ps1). Preserves start2.bin, the pin layout.

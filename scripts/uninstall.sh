@@ -928,10 +928,10 @@ _unsloth_uninstall_main() {
     case "$_os" in
         Darwin)
             echo "Removing macOS .app bundle and Launch Services entry..."
-            _remove_path "$HOME/Applications/Unsloth Studio.app"
+            _remove_path "$HOME/Applications/LABZ.app"
             _lsr="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
             if [ -x "$_lsr" ]; then
-                "$_lsr" -u "$HOME/Applications/Unsloth Studio.app" 2>/dev/null || true
+                "$_lsr" -u "$HOME/Applications/LABZ.app" 2>/dev/null || true
             fi
             # WKWebView data, keyed by bundle id; created at first launch, not by install.sh. The
             # packaged desktop app shares this id and is the only thing that writes the data, so
@@ -961,10 +961,10 @@ _unsloth_uninstall_main() {
         Linux)
             if [ "$_is_wsl" = "1" ]; then
                 echo "Removing WSL Windows-side shortcuts..."
-                # install.sh creates per-distro 'Unsloth Studio (WSL - <distro>).lnk' on the
+                # install.sh creates per-distro 'LABZ (WSL - <distro>).lnk' on the
                 # Windows Desktop + Start Menu. Scope removal to THIS distro so a multi-distro
                 # install keeps the other distros' launchers; the TARGET=wsl.exe check spares a
-                # native install's "Unsloth Studio.lnk". Test powershell.exe can EXECUTE:
+                # native install's "LABZ.lnk". Test powershell.exe can EXECUTE:
                 # `command -v` succeeds even with interop OFF and the .exe then fails to run.
                 _wsl_distro="${WSL_DISTRO_NAME:-}"
                 _ps_ran=0
@@ -990,7 +990,7 @@ _unsloth_uninstall_main() {
                                     # name for this distro or its -d "<distro>" argument
                                     # so launchers for other distros are not removed.
                                     if ($distro) {
-                                        $nameMatch = ($_.Name -eq "Unsloth Studio (WSL - $distro).lnk");
+                                        $nameMatch = ($_.Name -eq "LABZ (WSL - $distro).lnk");
                                         $argMatch  = ($sc.Arguments -match ("-d\s+`"?" + [regex]::Escape($distro) + "`"?"));
                                         if (-not ($nameMatch -or $argMatch)) { return }
                                     }
@@ -1008,7 +1008,7 @@ _unsloth_uninstall_main() {
                         # Guard LOCALAPPDATA: empty on a service/SYSTEM account makes
                         # Join-Path throw, aborting the icon cleanup (mirror uninstall.ps1).
                         if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
-                            $iconDir = Join-Path $env:LOCALAPPDATA "Unsloth Studio";
+                            $iconDir = Join-Path $env:LOCALAPPDATA "Labz";
                             $ico = Join-Path $iconDir "labz.ico";
                             if ((-not $iconInUse) -and (Test-Path -LiteralPath $ico)) { Remove-Item -LiteralPath $ico -Force -ErrorAction SilentlyContinue }
                             if ((Test-Path -LiteralPath $iconDir) -and -not (Get-ChildItem -LiteralPath $iconDir -Force -ErrorAction SilentlyContinue)) { Remove-Item -LiteralPath $iconDir -Recurse -Force -ErrorAction SilentlyContinue }
@@ -1038,7 +1038,7 @@ _unsloth_uninstall_main() {
                     [ -d "$_icodir" ] && rmdir "$_icodir" 2>/dev/null || true
                 }
                 # Fallback when interop is off: remove WSL .lnk files via drvfs. The
-                # "Unsloth Studio (WSL..." name never matches a native "Unsloth Studio.lnk".
+                # "LABZ (WSL..." name never matches a native "LABZ.lnk".
                 if [ "$_ps_ran" = "0" ]; then
                     for _drive in /mnt/c /mnt/d /mnt/e; do
                         [ -d "$_drive/Users" ] || continue
@@ -1052,11 +1052,11 @@ _unsloth_uninstall_main() {
                                 [ -d "$_scdir" ] || continue
                                 if [ -n "$_wsl_distro" ]; then
                                     # Exact per-distro name (no glob) so other distros survive.
-                                    _lnk="$_scdir/Unsloth Studio (WSL - ${_wsl_distro}).lnk"
+                                    _lnk="$_scdir/LABZ (WSL - ${_wsl_distro}).lnk"
                                     [ -e "$_lnk" ] && rm -f "$_lnk" 2>/dev/null && echo "  removed: $_lnk" || true
                                 else
                                     # Distro unknown: fall back to the broad WSL prefix.
-                                    for _lnk in "$_scdir"/"Unsloth Studio (WSL"*.lnk; do
+                                    for _lnk in "$_scdir"/"LABZ (WSL"*.lnk; do
                                         [ -e "$_lnk" ] && rm -f "$_lnk" 2>/dev/null && echo "  removed: $_lnk" || true
                                     done
                                 fi

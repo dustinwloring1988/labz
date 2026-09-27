@@ -1834,12 +1834,12 @@ function Install-UnslothStudio {
         # that is removed only when empty.
         $roots = @()
         if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
-            $roots += (Join-Path $env:LOCALAPPDATA "Unsloth Studio\temp")
+            $roots += (Join-Path $env:LOCALAPPDATA "Labz\temp")
         }
         try {
             $localAppData = [Environment]::GetFolderPath("LocalApplicationData")
             if (-not [string]::IsNullOrWhiteSpace($localAppData)) {
-                $roots += (Join-Path $localAppData "Unsloth Studio\temp")
+                $roots += (Join-Path $localAppData "Labz\temp")
             }
         } catch {}
         if (-not [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
@@ -1855,7 +1855,7 @@ function Install-UnslothStudio {
             $leaf = "ust-" + $PID + "-" + [guid]::NewGuid().ToString('N').Substring(0, 8)
             $candidate = Join-Path $root $leaf
             # Which of these did not exist BEFORE the probe touched anything. Only
-            # those may be unwound below: a pre-provisioned "Unsloth Studio\temp"
+            # those may be unwound below: a pre-provisioned "Labz\temp"
             # with custom ACLs, or an empty junction pointing somewhere else, is
             # configuration this installer did not create and must not remove
             # merely for being empty and correctly named.
@@ -1871,13 +1871,13 @@ function Install-UnslothStudio {
                 return $candidate
             }
             # The probe creates the candidate before it tests it, and -Force builds
-            # the whole chain, so a root that fails leaves "Unsloth Studio\temp\ust-x"
+            # the whole chain, so a root that fails leaves "Labz\temp\ust-x"
             # behind; on a host where every root fails that is a data directory tree
             # conjured by an install that then gave up. Walk back up, but only through
             # the directories this path is made of and only while each one is EMPTY,
             # so a tree that already held something is never touched and neither is
             # ~\.unsloth itself, which is shared and is not ours to remove.
-            $ours = @("temp", "Unsloth Studio", ".cache")
+            $ours = @("temp", "Labz", ".cache")
             $unwind = $candidate
             for ($depth = 0; $depth -lt 4; $depth++) {
                 try {
@@ -2969,7 +2969,7 @@ exit 1
 
     # LOCALAPPDATA may be unset in service / CI contexts; guard Join-Path under Stop.
     $defaultDataDir = if ($env:LOCALAPPDATA -and -not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
-        Join-Path $env:LOCALAPPDATA "Unsloth Studio"
+        Join-Path $env:LOCALAPPDATA "Labz"
     } else { $null }
 
     # Cleared per invocation: script scope outlives a run, and under `irm | iex` one session can
@@ -4736,7 +4736,7 @@ exit 1
             $launcherPs1 = Join-Path $appDir "launch-studio.ps1"
             $desktopDir = [Environment]::GetFolderPath("Desktop")
             $desktopLink = if ($desktopDir -and $desktopDir.Trim()) {
-                Join-Path $desktopDir "Unsloth Studio.lnk"
+                Join-Path $desktopDir "LABZ.lnk"
             } else {
                 $null
             }
@@ -4746,7 +4746,7 @@ exit 1
                 $null
             }
             $startMenuLink = if ($startMenuDir -and $startMenuDir.Trim()) {
-                Join-Path $startMenuDir "Unsloth Studio.lnk"
+                Join-Path $startMenuDir "LABZ.lnk"
             } else {
                 $null
             }

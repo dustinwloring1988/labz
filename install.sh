@@ -2085,7 +2085,7 @@ LAUNCHER_EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Unsloth Studio
+Name=LABZ
 Comment=Launch LABZ
 Exec="$_css_exec_escaped"
 Icon=$_css_icon_escaped
@@ -2111,7 +2111,7 @@ DESKTOP_EOF
 
     elif [ "$_css_os" = "macos" ]; then
         # ── macOS: .app bundle ──
-        _css_app="$HOME/Applications/Unsloth Studio.app"
+        _css_app="$HOME/Applications/LABZ.app"
         _css_contents="$_css_app/Contents"
         _css_macos_dir="$_css_contents/MacOS"
         _css_res_dir="$_css_contents/Resources"
@@ -2127,8 +2127,8 @@ DESKTOP_EOF
             return 1
         fi
         # Older installs linked the Desktop shortcut with `ln -sf`, which followed the existing link and planted a self-referential copy one level inside the bundle.
-        if [ -L "$_css_app/Unsloth Studio.app" ]; then
-            rm -f "$_css_app/Unsloth Studio.app" 2>/dev/null || true
+        if [ -L "$_css_app/LABZ.app" ]; then
+            rm -f "$_css_app/LABZ.app" 2>/dev/null || true
         fi
         mkdir -p "$_css_macos_dir" "$_css_res_dir"
 
@@ -2141,9 +2141,9 @@ DESKTOP_EOF
     <key>CFBundleIdentifier</key>
     <string>ai.unsloth.studio</string>
     <key>CFBundleName</key>
-    <string>Unsloth Studio</string>
+    <string>LABZ</string>
     <key>CFBundleDisplayName</key>
-    <string>Unsloth Studio</string>
+    <string>LABZ</string>
     <key>CFBundleExecutable</key>
     <string>launch-studio</string>
     <key>CFBundleIconFile</key>
@@ -2206,7 +2206,7 @@ STUB_EOF
 
         # Symlink on Desktop. -n is required: without it a re-run follows the existing link into the bundle and creates the new one inside it, as the CLI shim guards.
         if [ -d "$HOME/Desktop" ]; then
-            ln -sfn "$_css_app" "$HOME/Desktop/Unsloth Studio" 2>/dev/null || true
+            ln -sfn "$_css_app" "$HOME/Desktop/LABZ" 2>/dev/null || true
         fi
         _css_created=1
 
@@ -2237,11 +2237,11 @@ STUB_EOF
         # Escape single quotes for PowerShell single-quoted string embedding
         _css_sc_args_ps=$(printf '%s' "$_css_sc_args" | sed "s/'/''/g")
 
-        # Per-distro name so the WSL launcher never clobbers a native "Unsloth Studio.lnk".
+        # Per-distro name so the WSL launcher never clobbers a native "LABZ.lnk".
         if [ -n "$_css_distro" ]; then
-            _css_lnk_name="Unsloth Studio (WSL - ${_css_distro}).lnk"
+            _css_lnk_name="LABZ (WSL - ${_css_distro}).lnk"
         else
-            _css_lnk_name="Unsloth Studio (WSL).lnk"
+            _css_lnk_name="LABZ (WSL).lnk"
         fi
         _css_lnk_name_ps=$(printf '%s' "$_css_lnk_name" | sed "s/'/''/g")
 
@@ -2356,7 +2356,7 @@ STUB_EOF
 if (-not \$targetExe) { exit 1 }
 # Best-effort: fetch the Unsloth icon to a stable Windows path (shared with a
 # native install if one exists) so the WSL shortcut shows the proper icon.
-\$iconDir = Join-Path \$env:LOCALAPPDATA 'Unsloth Studio'
+\$iconDir = Join-Path \$env:LOCALAPPDATA 'Labz'
 \$iconPath = Join-Path \$iconDir 'labz.ico'
 \$preIconHash = \$null
 if (Test-Path -LiteralPath \$iconPath) {
@@ -2506,7 +2506,7 @@ WSLPS1_EOF
         fi
         if [ "$_css_created" -ne 1 ]; then
             substep "Couldn't create the Windows shortcut (WSL interop may be disabled)." "$C_WARN"
-            substep "  Launch Unsloth from Windows:  wsl -d \"$_css_distro\" -- bash -lc 'unsloth studio'" "$C_WARN"
+            substep "  Launch LABZ from Windows:  wsl -d \"$_css_distro\" -- bash -lc 'unsloth studio'" "$C_WARN"
             substep "  (re-enable shortcuts: turn WSL interop back on, e.g. run 'wsl --shutdown' then reopen WSL.)" "$C_WARN"
         fi
     fi
