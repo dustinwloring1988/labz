@@ -47,7 +47,7 @@
 
 ARG BASE_IMAGE=unsloth/unsloth-rocm:latest
 
-# Builds the "Unsloth Dark" (Monokai) theme + Colab-style cell-nav keymap, as
+# Builds the "LABZ Dark" (Monokai) theme + Colab-style cell-nav keymap, as
 # Dockerfile.studio does. Node lives only in this throwaway stage; the final image
 # copies just the prebuilt labextension (runtime stays Node-free). The ROCm base has
 # no jupyterlab, so jlpm is installed into this stage's venv, at the final stage's pin.
@@ -61,7 +61,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends nodejs \
  && rm -rf /var/lib/apt/lists/*
 RUN /opt/unsloth-venv/bin/uv pip install --python /opt/unsloth-venv/bin/python "jupyterlab==4.6.0"
-COPY jupyter/unsloth_labext /opt/labext-src
+COPY jupyter/labext /opt/labext-src
 RUN cd /opt/labext-src \
  && /opt/unsloth-venv/bin/jlpm install \
  && /opt/unsloth-venv/bin/jlpm build:prod
@@ -187,7 +187,7 @@ COPY unsloth_jupyter_tunnel.sh /usr/local/bin/unsloth-jupyter-tunnel
 # overrides.json is the settings override; theme + keymap + logo ship as the
 # prebuilt labextension from labext-builder above.
 COPY jupyter/overrides.json /opt/unsloth-venv/share/jupyter/lab/settings/overrides.json
-COPY --from=labext-builder /opt/labext-src/unsloth-jupyterlab/labextension /opt/unsloth-venv/share/jupyter/labextensions/unsloth-jupyterlab
+COPY --from=labext-builder /opt/labext-src/labz-jupyterlab/labextension /opt/unsloth-venv/share/jupyter/labextensions/labz-jupyterlab
 # Unsloth branding (applied to jupyter_server's site-packages): replace favicon +
 # logo, brand login.html, disable+lock the stock top-left logo. Only the
 # sloth-sticker install is fail-soft (`|| echo`); the copies above stay fatal.
@@ -210,21 +210,21 @@ RUN JS="$(/opt/unsloth-venv/bin/python -c 'import os, jupyter_server; print(os.p
  && /opt/unsloth-venv/bin/jupyter labextension lock @jupyterlab/application-extension:logo \
  && /opt/unsloth-venv/bin/jupyter labextension disable @jupyterlab/apputils-extension:splash \
  && /opt/unsloth-venv/bin/jupyter labextension lock @jupyterlab/apputils-extension:splash \
- && /opt/unsloth-venv/bin/jupyter labextension lock unsloth-jupyterlab
+ && /opt/unsloth-venv/bin/jupyter labextension lock labz-jupyterlab
 # Branding integrity guard: the attribution checker (a jupyter_server extension),
 # the AGPLv3 license text, and its enabling config, into the base venv. --verify
 # FAILS the build if any attribution / license asset is missing or altered.
-COPY jupyter/unsloth_branding.py /tmp/unsloth-branding-guard/unsloth_branding.py
-COPY jupyter/jupyter_server_config.d/unsloth_branding_guard.json /tmp/unsloth-branding-guard/unsloth_branding_guard.json
+COPY jupyter/labz_branding.py /tmp/labz-branding-guard/labz_branding.py
+COPY jupyter/jupyter_server_config.d/labz_branding_guard.json /tmp/labz-branding-guard/labz_branding_guard.json
 RUN SP="$(/opt/unsloth-venv/bin/python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')" \
- && cp /tmp/unsloth-branding-guard/unsloth_branding.py "${SP}/unsloth_branding.py" \
+ && cp /tmp/labz-branding-guard/labz_branding.py "${SP}/labz_branding.py" \
  && mkdir -p /opt/unsloth-venv/etc/jupyter/jupyter_server_config.d \
- && cp /tmp/unsloth-branding-guard/unsloth_branding_guard.json \
-       /opt/unsloth-venv/etc/jupyter/jupyter_server_config.d/unsloth_branding_guard.json \
+ && cp /tmp/labz-branding-guard/labz_branding_guard.json \
+       /opt/unsloth-venv/etc/jupyter/jupyter_server_config.d/labz_branding_guard.json \
  && cp "${UNSLOTH_STUDIO_HOME}/src/studio/LICENSE.AGPL-3.0" \
        /opt/unsloth-venv/share/jupyter/UNSLOTH_LICENSE.AGPL-3.0 \
- && rm -rf /tmp/unsloth-branding-guard \
- && /opt/unsloth-venv/bin/python -m unsloth_branding --verify
+ && rm -rf /tmp/labz-branding-guard \
+ && /opt/unsloth-venv/bin/python -m labz_branding --verify
 
 # The notebook tooling of the CUDA core image (docker/Dockerfile), so the notebooks
 # run UNCHANGED here too (see unsloth_nb_compat.py):

@@ -1,10 +1,10 @@
 {
   "@jupyterlab/apputils-extension:themes": {
-    "theme": "Unsloth Dark",
+    "theme": "LABZ Dark",
     "theme-scrollbars": true,
     "adaptive-theme": true,
     "preferred-light-theme": "JupyterLab Light",
-    "preferred-dark-theme": "Unsloth Dark"
+    "preferred-dark-theme": "LABZ Dark"
   },
   "@jupyterlab/notebook-extension:tracker": {
     "windowingMode": "none",

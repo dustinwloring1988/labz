@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 import {
   ILabShell,
@@ -30,7 +30,7 @@ function injectStyle(): void {
 }
 
 const uiChromePlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:ui-chrome',
+  id: 'labz-jupyterlab:ui-chrome',
   description: 'Hide the right activity bar by default (Colab-like chrome).',
   autoStart: true,
   requires: [ILabShell],

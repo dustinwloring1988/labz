@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 import {
   ILabShell,
@@ -8,7 +8,7 @@ import {
 } from '@jupyterlab/application';
 import { IThemeManager } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
-import { UNSLOTH_LOGO_DATA_URI } from './logo';
+import { LABZ_LOGO_DATA_URI } from './logo';
 import aboutPlugin from './about';
 import cellNavPlugin from './cellNav';
 import colabTitlePlugin from './colabTitle';
@@ -18,14 +18,14 @@ import uiChromePlugin from './uiChrome';
 
 /** A NAMED theme, so Settings > Theme and the adaptive light/dark switch see it. */
 const themePlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:theme',
-  description: 'Unsloth Dark (Monokai) theme.',
+  id: 'labz-jupyterlab:theme',
+  description: 'LABZ Dark (Monokai) theme.',
   autoStart: true,
   requires: [IThemeManager],
   activate: (app: JupyterFrontEnd, manager: IThemeManager): void => {
-    const style = 'unsloth-jupyterlab/index.css';
+    const style = 'labz-jupyterlab/index.css';
     manager.register({
-      name: 'Unsloth Dark',
+      name: 'LABZ Dark',
       isLight: false,
       themeScrollbars: true,
       load: () => manager.loadCSS(style),
@@ -39,15 +39,15 @@ const themePlugin: JupyterFrontEndPlugin<void> = {
  * widget. An <img> with inline styles, not a LabIcon, so it shows in any theme.
  */
 const logoPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:logo',
-  description: 'Replace the top-left Jupyter logo with the Unsloth logo.',
+  id: 'labz-jupyterlab:logo',
+  description: 'Replace the top-left Jupyter logo with the LABZ logo.',
   autoStart: true,
   requires: [ILabShell],
   activate: (app: JupyterFrontEnd, shell: ILabShell): void => {
     const logo = new Widget();
     const img = document.createElement('img');
-    img.src = UNSLOTH_LOGO_DATA_URI;
-    img.alt = 'Unsloth';
+    img.src = LABZ_LOGO_DATA_URI;
+    img.alt = 'LABZ';
     img.style.height = '24px';
     img.style.width = 'auto';
     img.style.margin = '1px 6px 1px 8px';

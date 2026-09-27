@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 import {
   JupyterFrontEnd,
@@ -14,7 +14,7 @@ import { INotebookTracker } from '@jupyterlab/notebook';
  * mid-output, and no setting changes that.
  */
 const cellNavPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:cell-nav',
+  id: 'labz-jupyterlab:cell-nav',
   description:
     'ArrowDown/ArrowUp move to the TOP of the next/previous cell (command + edit mode).',
   autoStart: true,

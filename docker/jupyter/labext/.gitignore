@@ -1,7 +1,7 @@
 node_modules/
 lib/
 *.tsbuildinfo
-unsloth-jupyterlab/
+labz-jupyterlab/
 .yarn/
 .pnp.*
 yarn.lock

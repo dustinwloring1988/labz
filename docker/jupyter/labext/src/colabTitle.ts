@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 import {
   JupyterFrontEnd,
@@ -121,7 +121,7 @@ function applyTitle(cell: Cell): void {
 }
 
 const colabTitlePlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:colab-title',
+  id: 'labz-jupyterlab:colab-title',
   description: 'Render Colab #@title code cells as collapsed, titled forms.',
   autoStart: true,
   requires: [INotebookTracker],

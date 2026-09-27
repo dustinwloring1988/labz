@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
-"""Install the Unsloth Studio sloth stickers for the JupyterLab login screen.
+"""Install the LABZ Studio sloth stickers for the JupyterLab login screen.
 
 Copies the curated subset of `studio/frontend/public/Sloth emojis/` into
 jupyter_server's static dir as `sloth/01.png .. sloth/20.png`, so login.html can
@@ -12,7 +12,7 @@ Usage:
     install_sloth_stickers.py --src "<Sloth emojis dir>" --dest "<static>/sloth"
 
 Fail-soft: a missing source file is skipped (login.html's onerror falls back to the
-Unsloth logo) and the script still exits 0 if at least one sticker was installed.
+LABZ logo) and the script still exits 0 if at least one sticker was installed.
 """
 
 import argparse
@@ -47,7 +47,7 @@ CURATED = [
 
 def main() -> int:
     parser = argparse.ArgumentParser(description = __doc__)
-    parser.add_argument("--src", required = True, help = "Unsloth 'Sloth emojis' dir")
+    parser.add_argument("--src", required = True, help = "LABZ 'Sloth emojis' dir")
     parser.add_argument("--dest", required = True, help = "output dir (static/sloth)")
     args = parser.parse_args()
 

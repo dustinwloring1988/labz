@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
-"""Tests for the Unsloth Docker Studio branding / AGPLv3 integrity guard.
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
+"""Tests for the LABZ Docker Studio branding / AGPLv3 integrity guard.
 
 verify_branding() runs against a staged temp tree mirroring the installed image
 layout, so no container or built labextension is required.
@@ -16,7 +16,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(REPO, "docker", "jupyter"))
 
-import unsloth_branding as ub  # noqa: E402
+import labz_branding as ub  # noqa: E402
 
 
 def _stage(tmp_path):
@@ -55,10 +55,10 @@ def _stage(tmp_path):
 
     (js_dir / "templates").mkdir(parents = True)
     (js_dir / "templates" / "login.html").write_text(
-        "Built by the Unsloth team. Apache 2.0, AGPLv3 License Link\n"
-        "Copyright 2026-Present the Unsloth team.\n"
-        "https://github.com/unslothai/unsloth#license\n"
-        "https://github.com/unslothai/unsloth\n",
+        "Built by the LABZ team. Apache 2.0, AGPLv3 License Link\n"
+        "Copyright 2026-Present the LABZ team.\n"
+        "https://github.com/dustinwloring1988/labz#license\n"
+        "https://github.com/dustinwloring1988/labz\n",
         encoding = "utf-8",
     )
 
@@ -114,7 +114,7 @@ def _drop_theme(paths):
 
 def _rebrand_labext(paths):
     with open(paths["labext_pkg"], "w", encoding = "utf-8") as f:
-        f.write(json.dumps({"name": "totally-not-unsloth"}))
+        f.write(json.dumps({"name": "totally-not-labz"}))
 
 
 def _strip_bundle_phrase(paths):
@@ -143,17 +143,17 @@ def _empty_favicon(paths):
     open(paths["favicon"], "w").close()
 
 
-def _disable_unsloth_ext(paths):
+def _disable_labz_ext(paths):
     with open(paths["page_configs"][0], "w", encoding = "utf-8") as f:
         json.dump({"disabledExtensions": {ub.LABEXT_NAME: True}}, f)
 
 
-def _disable_unsloth_plugin(paths):
+def _disable_labz_plugin(paths):
     with open(paths["page_configs"][0], "w", encoding = "utf-8") as f:
         json.dump({"disabledExtensions": {ub.ABOUT_PLUGIN_ID: True}}, f)
 
 
-def _disable_unsloth_ext_list_form(paths):
+def _disable_labz_ext_list_form(paths):
     with open(paths["page_configs"][0], "w", encoding = "utf-8") as f:
         json.dump({"disabledExtensions": [ub.SPLASH_PLUGIN_ID]}, f)
 
@@ -172,9 +172,9 @@ def _disable_unsloth_ext_list_form(paths):
         _strip_bundle_logo,
         _remove_logo_png,
         _empty_favicon,
-        _disable_unsloth_ext,
-        _disable_unsloth_plugin,
-        _disable_unsloth_ext_list_form,
+        _disable_labz_ext,
+        _disable_labz_plugin,
+        _disable_labz_ext_list_form,
     ],
 )
 def test_negative_each_marker_is_enforced(tmp_path, mutate):
@@ -205,10 +205,10 @@ def test_attribution_sources_have_no_encoded_obfuscation():
     """Plain readable strings only, so antivirus scanners have nothing to trip on."""
     src_dir = os.path.join(REPO, "docker", "jupyter")
     files = [
-        os.path.join(src_dir, "unsloth_branding.py"),
-        os.path.join(src_dir, "unsloth_labext", "src", "branding.ts"),
-        os.path.join(src_dir, "unsloth_labext", "src", "about.ts"),
-        os.path.join(src_dir, "unsloth_labext", "src", "splash.ts"),
+        os.path.join(src_dir, "labz_branding.py"),
+        os.path.join(src_dir, "labext", "src", "branding.ts"),
+        os.path.join(src_dir, "labext", "src", "about.ts"),
+        os.path.join(src_dir, "labext", "src", "splash.ts"),
     ]
     forbidden = [
         "b64decode",
@@ -232,9 +232,9 @@ def test_canonical_phrase_is_plain_text_in_definition_files():
     whole in the bundle for the guard to grep."""
     src_dir = os.path.join(REPO, "docker", "jupyter")
     ts = open(
-        os.path.join(src_dir, "unsloth_labext", "src", "branding.ts"), encoding = "utf-8"
+        os.path.join(src_dir, "labext", "src", "branding.ts"), encoding = "utf-8"
     ).read()
     assert ub.PHRASE in ts, "branding.ts must hold the full PHRASE as one literal"
-    py = open(os.path.join(src_dir, "unsloth_branding.py"), encoding = "utf-8").read()
+    py = open(os.path.join(src_dir, "labz_branding.py"), encoding = "utf-8").read()
     for marker in (ub.SHORT_LABEL, ub.COPYRIGHT, ub.SOURCE_URL, ub.AGPL_URL, ub.THEME_NAME):
-        assert marker in py, "unsloth_branding.py missing plain marker: " + marker
+        assert marker in py, "labz_branding.py missing plain marker: " + marker

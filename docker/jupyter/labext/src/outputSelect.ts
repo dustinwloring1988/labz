@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 
 import {
   JupyterFrontEnd,
@@ -49,7 +49,7 @@ function inEditableContext(): boolean {
 }
 
 const outputSelectPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:output-select-all',
+  id: 'labz-jupyterlab:output-select-all',
   description:
     'Ctrl/Cmd+A inside a cell output selects only that output, not every cell.',
   autoStart: true,

@@ -1,7 +1,7 @@
 {
-  "name": "unsloth-jupyterlab",
+  "name": "labz-jupyterlab",
   "version": "0.1.0",
-  "description": "Unsloth Dark (Monokai) theme + Colab-style cell navigation for JupyterLab.",
+  "description": "LABZ Dark (Monokai) theme + Colab-style cell navigation for JupyterLab.",
   "keywords": [
     "jupyter",
     "jupyterlab",
@@ -9,7 +9,7 @@
     "theme"
   ],
   "license": "AGPL-3.0-only",
-  "author": "Unsloth AI",
+  "author": "LABZ",
   "private": true,
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -26,7 +26,7 @@
     "build:lib:prod": "tsc",
     "build:labextension": "jupyter-builder build .",
     "build:labextension:dev": "jupyter-builder build --development True .",
-    "clean": "rimraf lib tsconfig.tsbuildinfo unsloth-jupyterlab/labextension"
+    "clean": "rimraf lib tsconfig.tsbuildinfo labz-jupyterlab/labextension"
   },
   "dependencies": {
     "@codemirror/state": "^6.0.0",
@@ -49,6 +49,6 @@
   "jupyterlab": {
     "extension": true,
     "themePath": "style/index.css",
-    "outputDir": "unsloth-jupyterlab/labextension"
+    "outputDir": "labz-jupyterlab/labextension"
   }
 }

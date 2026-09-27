@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-CELL_NAV = REPO_ROOT / "docker" / "jupyter" / "unsloth_labext" / "src" / "cellNav.ts"
+CELL_NAV = REPO_ROOT / "docker" / "jupyter" / "labext" / "src" / "cellNav.ts"
 
 
 @pytest.fixture(scope = "module")

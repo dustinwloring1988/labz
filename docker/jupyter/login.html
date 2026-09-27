@@ -1,12 +1,12 @@
-{# Unsloth-branded JupyterLab login page. Overwrites jupyter_server's default
+{# LABZ-branded JupyterLab login page. Overwrites jupyter_server's default
    login.html (same overwrite pattern as the favicon/logo). Extends the stock
-   page.html so favicon (already the Unsloth icon) and form plumbing stay intact;
+   page.html so favicon (already the LABZ icon) and form plumbing stay intact;
    we override the title, hide the stock header, and render a dark centered card
-   matching the "Unsloth Dark" (Monokai) theme. The card logo reads
-   static/logo/logo.png, which the image build replaces with the Unsloth logo. #}
+   matching the "LABZ Dark" (Monokai) theme. The card logo reads
+   static/logo/logo.png, which the image build replaces with the LABZ logo. #}
 {% extends "page.html" %}
 
-{% block title %}Unsloth{% endblock %}
+{% block title %}LABZ{% endblock %}
 
 {% block stylesheet %}
 <style>
@@ -61,9 +61,8 @@
   .unsloth-login-card button:hover { background: hsl(160, 55%, 36%); }
   .unsloth-login-card .message { margin-top: 16px; font-size: 13px; }
   .unsloth-login-card .message.error { color: hsl(0, 75%, 68%); }
-  /* License attribution footer. Part of the Unsloth attribution set the image's
-     integrity guard verifies (Built by the Unsloth team + AGPLv3 + copyright +
-     source link). */
+  /* Licence footer. Part of the branding set the image's integrity guard
+     verifies (Built by the LABZ team + AGPLv3 + copyright + source link). */
   .unsloth-attrib {
     margin-top: 18px; text-align: center; font-size: 12px; line-height: 1.6;
     color: hsl(60, 8%, 58%); width: 360px; max-width: 90vw;
@@ -74,9 +73,9 @@
 {% endblock %}
 
 {% block site %}
-{# A different Unsloth Studio sloth sticker each visit (matches Studio's login).
+{# A different LABZ Studio sloth sticker each visit (matches Studio's login).
    The PNGs are copied into static/sloth/NN.png by the image build; if one is
-   missing the onerror handler falls back to the Unsloth logo so the page never
+   missing the onerror handler falls back to the LABZ logo so the page never
    shows a broken image. #}
 {% set sloths = [
   "01.png", "02.png", "03.png", "04.png", "05.png", "06.png", "07.png",
@@ -86,8 +85,8 @@
 <div class="unsloth-login-card">
   <img class="sloth" src='{{ static_url("sloth/" ~ (sloths | random)) }}'
        onerror="this.onerror=null;this.className='logo';this.src='{{ static_url('logo/logo.png') }}';"
-       alt='Unsloth' />
-  <h1>Unsloth</h1>
+       alt='LABZ' />
+  <h1>LABZ</h1>
   <p class="sub">Sign in to JupyterLab</p>
   {% if login_available %}
   <form action="{{base_url}}login?next={{next}}" method="post">
@@ -106,12 +105,12 @@
   {% endif %}
 </div>
 <div class="unsloth-attrib">
-  Built by the Unsloth team.
-  <a href="https://github.com/unslothai/unsloth#license" target="_blank" rel="noopener">Apache 2.0, AGPLv3 License Link</a><br/>
-  Copyright 2026-Present the Unsloth team.<br/>
-  <a href="https://github.com/unslothai/unsloth" target="_blank" rel="noopener">github.com/unslothai/unsloth</a>
+  Built by the LABZ team.
+  <a href="https://github.com/dustinwloring1988/labz#license" target="_blank" rel="noopener">Apache 2.0, AGPLv3 License Link</a><br/>
+  Copyright 2026-Present the LABZ team.<br/>
+  <a href="https://github.com/dustinwloring1988/labz" target="_blank" rel="noopener">github.com/dustinwloring1988/labz</a>
   &middot;
-  <a href="https://unsloth.ai" target="_blank" rel="noopener">unsloth.ai</a>
+  <a href="https://unsloth.ai/docs" target="_blank" rel="noopener">Unsloth reference docs</a>
 </div>
 {% endblock %}
 

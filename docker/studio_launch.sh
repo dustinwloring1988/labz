@@ -140,7 +140,7 @@ mkdir -p /workspace
 # AGPLv3: refuse to start if the Unsloth attribution is stripped. The same checker
 # runs at build time and as a jupyter_server extension.
 if [[ "${UNSLOTH_SKIP_BRANDING_CHECK:-0}" != "1" ]]; then
-    if ! /opt/unsloth-venv/bin/python -m unsloth_branding --verify; then
+    if ! /opt/unsloth-venv/bin/python -m labz_branding --verify; then
         echo "Refusing to start the container." >&2
         exit 1
     fi

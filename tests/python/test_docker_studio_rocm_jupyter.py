@@ -30,8 +30,8 @@ SUPERVISORD = DOCKER / "supervisord.conf"
 LAUNCH = DOCKER / "studio_launch.sh"
 DOCKERIGNORE = DOCKER / ".dockerignore"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "docker-publish-rocm.yml"
-LABEXT_PKG = DOCKER / "jupyter" / "unsloth_labext" / "package.json"
-BRANDING = DOCKER / "jupyter" / "unsloth_branding.py"
+LABEXT_PKG = DOCKER / "jupyter" / "labext" / "package.json"
+BRANDING = DOCKER / "jupyter" / "labz_branding.py"
 
 VENV = "/opt/unsloth-venv"
 
@@ -76,7 +76,7 @@ def _pins(text: str, packages) -> dict[str, set[str]]:
 
 
 def _branding_module():
-    spec = importlib.util.spec_from_file_location("unsloth_branding_under_test", BRANDING)
+    spec = importlib.util.spec_from_file_location("labz_branding_under_test", BRANDING)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
@@ -170,7 +170,7 @@ def test_the_labextension_lands_where_the_branding_guard_looks():
     (labext_src, labext_dest) = next(
         (src[0], dest) for stage, src, dest in copies if stage == "labext-builder"
     )
-    (staged_src,) = [dest for stage, src, dest in copies if src == ["jupyter/unsloth_labext"]]
+    (staged_src,) = [dest for stage, src, dest in copies if src == ["jupyter/labext"]]
     assert (
         labext_src == f"{staged_src}/{output_dir}"
     ), "the --from copy must take the labextension from where jlpm build:prod writes it"
@@ -180,7 +180,7 @@ def test_the_labextension_lands_where_the_branding_guard_looks():
     ]
     text = _read(ROCM_STUDIO)
     assert paths["license"] in text, "the AGPLv3 text must be staged where the guard reads it"
-    assert "-m unsloth_branding --verify" in text, "the build must run the branding guard"
+    assert "-m labz_branding --verify" in text, "the build must run the branding guard"
 
 
 def test_the_branding_chain_matches_the_cuda_studio_image():

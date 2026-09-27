@@ -1,6 +1,6 @@
-/* Unsloth Dark = Sublime/Colab "Monokai" palette, overriding JupyterLab Dark.
+/* LABZ Dark = Sublime/Colab "Monokai" palette, overriding JupyterLab Dark.
  * Applied on :root because the theme manager only loads this file while the
- * "Unsloth Dark" theme is active, so it never affects the light theme.
+ * "LABZ Dark" theme is active, so it never affects the light theme.
  *
  * Exact HSL from Sublime "Monokai":
  *   bg hsl(70,8%,15%)  fg hsl(60,30%,96%)  selection hsla(55,8%,31%,.7)

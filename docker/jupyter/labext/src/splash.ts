@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 //
-// Replace the JupyterLab loading splash with a spinning Unsloth logo. The stock
+// Replace the JupyterLab loading splash with a spinning LABZ logo. The stock
 // splash is disabled + locked at build, so this is the only ISplashScreen provider.
 
 import { JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { ISplashScreen } from '@jupyterlab/apputils';
 import { DisposableDelegate, IDisposable } from '@lumino/disposable';
-import { UNSLOTH_LOGO_DATA_URI } from './logo';
+import { LABZ_LOGO_DATA_URI } from './logo';
 import { SPLASH_LABEL } from './branding';
 
 const STYLE_ID = 'unsloth-splash-style';
@@ -54,8 +54,8 @@ function ensureStyle(): void {
 }
 
 const splashPlugin: JupyterFrontEndPlugin<ISplashScreen> = {
-  id: 'unsloth-jupyterlab:splash',
-  description: 'Unsloth spinning-logo loading splash.',
+  id: 'labz-jupyterlab:splash',
+  description: 'LABZ spinning-logo loading splash.',
   autoStart: true,
   provides: ISplashScreen,
   activate: (): ISplashScreen => {
@@ -66,8 +66,8 @@ const splashPlugin: JupyterFrontEndPlugin<ISplashScreen> = {
         overlay.id = SPLASH_ID;
 
         const img = document.createElement('img');
-        img.src = UNSLOTH_LOGO_DATA_URI;
-        img.alt = 'Unsloth';
+        img.src = LABZ_LOGO_DATA_URI;
+        img.alt = 'LABZ';
         overlay.appendChild(img);
 
         const label = document.createElement('div');

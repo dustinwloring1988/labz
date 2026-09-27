@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
+// Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
 //
-// "About Unsloth Docker Studio": the AGPLv3 license, copyright and source links.
+// "About LABZ Docker Studio": the AGPLv3 licence, copyright and source links.
 
 import {
   JupyterFrontEnd,
@@ -10,7 +10,7 @@ import {
 import { Dialog, ICommandPalette, showDialog } from '@jupyterlab/apputils';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 import { Widget } from '@lumino/widgets';
-import { UNSLOTH_LOGO_DATA_URI } from './logo';
+import { LABZ_LOGO_DATA_URI } from './logo';
 import {
   AGPL_NOTICE,
   AGPL_URL,
@@ -25,7 +25,7 @@ import {
   WEBSITE_URL
 } from './branding';
 
-const COMMAND_ID = 'unsloth:about';
+const COMMAND_ID = 'labz:about';
 
 /**
  * Trusted branding.ts constants only, so innerHTML has no injection surface, and
@@ -37,9 +37,9 @@ function aboutBody(): Widget {
   el.style.textAlign = 'center';
   el.style.padding = '4px 10px 10px';
   el.style.maxWidth = '430px';
-  el.setAttribute('data-unsloth-attribution', PHRASE);
+  el.setAttribute('data-labz-attribution', PHRASE);
   el.innerHTML = `
-    <img src="${UNSLOTH_LOGO_DATA_URI}" alt="Unsloth"
+    <img src="${LABZ_LOGO_DATA_URI}" alt="LABZ"
          style="height:64px;width:auto;margin:2px auto 10px;display:block;" />
     <div style="font-size:16px;font-weight:700;margin-bottom:2px;">${PRODUCT}</div>
     <div style="opacity:0.8;margin-bottom:10px;">${SHORT_LABEL}</div>
@@ -50,9 +50,9 @@ function aboutBody(): Widget {
       <div>Unsloth Reference: <a href="${DOCS_URL}" target="_blank" rel="noopener">${DOCS_URL}</a></div>
       <div style="margin-top:8px;font-weight:600;">Licenses</div>
       <div style="margin-left:12px;">
-        <div>Unsloth Studio: <a href="${AGPL_URL}" target="_blank" rel="noopener">AGPLv3</a></div>
+        <div>LABZ Studio: <a href="${AGPL_URL}" target="_blank" rel="noopener">AGPLv3</a></div>
         <div>Unsloth Core: <a href="${APACHE_URL}" target="_blank" rel="noopener">Apache 2.0</a></div>
-        <div>Unsloth license: <a href="${LICENSE_URL}" target="_blank" rel="noopener">${LICENSE_URL}</a></div>
+        <div>LABZ license: <a href="${LICENSE_URL}" target="_blank" rel="noopener">${LICENSE_URL}</a></div>
       </div>
     </div>
     <div style="font-size:12px;opacity:0.7;margin-top:12px;">${COPYRIGHT}</div>
@@ -61,8 +61,8 @@ function aboutBody(): Widget {
 }
 
 const aboutPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'unsloth-jupyterlab:about',
-  description: 'About Unsloth Docker Studio (AGPLv3 attribution).',
+  id: 'labz-jupyterlab:about',
+  description: 'About LABZ Docker Studio (AGPLv3 licence).',
   autoStart: true,
   optional: [IMainMenu, ICommandPalette],
   activate: (

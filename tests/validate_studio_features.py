@@ -21,7 +21,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCKER = os.path.join(ROOT, "docker")
 JUPYTER = os.path.join(DOCKER, "jupyter")
-LABEXT = os.path.join(JUPYTER, "unsloth_labext")
+LABEXT = os.path.join(JUPYTER, "labext")
 sys.path.insert(0, DOCKER)
 
 _failures: list[str] = []
@@ -150,12 +150,12 @@ def test_overrides() -> None:
         d = json.load(f)  # raises, so invalid JSON fails CI
     themes = d.get("@jupyterlab/apputils-extension:themes", {})
     check(
-        "default theme = Unsloth Dark",
-        themes.get("theme") == "Unsloth Dark",
+        "default theme = LABZ Dark",
+        themes.get("theme") == "LABZ Dark",
         str(themes.get("theme")),
     )
     check("adaptive theme on", themes.get("adaptive-theme") is True)
-    check("preferred dark = Unsloth Dark", themes.get("preferred-dark-theme") == "Unsloth Dark")
+    check("preferred dark = LABZ Dark", themes.get("preferred-dark-theme") == "LABZ Dark")
     tracker = d.get("@jupyterlab/notebook-extension:tracker", {})
     check(
         "windowingMode none",
@@ -183,7 +183,7 @@ def test_labext_and_branding() -> None:
     if os.path.isfile(pkg):
         with open(pkg, encoding = "utf-8") as f:
             p = json.load(f)
-        check("labext name unsloth-jupyterlab", p.get("name") == "unsloth-jupyterlab")
+        check("labext name labz-jupyterlab", p.get("name") == "labz-jupyterlab")
         check("labext themePath set", bool(p.get("jupyterlab", {}).get("themePath")))
     src_dir = os.path.join(LABEXT, "src")
     all_src = ""
@@ -193,12 +193,12 @@ def test_labext_and_branding() -> None:
                 with open(os.path.join(src_dir, fn), encoding = "utf-8") as f:
                     all_src += f.read() + "\n"
     for plug in [
-        "unsloth-jupyterlab:theme",
-        "unsloth-jupyterlab:cell-nav",
-        "unsloth-jupyterlab:logo",
-        "unsloth-jupyterlab:colab-title",
-        "unsloth-jupyterlab:output-select-all",
-        "unsloth-jupyterlab:ui-chrome",
+        "labz-jupyterlab:theme",
+        "labz-jupyterlab:cell-nav",
+        "labz-jupyterlab:logo",
+        "labz-jupyterlab:colab-title",
+        "labz-jupyterlab:output-select-all",
+        "labz-jupyterlab:ui-chrome",
     ]:
         check(f"plugin present: {plug}", plug in all_src)
     index = os.path.join(src_dir, "index.ts")

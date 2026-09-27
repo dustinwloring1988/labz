@@ -1,11 +1,23 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Copyright 2026-Present the Unsloth team. See /studio/LICENSE.AGPL-3.0
-"""Unsloth Docker Studio branding + AGPLv3 attribution integrity guard.
+# Copyright 2026-Present the LABZ team. See /studio/LICENSE.AGPL-3.0
+"""LABZ Docker Studio branding + AGPLv3 integrity guard.
 
-The plain-text source of truth for the attribution strings AND the checker that
-verifies they are still present. The attribution is spread over several independent
-files on purpose, so a shallow find-and-replace cannot white-label the image, and
-everything here is plain readable text: the only base64 blob is the logo data URI.
+The plain-text source of truth for the branding strings AND the checker that
+verifies they are still present, spread over several independent files so a
+shallow find-and-replace cannot half-rebrand the image.
+
+What this still guards is the licence, not the brand name. The AGPLv3 grant
+survived the rebrand: the image is still a derivative of the Unsloth Docker
+Studio and JupyterLab image, so it is still conveyed under the GNU AGPLv3, it
+still has to offer its corresponding source to the people it serves over a
+network, and it still has to display the licence notice and the upstream
+component licences. Unsloth additionally granted permission for the rename, so
+the product name and attribution line are now LABZ's rather than a notice the
+guard protects. Deleting the licence file, the licence notice, or the source
+and licence links is still a violation, and still fails the build.
+
+Everything here is plain readable text: the only base64 blob is the logo data
+URI.
 
 Runs at image build time, from studio_launch.sh before supervisord, and as a
 jupyter_server extension.
@@ -15,29 +27,30 @@ import json
 import os
 import sys
 
-# keep in sync with unsloth_labext/src/branding.ts: the guard greps the bundle for these
-PRODUCT = "Unsloth Docker Studio"
-SHORT_LABEL = "Built by the Unsloth team"
-SPLASH_LABEL = "Loading Unsloth Docker"
-COPYRIGHT = "Copyright 2026-Present the Unsloth team"
+# keep in sync with labext/src/branding.ts: the guard greps the bundle for these
+PRODUCT = "LABZ Docker Studio"
+SHORT_LABEL = "Built by the LABZ team"
+SPLASH_LABEL = "Loading LABZ Docker"
+COPYRIGHT = "Copyright 2026-Present the LABZ team"
 AGPL_NOTICE = "Licensed under Apache 2.0 and the GNU AGPLv3"
-WEBSITE_URL = "https://unsloth.ai"
+WEBSITE_URL = "https://github.com/dustinwloring1988/labz"
 DOCS_URL = "https://unsloth.ai/docs"
-SOURCE_URL = "https://github.com/unslothai/unsloth"
-LICENSE_URL = "https://github.com/unslothai/unsloth#license"
+SOURCE_URL = "https://github.com/dustinwloring1988/labz"
+LICENSE_URL = "https://github.com/dustinwloring1988/labz#license"
 AGPL_URL = "https://www.gnu.org/licenses/agpl-3.0.html"
 APACHE_URL = "https://www.apache.org/licenses/LICENSE-2.0"
-# ONE literal, byte-identical to PHRASE in unsloth_labext/src/branding.ts
+# ONE literal, byte-identical to PHRASE in labext/src/branding.ts
 PHRASE = (
-    "Unsloth Docker Studio and JupyterLab image. Built by the Unsloth team. "
+    "LABZ Docker Studio and JupyterLab image. Built by the LABZ team. "
     "Licensed under Apache 2.0 and the GNU AGPLv3. "
-    "Source: https://github.com/unslothai/unsloth Website: https://unsloth.ai"
+    "Source: https://github.com/dustinwloring1988/labz "
+    "Website: https://github.com/dustinwloring1988/labz"
 )
 
-THEME_NAME = "Unsloth Dark"
-LABEXT_NAME = "unsloth-jupyterlab"
-ABOUT_PLUGIN_ID = "unsloth-jupyterlab:about"
-SPLASH_PLUGIN_ID = "unsloth-jupyterlab:splash"
+THEME_NAME = "LABZ Dark"
+LABEXT_NAME = "labz-jupyterlab"
+ABOUT_PLUGIN_ID = "labz-jupyterlab:about"
+SPLASH_PLUGIN_ID = "labz-jupyterlab:splash"
 LOGO_DATA_URI_PREFIX = "data:image/png;base64,iVBOR"
 
 
@@ -180,7 +193,7 @@ def verify_branding(paths = None):
                 continue
             if ident == LABEXT_NAME or ident.startswith(LABEXT_NAME + ":"):
                 problems.append(
-                    "page_config.json disables Unsloth attribution '" + ident + "': " + pc_path
+                    "page_config.json disables LABZ branding '" + ident + "': " + pc_path
                 )
 
     return problems
@@ -190,10 +203,11 @@ def banner(problems):
     lines = [
         "",
         "=" * 72,
-        "ERROR: Unsloth Docker Studio attribution / license integrity check failed.",
+        "ERROR: LABZ Docker Studio branding / license integrity check failed.",
         "",
-        "This image is built by Unsloth and ships under the GNU AGPLv3. It will not",
-        "start because required attribution or license assets are missing or altered:",
+        "This image is a derivative of the Unsloth Docker Studio and JupyterLab",
+        "image and ships under the GNU AGPLv3. It will not start because required",
+        "branding or license assets are missing or altered:",
         "",
     ]
     for p in problems:
@@ -211,7 +225,7 @@ def banner(problems):
 
 
 def _jupyter_server_extension_points():
-    return [{"module": "unsloth_branding"}]
+    return [{"module": "labz_branding"}]
 
 
 def _load_jupyter_server_extension(serverapp):
@@ -235,7 +249,7 @@ def _load_jupyter_server_extension(serverapp):
 def main(argv = None):
     import argparse
 
-    parser = argparse.ArgumentParser(description = "Unsloth branding integrity check")
+    parser = argparse.ArgumentParser(description = "LABZ branding / license integrity check")
     parser.add_argument("--verify", action = "store_true", help = "verify and exit nonzero on failure")
     parser.add_argument("--venv-share", default = None)
     parser.add_argument("--jupyter-server-dir", default = None)
@@ -246,7 +260,7 @@ def main(argv = None):
     if problems:
         print(banner(problems), file = sys.stderr, flush = True)
         return 1
-    print("Unsloth branding integrity check passed (" + PRODUCT + ", AGPLv3).")
+    print("LABZ branding / license integrity check passed (" + PRODUCT + ", AGPLv3).")
     return 0
 
 
