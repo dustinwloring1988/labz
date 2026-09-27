@@ -147,7 +147,7 @@ def test_wsl_shortcut_reads_the_packaged_ico_out_of_site_packages(tmp_path):
         tmp_path / "venv" / "lib" / "python3.12" / "site-packages" / "studio" / "frontend" / "dist"
     )
     dist.mkdir(parents = True)
-    (dist / "unsloth.ico").write_bytes(b"\x00\x00\x01\x00icon")
+    (dist / "labz.ico").write_bytes(b"\x00\x00\x01\x00icon")
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     (fake_bin / "wslpath").write_text("#!/bin/sh\nprintf 'C:\\\\wsl\\\\%s' \"${2##*/}\"\n")
@@ -167,7 +167,7 @@ def test_wsl_shortcut_reads_the_packaged_ico_out_of_site_packages(tmp_path):
         capture_output = True,
         text = True,
     )
-    assert result.stdout == "C:\\wsl\\unsloth.ico"
+    assert result.stdout == "C:\\wsl\\labz.ico"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason = "bash is unavailable")
@@ -178,7 +178,7 @@ def test_wsl_shortcut_falls_back_when_the_ico_cannot_be_translated(tmp_path, shi
     )
     dist.mkdir(parents = True)
     if ships_icon:
-        (dist / "unsloth.ico").write_bytes(b"\x00\x00\x01\x00icon")
+        (dist / "labz.ico").write_bytes(b"\x00\x00\x01\x00icon")
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     (fake_bin / "wslpath").write_text("#!/bin/sh\nprintf 'wslpath: cannot translate'\nexit 1\n")
@@ -212,7 +212,7 @@ def test_windows_shortcut_prefers_the_packaged_icon_over_the_download(tmp_path):
 
     packaged = tmp_path / "packaged.ico"
     packaged.write_bytes(b"\x00\x00\x01\x00packaged")
-    icon_path = tmp_path / "unsloth.ico"
+    icon_path = tmp_path / "labz.ico"
 
     def run(packaged_icon: str) -> str:
         icon_path.unlink(missing_ok = True)
@@ -223,7 +223,7 @@ def test_windows_shortcut_prefers_the_packaged_icon_over_the_download(tmp_path):
                 "$bundledIcon = $null",
                 f"$packagedIcon = {packaged_icon}",
                 f"$iconPath = '{icon_path}'",
-                "$iconUrl = 'https://example.invalid/unsloth.ico'",
+                "$iconUrl = 'https://example.invalid/labz.ico'",
                 block,
             ]
         )
@@ -252,7 +252,7 @@ def test_windows_packaged_icon_is_found_next_to_the_managed_python(tmp_path):
     venv = tmp_path / "venv"
     (venv / "Scripts").mkdir(parents = True)
     (venv / "Scripts" / "python.exe").write_text("")
-    icon = venv / "Lib" / "site-packages" / "studio" / "frontend" / "dist" / "unsloth.ico"
+    icon = venv / "Lib" / "site-packages" / "studio" / "frontend" / "dist" / "labz.ico"
     icon.parent.mkdir(parents = True)
     icon.write_bytes(b"\x00\x00\x01\x00packaged")
 
@@ -270,7 +270,7 @@ def test_windows_packaged_icon_is_found_next_to_the_managed_python(tmp_path):
         text = True,
     ).stdout.strip()
     assert found.startswith(str(venv))
-    assert found.endswith("unsloth.ico")
+    assert found.endswith("labz.ico")
 
 
 @pytest.mark.skipif(
@@ -310,7 +310,7 @@ def test_wsl_shortcut_script_copies_the_packaged_ico_instead_of_downloading(tmp_
         [
             "function Invoke-WebRequest { Write-Output 'DOWNLOADED' }",
             f"$iconDir = '{icon_dir}'",
-            f"$iconPath = '{icon_dir / 'unsloth.ico'}'",
+            f"$iconPath = '{icon_dir / 'labz.ico'}'",
             block,
         ]
     )
@@ -321,4 +321,4 @@ def test_wsl_shortcut_script_copies_the_packaged_ico_instead_of_downloading(tmp_
         text = True,
     )
     assert "DOWNLOADED" not in result.stdout
-    assert (icon_dir / "unsloth.ico").read_bytes() == b"\x00\x00\x01\x00packaged"
+    assert (icon_dir / "labz.ico").read_bytes() == b"\x00\x00\x01\x00packaged"

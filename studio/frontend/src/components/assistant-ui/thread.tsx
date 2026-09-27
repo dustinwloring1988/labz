@@ -2457,43 +2457,49 @@ const ThreadScrollToBottom: FC = () => {
 const pickRandom = <T,>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
-// Each greeting carries its matching sloth picture so a line always shows the
-// same mascot. Greeting varies by local time; name-bearing lines drop the
-// name when none is set.
-type Welcome = { text: string; sloth: string };
+// Each greeting carries its matching picture so a line always shows the same mark. Greeting
+// varies by local time; name-bearing lines drop the name when none is set.
+//
+// The old build paired these with ~11 distinct sloth poses. There is no pose set for this
+// character, only three cutouts, so the rotation now spreads those across the lines: the text
+// still varies by time of day, and the picture still varies, just over a smaller set.
+type Welcome = { text: string; mark: string };
+const MARK_GEM = "labz-gem.png";
+const MARK_HEAD = "labz-head.png";
+const MARK_DISC = "sticker.png";
 const DEFAULT_WELCOME: Welcome = {
   text: "What’s on your mind today?",
-  sloth: "sloth magnify final.png",
+  mark: MARK_HEAD,
 };
 
 function buildWelcome(hour: number, name: string): Welcome {
-  const g = (text: string, sloth: string): Welcome => ({ text, sloth });
+  const g = (text: string, mark: string): Welcome => ({ text, mark });
   // Use the name on ~a third of lines (only direct salutations where it reads
   // naturally); the rest stay name-free so greetings don't feel repetitive.
   const base: Welcome[] = [
-    g(name ? `Good to see you, ${name}` : "Good to see you", "large sloth wave.png"),
-    g("Ready when you are", "large sloth thumbs.png"),
+    g(name ? `Good to see you, ${name}` : "Good to see you", MARK_GEM),
+    g("Ready when you are", MARK_DISC),
     DEFAULT_WELCOME,
-    g("How can I help?", "sloth sir large.png"),
+    g("How can I help?", MARK_GEM),
   ];
   if (hour >= 4 && hour < 9) {
-    const morning = g(name ? `Good morning, ${name}` : "Good morning", "large sloth drink.png");
+    const morning = g(name ? `Good morning, ${name}` : "Good morning", MARK_DISC);
     return pickRandom([...base, morning]);
   }
   if (hour >= 17 && hour < 23) {
     const evening: Welcome[] = [
-      g(name ? `Good evening, ${name}` : "Good evening", "sloth shy large.png"),
-      g("What’s on for tonight?", "large sloth glasses.png"),
+      g(name ? `Good evening, ${name}` : "Good evening", MARK_HEAD),
+      g("What’s on for tonight?", MARK_GEM),
     ];
     // Lean toward an evening line, but a base greeting can still appear.
     return pickRandom(Math.random() < 0.75 ? evening : base);
   }
   if (hour >= 23 || hour < 4) {
     return pickRandom([
-      g("Night owl mode?", "large sloth glasses.png"),
-      g("Late night ideas?", "large sloth yay.png"),
-      g("Up late with an idea?", "large sloth heart.png"),
-      g(name ? `The night shift begins, ${name}` : "The night shift begins", "large sloth drink.png"),
+      g("Night owl mode?", MARK_DISC),
+      g("Late night ideas?", MARK_GEM),
+      g("Up late with an idea?", MARK_HEAD),
+      g(name ? `The night shift begins, ${name}` : "The night shift begins", MARK_DISC),
     ]);
   }
   return pickRandom(base);
@@ -2517,7 +2523,7 @@ const ThreadWelcome: FC<{
     setWelcome(buildWelcome(new Date().getHours(), name));
   }, [displayName, nickname]);
 
-  const currentEmojiSrc = `Sloth emojis/${welcome.sloth}`;
+  const currentMarkSrc = welcome.mark;
 
   return (
     <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
@@ -2529,7 +2535,7 @@ const ThreadWelcome: FC<{
             {/* Temporary chat keeps the title on its own, no mascot. */}
             {showGreetingSloth && !incognito && (
               <MascotImg
-                src={currentEmojiSrc}
+                src={currentMarkSrc}
                 className="unsloth-welcome-sloth size-[calc(44px*var(--ui-space-scale,1))] -translate-y-[2px]"
               />
             )}

@@ -69,7 +69,7 @@ _RENDER_VARS = {
     "_css_sc_target": "wt.exe",
     "_css_sc_args_ps": 'wsl.exe -d "O\'\'Brien 24.04" -- bash -l -c "exec /home/u/launch.sh"',
     "_css_lnk_name_ps": "Unsloth Studio (WSL - O''Brien 24.04).lnk",
-    "_css_wsl_ico_win_ps": "C:\\Users\\ci\\unsloth.ico",
+    "_css_wsl_ico_win_ps": "C:\\Users\\ci\\labz.ico",
 }
 
 

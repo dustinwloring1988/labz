@@ -49,7 +49,7 @@ SHORTCUTS = [
         "arguments": "-NoProfile -WindowStyle Hidden -ExecutionPolicy RemoteSigned -File launch-studio.ps1",
         "workingDirectory": r"C:\Users\runneradmin\.unsloth\studio",
         "windowStyle": "1",
-        "iconLocation": r"C:\Users\runneradmin\.unsloth\studio\unsloth.ico,0",
+        "iconLocation": r"C:\Users\runneradmin\.unsloth\studio\labz.ico,0",
     }
 ]
 

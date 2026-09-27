@@ -1009,12 +1009,12 @@ _unsloth_uninstall_main() {
                         # Join-Path throw, aborting the icon cleanup (mirror uninstall.ps1).
                         if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
                             $iconDir = Join-Path $env:LOCALAPPDATA "Unsloth Studio";
-                            $ico = Join-Path $iconDir "unsloth.ico";
+                            $ico = Join-Path $iconDir "labz.ico";
                             if ((-not $iconInUse) -and (Test-Path -LiteralPath $ico)) { Remove-Item -LiteralPath $ico -Force -ErrorAction SilentlyContinue }
                             if ((Test-Path -LiteralPath $iconDir) -and -not (Get-ChildItem -LiteralPath $iconDir -Force -ErrorAction SilentlyContinue)) { Remove-Item -LiteralPath $iconDir -Recurse -Force -ErrorAction SilentlyContinue }
                         }' >/dev/null 2>&1 || true
                 fi
-                # Remove $1's shared unsloth.ico only if no Unsloth shortcut (native install or
+                # Remove $1's shared labz.ico only if no Unsloth shortcut (native install or
                 # another WSL distro) still uses it, then drop the dir if empty. Reciprocal of
                 # uninstall.ps1's _RemoveDataDirKeepingWslIcon.
                 _drop_shared_icon_if_unused() {
@@ -1033,7 +1033,7 @@ _unsloth_uninstall_main() {
                         [ "$_icon_in_use" = "1" ] && break
                     done
                     if [ "$_icon_in_use" = "0" ]; then
-                        [ -f "$_icodir/unsloth.ico" ] && rm -f "$_icodir/unsloth.ico" 2>/dev/null || true
+                        [ -f "$_icodir/labz.ico" ] && rm -f "$_icodir/labz.ico" 2>/dev/null || true
                     fi
                     [ -d "$_icodir" ] && rmdir "$_icodir" 2>/dev/null || true
                 }

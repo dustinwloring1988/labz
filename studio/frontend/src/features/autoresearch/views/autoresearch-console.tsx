@@ -180,7 +180,7 @@ export function AutoresearchStartOverlay() {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center rounded-2xl bg-background/45 backdrop-blur-[1px]">
-      <MascotImg src="Sloth emojis/sloth shy large.png" className="size-24" />
+      <MascotImg src="labz-gem.png" className="size-24" />
       <p className="mt-4 font-heading text-ui-20 font-semibold">
         {phase === "preparing" ? "Preparing the experiment loop" : "Starting the first experiment"}
       </p>

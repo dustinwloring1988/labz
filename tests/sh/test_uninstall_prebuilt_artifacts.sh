@@ -24,7 +24,7 @@ FAIL=0
 # This suite runs the REAL uninstaller, and overriding HOME does not contain it
 # on WSL: the body detects WSL from /proc/version and then reaches host state
 # outside the fixture -- powershell.exe deletes Windows-side "Unsloth Studio*.lnk"
-# shortcuts and the shared unsloth.ico (uninstall.sh WSL branch), the interop-off
+# shortcuts and the shared labz.ico (uninstall.sh WSL branch), the interop-off
 # fallback scans /mnt/{c,d,e}/Users, and `sudo rm -f /etc/profile.d/unsloth-rocm-wsl.sh`
 # touches the system. Skip there, exactly like tests/sh/test_uninstall_arg_guard.sh.
 if grep -qi microsoft /proc/version 2>/dev/null; then

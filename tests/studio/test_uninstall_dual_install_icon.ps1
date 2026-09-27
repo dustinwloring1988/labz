@@ -3,7 +3,7 @@
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 # Unit test for _RemoveDataDirKeepingWslIcon in scripts/uninstall.ps1.
 #
-# A native uninstall must NOT delete the shared unsloth.ico while a WSL shortcut
+# A native uninstall must NOT delete the shared labz.ico while a WSL shortcut
 # still points at it (else that shortcut blanks). Extracts the helper via AST and
 # runs it on a temp data dir with a controlled ShortcutDirs list (dual-install vs
 # native-only), so no real Desktop / Start Menu is touched.
@@ -50,18 +50,18 @@ function Check($name, $cond) {
 $work = Join-Path ([System.IO.Path]::GetTempPath()) ("undi_" + [guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force -Path $work | Out-Null
 try {
-    # ----- Case A: a WSL shortcut survives -> keep unsloth.ico, drop the rest, keep dir -----
+    # ----- Case A: a WSL shortcut survives -> keep labz.ico, drop the rest, keep dir -----
     $progA = Join-Path $work "shortcutsA"
     New-Item -ItemType Directory -Force -Path $progA | Out-Null
     Set-Content -LiteralPath (Join-Path $progA "Unsloth Studio (WSL - Ubuntu-24.04).lnk") -Value "x"
     $dataA = Join-Path $work "dataA"
     New-Item -ItemType Directory -Force -Path $dataA | Out-Null
-    Set-Content -LiteralPath (Join-Path $dataA "unsloth.ico") -Value "ICO"
+    Set-Content -LiteralPath (Join-Path $dataA "labz.ico") -Value "ICO"
     Set-Content -LiteralPath (Join-Path $dataA "launch-studio.ps1") -Value "L"
     Set-Content -LiteralPath (Join-Path $dataA "studio.conf") -Value "C"
     _RemoveDataDirKeepingWslIcon -DataDir $dataA -ShortcutDirs @($progA)
     Check "A: data dir kept"            (Test-Path -LiteralPath $dataA)
-    Check "A: unsloth.ico preserved"    (Test-Path -LiteralPath (Join-Path $dataA "unsloth.ico"))
+    Check "A: labz.ico preserved"    (Test-Path -LiteralPath (Join-Path $dataA "labz.ico"))
     Check "A: launch-studio.ps1 removed" (-not (Test-Path -LiteralPath (Join-Path $dataA "launch-studio.ps1")))
     Check "A: studio.conf removed"      (-not (Test-Path -LiteralPath (Join-Path $dataA "studio.conf")))
 
@@ -71,7 +71,7 @@ try {
     Set-Content -LiteralPath (Join-Path $progB "Unrelated.lnk") -Value "x"
     $dataB = Join-Path $work "dataB"
     New-Item -ItemType Directory -Force -Path $dataB | Out-Null
-    Set-Content -LiteralPath (Join-Path $dataB "unsloth.ico") -Value "ICO"
+    Set-Content -LiteralPath (Join-Path $dataB "labz.ico") -Value "ICO"
     Set-Content -LiteralPath (Join-Path $dataB "launch-studio.ps1") -Value "L"
     _RemoveDataDirKeepingWslIcon -DataDir $dataB -ShortcutDirs @($progB)
     Check "B: whole data dir removed"   (-not (Test-Path -LiteralPath $dataB))
@@ -79,7 +79,7 @@ try {
     # ----- Case C: empty shortcut dirs -> whole dir removed -----
     $dataC = Join-Path $work "dataC"
     New-Item -ItemType Directory -Force -Path $dataC | Out-Null
-    Set-Content -LiteralPath (Join-Path $dataC "unsloth.ico") -Value "ICO"
+    Set-Content -LiteralPath (Join-Path $dataC "labz.ico") -Value "ICO"
     _RemoveDataDirKeepingWslIcon -DataDir $dataC -ShortcutDirs @()
     Check "C: removed when no shortcut dirs" (-not (Test-Path -LiteralPath $dataC))
 

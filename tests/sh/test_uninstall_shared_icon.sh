@@ -3,7 +3,7 @@
 # Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 # Unit tests for _drop_shared_icon_if_unused() from scripts/uninstall.sh.
 #
-# The WSL uninstall shares %LOCALAPPDATA%\Unsloth Studio\unsloth.ico with the native
+# The WSL uninstall shares %LOCALAPPDATA%\Unsloth Studio\labz.ico with the native
 # install and every other WSL distro's shortcut. Removing one side must KEEP the icon
 # while any "Unsloth Studio*.lnk" still references it, and drop it (plus the dir, if
 # empty) only once the last shortcut is gone. Reciprocal of uninstall.ps1's
@@ -34,19 +34,19 @@ sed -n '/_drop_shared_icon_if_unused() {/,/^[[:space:]]*}$/p' "$UNINSTALL_SH" > 
 # shellcheck disable=SC1090
 . "$FUNC_FILE"
 
-# make_user [shortcut_relpath] : a fresh fake Windows user dir with unsloth.ico,
+# make_user [shortcut_relpath] : a fresh fake Windows user dir with labz.ico,
 # optionally placing an "Unsloth Studio*.lnk" at the given relative path.
 make_user() {
     _u=$(mktemp -d "$_TMP_ROOT/user.XXXXXX")
     mkdir -p "$_u/AppData/Local/Unsloth Studio"
-    : > "$_u/AppData/Local/Unsloth Studio/unsloth.ico"
+    : > "$_u/AppData/Local/Unsloth Studio/labz.ico"
     if [ -n "${1:-}" ]; then
         mkdir -p "$_u/$(dirname "$1")"
         : > "$_u/$1"
     fi
     echo "$_u"
 }
-ICO='AppData/Local/Unsloth Studio/unsloth.ico'
+ICO='AppData/Local/Unsloth Studio/labz.ico'
 DIR='AppData/Local/Unsloth Studio'
 SM='AppData/Roaming/Microsoft/Windows/Start Menu/Programs'
 

@@ -4756,19 +4756,19 @@ exit 1
             if (-not $startMenuLink) {
                 substep "APPDATA/Start Menu path unavailable; skipped Start menu shortcut creation" "Yellow"
             }
-            $iconPath = Join-Path $appDir "unsloth.ico"
+            $iconPath = Join-Path $appDir "labz.ico"
             $bundledIcon = $null
             if ($PSScriptRoot -and $PSScriptRoot.Trim()) {
-                $bundledIcon = Join-Path $PSScriptRoot "studio\frontend\public\unsloth.ico"
+                $bundledIcon = Join-Path $PSScriptRoot "studio\frontend\public\labz.ico"
             }
             # The packaged .ico (studio\frontend\dist) serves irm|iex installs with no $PSScriptRoot.
             $packagedIcon = $null
             try {
                 $venvRoot = Split-Path -Parent (Split-Path -Parent $ManagedPythonPath)
-                $packagedIconCandidate = Join-Path $venvRoot "Lib\site-packages\studio\frontend\dist\unsloth.ico"
+                $packagedIconCandidate = Join-Path $venvRoot "Lib\site-packages\studio\frontend\dist\labz.ico"
                 if (Test-Path -LiteralPath $packagedIconCandidate) { $packagedIcon = $packagedIconCandidate }
             } catch {}
-            $iconUrl = "https://raw.githubusercontent.com/unslothai/unsloth/main/studio/frontend/public/unsloth.ico"
+            $iconUrl = "https://raw.githubusercontent.com/dustinwloring1988/labz/main/studio/frontend/public/labz.ico"
 
             if (-not (Test-Path -LiteralPath $appDir)) {
                 [System.IO.Directory]::CreateDirectory($appDir) | Out-Null

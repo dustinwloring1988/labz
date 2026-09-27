@@ -176,7 +176,7 @@ export function NanochatStartOverlay() {
   return (
     <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center rounded-2xl bg-background/45 backdrop-blur-[1px]">
       <div className="pointer-events-auto my-auto flex w-[calc(860px*var(--ui-space-scale,1))] max-w-[calc(100%-2rem)] flex-col items-center gap-3">
-        <MascotImg src="unsloth-gem.png" className="size-24 object-contain max-sm:size-16" />
+        <MascotImg src="labz-gem.png" className="size-24 object-contain max-sm:size-16" />
         <NanochatConsole className="w-full" running heightClassName="h-80" />
       </div>
     </div>

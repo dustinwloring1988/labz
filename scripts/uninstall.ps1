@@ -112,7 +112,7 @@ Environment:
                 return
             }
             # Remove-Item -Recurse can report success yet leave a transiently-locked child (e.g.
-            # unsloth.ico in Explorer's icon cache); verify + retry so "removed" is never a lie.
+            # labz.ico in Explorer's icon cache); verify + retry so "removed" is never a lie.
             if (-not (Test-Path -LiteralPath $Path)) {
                 _Substep "removed: $Path" "Green"
                 return
@@ -391,7 +391,7 @@ Environment:
         }
     }
 
-    # Remove the shared data dir, but keep unsloth.ico if a WSL shortcut still points
+    # Remove the shared data dir, but keep labz.ico if a WSL shortcut still points
     # at it (else that shortcut blanks); uninstall.sh drops it when WSL is removed.
     function _RemoveDataDirKeepingWslIcon {
         param(
@@ -429,8 +429,8 @@ Environment:
         }
         if (@($wslShortcuts).Count -gt 0) {
             # A WSL shortcut survives: keep its shared icon.
-            _Substep "keeping $(Join-Path $DataDir 'unsloth.ico') for the WSL shortcut" "Gray"
-            $keep += (Join-Path $DataDir "unsloth.ico")
+            _Substep "keeping $(Join-Path $DataDir 'labz.ico') for the WSL shortcut" "Gray"
+            $keep += (Join-Path $DataDir "labz.ico")
         }
         _RemoveTreeKeeping -Path $DataDir -Keep $keep
     }
@@ -1283,7 +1283,7 @@ Environment:
         }
     } catch { }
 
-    # Re-sweep: the first pass may have left unsloth.ico locked by Explorer/SMEH for the native
+    # Re-sweep: the first pass may have left labz.ico locked by Explorer/SMEH for the native
     # shortcut; that handle is now freed. (A surviving WSL shortcut still keeps the icon.)
     $preservedTemp = @(_RemoveStudioPrivateTempTrees -Paths $privateTempDirs -PrimaryPath $primaryPrivateTemp)
     if ($defaultDataDir -and (Test-Path -LiteralPath $defaultDataDir)) {

@@ -1533,7 +1533,7 @@ create_studio_shortcuts() {
     _css_data_dir="$DATA_DIR"
     _css_launcher="$_css_data_dir/launch-studio.sh"
     _css_icon_png="$_css_data_dir/unsloth-studio.png"
-    _css_gem_png="$_css_data_dir/unsloth-gem.png"
+    _css_gem_png="$_css_data_dir/labz-gem.png"
 
     mkdir -p "$_css_data_dir"
 
@@ -2013,7 +2013,7 @@ LAUNCHER_EOF
         cp "$_css_found_icon" "$_css_icon_png" 2>/dev/null || true
         cp "$_css_found_icon" "$_css_gem_png" 2>/dev/null || true
     else
-        download "https://raw.githubusercontent.com/unslothai/unsloth/main/studio/frontend/public/rounded-512.png" "$_css_icon_png" 2>/dev/null || true
+        download "https://raw.githubusercontent.com/dustinwloring1988/labz/main/studio/frontend/public/rounded-512.png" "$_css_icon_png" 2>/dev/null || true
         cp "$_css_icon_png" "$_css_gem_png" 2>/dev/null || true
     fi
 
@@ -2248,8 +2248,8 @@ STUB_EOF
         # The generated script prefers this to its download.
         _css_wsl_ico_win=""
         for _sp in "$_css_venv_dir"/lib/python*/site-packages/studio/frontend/dist; do
-            if [ -f "$_sp/unsloth.ico" ] && command -v wslpath >/dev/null 2>&1; then
-                _css_wsl_ico_win=$(wslpath -w "$_sp/unsloth.ico" 2>/dev/null) || _css_wsl_ico_win=""
+            if [ -f "$_sp/labz.ico" ] && command -v wslpath >/dev/null 2>&1; then
+                _css_wsl_ico_win=$(wslpath -w "$_sp/labz.ico" 2>/dev/null) || _css_wsl_ico_win=""
             fi
         done
         _css_wsl_ico_win_ps=$(printf '%s' "$_css_wsl_ico_win" | sed "s/'/''/g")
@@ -2357,7 +2357,7 @@ if (-not \$targetExe) { exit 1 }
 # Best-effort: fetch the Unsloth icon to a stable Windows path (shared with a
 # native install if one exists) so the WSL shortcut shows the proper icon.
 \$iconDir = Join-Path \$env:LOCALAPPDATA 'Unsloth Studio'
-\$iconPath = Join-Path \$iconDir 'unsloth.ico'
+\$iconPath = Join-Path \$iconDir 'labz.ico'
 \$preIconHash = \$null
 if (Test-Path -LiteralPath \$iconPath) {
     try { \$preIconHash = (Get-FileHash -LiteralPath \$iconPath -Algorithm SHA256).Hash } catch {}
@@ -2372,7 +2372,7 @@ if (-not (Test-Path -LiteralPath \$iconPath) -and \$packagedIcon -and (Test-Path
 if (-not (Test-Path -LiteralPath \$iconPath)) {
     try {
         New-Item -ItemType Directory -Force -Path \$iconDir | Out-Null
-        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/unslothai/unsloth/main/studio/frontend/public/unsloth.ico' -OutFile \$iconPath -UseBasicParsing -ErrorAction Stop
+        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/dustinwloring1988/labz/main/studio/frontend/public/labz.ico' -OutFile \$iconPath -UseBasicParsing -ErrorAction Stop
     } catch {}
 }
 \$hasIcon = \$false

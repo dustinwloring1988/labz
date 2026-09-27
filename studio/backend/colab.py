@@ -259,7 +259,7 @@ def _ready_card_html(
                 border-radius: 12px; margin: 10px 0; font-family: system-ui, -apple-system, sans-serif;">
         <h2 style="color: #000000; margin: 0 0 12px 0; font-size: 26px; font-weight: 800;
                    display: flex; align-items: center; gap: 12px;">
-            <img src="https://github.com/unslothai/unsloth/raw/main/studio/frontend/public/unsloth-gem.png"
+            <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
             Unsloth Studio is Ready!
         </h2>
@@ -277,7 +277,7 @@ def _ready_card_html(
                 border-radius: 12px; margin: 10px 0; font-family: system-ui, -apple-system, sans-serif;">
         <h2 style="color: #000000; margin: 0 0 12px 0; font-size: 26px; font-weight: 800;
                    display: flex; align-items: center; gap: 12px;">
-            <img src="https://github.com/unslothai/unsloth/raw/main/studio/frontend/public/unsloth-gem.png"
+            <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
             Unsloth Studio is Ready!
         </h2>
@@ -429,7 +429,7 @@ def _shareable_link_html(
                 border-radius: 12px; margin: 10px 0; font-family: system-ui, -apple-system, sans-serif;">
         <h2 style="color: #000000; margin: 0 0 12px 0; font-size: 26px; font-weight: 800;
                    display: flex; align-items: center; gap: 12px;">
-            <img src="https://github.com/unslothai/unsloth/raw/main/studio/frontend/public/unsloth-gem.png"
+            <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
                  height="48" style="display:block;">
             Shareable Unsloth Link is Ready!
         </h2>
@@ -492,7 +492,7 @@ def _embed_html_iframe(url: str, port: int) -> bool:
 <div style="font-family:system-ui,-apple-system,sans-serif;margin:8px 0;
             border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.18);">
   <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:#000;">
-    <img src="https://github.com/unslothai/unsloth/raw/main/studio/frontend/public/unsloth-gem.png"
+    <img src="https://github.com/dustinwloring1988/labz/raw/main/studio/frontend/public/labz-gem.png"
          height="26" style="display:block;">
     <span style="color:#fff;font-weight:700;font-size:15px;letter-spacing:-0.2px;">Unsloth Studio</span>
     <span style="margin-left:auto;color:#666;font-size:11px;font-family:monospace;">{short_url}</span>

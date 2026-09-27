@@ -22,7 +22,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useRef, useState } from "react";
-import { SLOTH_AVATARS } from "../sloth-avatars";
+import { MASCOT_AVATARS } from "../mascot-avatars";
 import { loginDisplayName } from "../hooks/use-effective-profile";
 import { decodeJwtSubject } from "../utils/jwt-subject";
 import { resizeImageFileToDataUrl } from "../utils/resize-image-file";
@@ -320,7 +320,7 @@ export function ProfilePersonalizationPanel() {
                   {t("settings.profile.chooseSloth")}
                 </span>
                 <div className="grid grid-cols-7 gap-2 max-[400px]:grid-cols-6">
-                  {SLOTH_AVATARS.map((path) => {
+                  {MASCOT_AVATARS.map((path) => {
                     const url = publicAssetUrl(path);
                     const selected = shownAvatar === url;
                     const label =
