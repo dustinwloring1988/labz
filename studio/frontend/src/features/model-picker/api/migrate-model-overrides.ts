@@ -25,7 +25,7 @@ import {
 } from "./model-overrides";
 
 // Bumped when the filter below started admitting Ollama tags, so a completed v1 pass reruns.
-const DONE_FLAG = "unsloth_model_overrides_backfilled_v2";
+const DONE_FLAG = "labz_model_overrides_backfilled_v2";
 
 function alreadyRan(): boolean {
   try {

@@ -7,4 +7,4 @@
  *  on launch. A module with no imports is always evaluated first, so do not add an import here. */
 
 /** Exported so the preference reset clears the same key the store writes. */
-export const SIDEBAR_ORGANIZATION_STORAGE_KEY = "unsloth_sidebar_organization";
+export const SIDEBAR_ORGANIZATION_STORAGE_KEY = "labz_sidebar_organization";

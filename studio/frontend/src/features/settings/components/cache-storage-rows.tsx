@@ -55,7 +55,7 @@ const CACHE_NAME_KEYS: Record<CacheKey, TranslationKey> = {
   matplotlib: "settings.resources.storage.caches.names.matplotlib",
   vllm: "settings.resources.storage.caches.names.vllm",
   // biome-ignore lint/style/useNamingConvention: API schema
-  unsloth_compiled: "settings.resources.storage.caches.names.unslothCompiled",
+  labz_compiled: "settings.resources.storage.caches.names.unslothCompiled",
   // biome-ignore lint/style/useNamingConvention: API schema
   hf_xet: "settings.resources.storage.caches.names.hfXet",
   // biome-ignore lint/style/useNamingConvention: API schema

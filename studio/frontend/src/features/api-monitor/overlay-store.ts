@@ -56,7 +56,7 @@ export const useApiMonitorOverlayStore = create<ApiMonitorOverlayState>()(
       setAutoOpen: (autoOpen) => set({ autoOpen }),
     }),
     {
-      name: "unsloth_api_monitor_overlay",
+      name: "labz_api_monitor_overlay",
       version: 1,
       storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({ autoOpen: state.autoOpen }),

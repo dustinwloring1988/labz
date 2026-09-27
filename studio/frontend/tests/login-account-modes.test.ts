@@ -492,7 +492,7 @@ test("creating an account hides full access in peer tabs without a status reques
 
 test("a deactivated account keeps full access hidden while the form is back in single mode", async (t) => {
   environment(t);
-  window.localStorage.setItem("unsloth_chat_permission_mode", "full");
+  window.localStorage.setItem("labz_chat_permission_mode", "full");
   const api = client();
   assert.equal(api.getFullAccessAllowed(), true);
   globalThis.fetch = async () =>
@@ -506,7 +506,7 @@ test("a deactivated account keeps full access hidden while the form is back in s
   assert.equal(api.getLoginMode(), "single");
   assert.equal(api.getFullAccessAllowed(), false);
   assert.equal(
-    window.localStorage.getItem("unsloth_chat_permission_mode"),
+    window.localStorage.getItem("labz_chat_permission_mode"),
     "auto",
   );
   assert.equal(window.localStorage.getItem(api.LOGIN_MODE_HINT_KEY), "restricted");

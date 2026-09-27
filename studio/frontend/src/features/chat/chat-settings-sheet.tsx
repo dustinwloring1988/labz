@@ -250,7 +250,7 @@ export function ParamSlider({
   );
 }
 
-const COLLAPSIBLE_STATE_KEY = "unsloth_chat_collapsible_state";
+const COLLAPSIBLE_STATE_KEY = "labz_chat_collapsible_state";
 
 function loadCollapsibleState(): Record<string, boolean> {
   if (!canUseStorage()) return {};

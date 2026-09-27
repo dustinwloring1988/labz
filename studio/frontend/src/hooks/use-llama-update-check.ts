@@ -168,7 +168,7 @@ function parseStatus(value: unknown): LlamaUpdateStatus | null {
 // record, not per-tab), so a fresh mount -- a new tab, or a page reload of a tab that already
 // resynced -- would otherwise replay the same completed job forever. Persist the handled marker
 // outside React state so it survives both, and is shared across tabs in this browser.
-const HANDLED_RELOAD_STORAGE_KEY = "unsloth_llama_update_reload_handled_at";
+const HANDLED_RELOAD_STORAGE_KEY = "labz_llama_update_reload_handled_at";
 
 function getHandledReloadAt(): string | null {
   try {

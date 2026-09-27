@@ -23,7 +23,7 @@ const { pinKey, usePinnedModelsStore } = await import(
 
 const MODELS_CATALOG_ROWS = readSrc("features/hub/catalog/models-catalog-rows.tsx");
 
-const STORAGE_KEY = "unsloth_pinned_models";
+const STORAGE_KEY = "labz_pinned_models";
 
 function setPinned(pinned: string[]) {
   usePinnedModelsStore.setState({ pinned });
@@ -437,7 +437,7 @@ test("a storage event for another key does not look like a cross-window pin writ
   const store = usePinnedModelsStore.getState();
   store.beginPinnedDrag();
   store.movePinned("a", "c");
-  fireWindowEvent("storage", { key: "unsloth_something_else" });
+  fireWindowEvent("storage", { key: "labz_something_else" });
   assert.deepEqual(
     usePinnedModelsStore.getState().pinned,
     ["b", "c", "a"],

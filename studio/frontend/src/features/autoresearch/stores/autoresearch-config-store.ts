@@ -13,7 +13,7 @@ import {
   type AutoresearchConfigState,
 } from "./autoresearch-config-policy.ts";
 
-export const AUTORESEARCH_CONFIG_PERSISTENCE_NAME = "unsloth_autoresearch_config_v1";
+export const AUTORESEARCH_CONFIG_PERSISTENCE_NAME = "labz_autoresearch_config_v1";
 
 export type AutoresearchConfigStore = AutoresearchConfigState & {
   apply: (patch: Partial<AutoresearchConfigState>) => void;

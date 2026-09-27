@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export type ModelLoadTimes = Record<string, number>;
 
-const STORAGE_KEY = "unsloth.model-load-times.v1";
+const STORAGE_KEY = "labz.model-load-times.v1";
 
 function readLoadTimes(): ModelLoadTimes {
   try {

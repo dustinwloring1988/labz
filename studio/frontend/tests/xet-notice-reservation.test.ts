@@ -20,8 +20,8 @@ import {
 
 const { store } = installLocalStorageFake();
 
-const LEGACY_COUNT_KEY = "unsloth.studio.xetNoticeCount";
-const LEGACY_MIGRATED_KEY = "unsloth.studio.xetNoticeMigrated";
+const LEGACY_COUNT_KEY = "labz.studio.xetNoticeCount";
+const LEGACY_MIGRATED_KEY = "labz.studio.xetNoticeMigrated";
 
 interface FetchCall {
   url: string;

@@ -228,7 +228,7 @@ test("an entry saved by an older install loads without gaining a cap", () => {
       updatedAt: 1,
     },
   ];
-  store.set("unsloth_chat_external_providers", JSON.stringify(legacy));
+  store.set("labz_chat_external_providers", JSON.stringify(legacy));
   const [loaded] = loadExternalProviders();
   assert.equal(loaded.maxOutputTokens, undefined);
   assert.equal(loaded.backendProviderType, undefined);

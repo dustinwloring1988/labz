@@ -2,11 +2,12 @@
 // Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
 import { USER_STOPPED_KEY } from "../hooks/server-stop-intent.ts";
+import { isAppStorageKey } from "./storage-namespace.ts";
 
-export const BROWSER_ACCOUNT_KEY = "unsloth.browser-account.v1";
+export const BROWSER_ACCOUNT_KEY = "labz.browser-account.v1";
 /** Written before a switch publishes new tokens, so peer tabs stop sending requests until the
  * marker lands and they reload. */
-export const BROWSER_ACCOUNT_FENCE_KEY = "unsloth.browser-account.fence.v1";
+export const BROWSER_ACCOUNT_FENCE_KEY = "labz.browser-account.fence.v1";
 /** A peer tab holds the marker for at most this long before reloading on its own. */
 export const ACCOUNT_FENCE_TIMEOUT_MS = 10_000;
 
@@ -17,25 +18,25 @@ export function accountTransitionPending(): boolean {
 }
 export const OWNER_BROWSER_ACCOUNT = "unsloth";
 
-export const APPEARANCE_KEY = "unsloth_appearance_customization";
+export const APPEARANCE_KEY = "labz_appearance_customization";
 
 /** Browser chrome only. Never add credentials, content, model choices or profile data. */
 export const ACCOUNT_CHROME_KEYS = new Set([
   "theme",
   "palette",
   APPEARANCE_KEY,
-  "unsloth_locale",
+  "labz_locale",
   "sidebar_pinned",
   "sidebar_width",
   "chat_settings_width",
-  "unsloth_sidebar_navigate_open",
-  "unsloth_settings_active_tab",
-  "unsloth_loaded_models_collapsed",
-  "unsloth_loaded_models_dismissed",
+  "labz_sidebar_navigate_open",
+  "labz_settings_active_tab",
+  "labz_loaded_models_collapsed",
+  "labz_loaded_models_dismissed",
   "unsloth-rag-preview-width",
 ]);
 export const ACCOUNT_CHROME_PREFIXES = [
-  "unsloth_web_update_dismissed:",
+  "labz_web_update_dismissed:",
 ] as const;
 /** Per-tab flags about the browser session, not the account. Never add content. */
 export const ACCOUNT_SESSION_CHROME_KEYS = new Set([USER_STOPPED_KEY]);
@@ -109,8 +110,8 @@ function isSameAccount(previous: MarkedAccount, next: MarkedAccount): boolean {
 }
 
 export function resetFullAccessForMultiUser(storage: Storage): void {
-  if (storage.getItem("unsloth_chat_permission_mode") === "full") {
-    storage.setItem("unsloth_chat_permission_mode", "auto");
+  if (storage.getItem("labz_chat_permission_mode") === "full") {
+    storage.setItem("labz_chat_permission_mode", "auto");
   }
 }
 
@@ -210,7 +211,11 @@ export async function transitionBrowserAccount(
         ACCOUNT_CHROME_PREFIXES.some((prefix) => key.startsWith(prefix))
       )
         continue;
-      if (key.startsWith("unsloth") || key.startsWith("chat-draft"))
+      // isAppStorageKey matches the current prefix *and* the pre-rebrand one. That second half is
+      // load-bearing: this sweep runs on sign-out, and a key the migration has not reached yet --
+      // written by an older tab, or by a build predating it -- would otherwise survive and be
+      // visible to whoever signs in next.
+      if (isAppStorageKey(key) || key.startsWith("chat-draft"))
         storage.removeItem(key);
     }
     purgeImportedFonts(storage);

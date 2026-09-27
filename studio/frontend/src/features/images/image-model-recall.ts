@@ -7,7 +7,7 @@ export interface RememberedImageModel {
   filename?: string;
 }
 
-const KEY = "unsloth:images:last-model";
+const KEY = "labz:images:last-model";
 
 export function readImageModel(): RememberedImageModel | null {
   try {

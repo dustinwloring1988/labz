@@ -194,7 +194,7 @@ test("the real preference store persists all controls and restores them on reloa
   prefs.getState().setShowContextWindowUsage(false);
   prefs.getState().setSendShortcut("mod-enter");
   prefs.getState().setFollowUpBehavior("steer");
-  const saved = store.get("unsloth_chat_preferences")!;
+  const saved = store.get("labz_chat_preferences")!;
   const expected = {
     plainTextComposer: false,
     showContextWindowUsage: false,
@@ -206,7 +206,7 @@ test("the real preference store persists all controls and restores them on reloa
     expected,
   );
   prefs.setState(normalizeComposerPreferences(null));
-  store.set("unsloth_chat_preferences", saved);
+  store.set("labz_chat_preferences", saved);
   await prefs.persist.rehydrate();
   assert.deepEqual(normalizeComposerPreferences(prefs.getState()), expected);
   assert.equal(typeof prefs.getState().setFollowUpBehavior, "function");

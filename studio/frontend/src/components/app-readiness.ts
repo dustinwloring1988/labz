@@ -11,7 +11,7 @@ import {
 } from "react";
 
 function signalReloadSnapshotReady(): void {
-  window.dispatchEvent(new Event("unsloth:app-shell-ready"));
+  window.dispatchEvent(new Event("labz:app-shell-ready"));
 }
 
 /** Each mounted desktop subtree owns its callback; late work cannot reveal its successor. */

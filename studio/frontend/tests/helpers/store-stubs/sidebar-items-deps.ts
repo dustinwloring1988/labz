@@ -45,7 +45,7 @@ export function resetRecorder(
   recorder.slowOn = new Set(slowOn);
 }
 
-export const CHAT_HISTORY_UPDATED_EVENT = "unsloth:chat-history-updated";
+export const CHAT_HISTORY_UPDATED_EVENT = "labz:chat-history-updated";
 
 export function notifyChatHistoryUpdated(): void {
   recorder.notifications += 1;

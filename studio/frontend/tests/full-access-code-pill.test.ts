@@ -12,7 +12,7 @@ import {
 } from "./helpers/mock-timer-drain.ts";
 
 const { store: localStorageFake } = installLocalStorageFake();
-localStorageFake.set("unsloth_chat_settings_imported_to_studio_db", "true");
+localStorageFake.set("labz_chat_settings_imported_to_studio_db", "true");
 register("./thread-sampling-resolver.mjs", import.meta.url);
 
 const { settingsHttp } = await import("./helpers/store-stubs/settings-http.ts");
@@ -24,7 +24,7 @@ const STORE_URL = new URL(
   "../src/features/chat/stores/chat-runtime-store.ts",
   import.meta.url,
 ).href;
-const CODE_KEY = "unsloth_chat_code_tools_enabled";
+const CODE_KEY = "labz_chat_code_tools_enabled";
 const LOCAL = "unsloth/Qwen3-1.7B-GGUF";
 const EXTERNAL = "external::anthropic::claude-opus-5";
 

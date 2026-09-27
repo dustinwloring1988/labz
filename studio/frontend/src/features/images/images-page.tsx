@@ -1388,7 +1388,7 @@ export function ImagesPage({
   const [availableControlNets, setAvailableControlNets] = useState<DiffusionControlNetInfo[]>([]);
   // Advanced options live in a right-docked panel, closed by default; the open state is remembered across visits.
   const [advancedOpen, setAdvancedOpen] = usePersistedToggle(
-    "unsloth_images_advanced_open",
+    "labz_images_advanced_open",
   );
   // Advanced (load-time) options; "auto"/"off"/"none" map to the backend defaults. Changing one
   // while loaded shows "Reapply".
@@ -1408,7 +1408,7 @@ export function ImagesPage({
   // host. Persisted, unlike the selects around it: status carries the device a pipeline is on
   // but not which card, so a refresh would reset it to Auto. A stale id is dropped on send.
   const [selectedGpu, setSelectedGpu] = usePersistedChoice(
-    "unsloth_image_gpu_choice",
+    "labz_image_gpu_choice",
     "auto",
   );
   const gpuChoices = useDiffusionGpuChoices();

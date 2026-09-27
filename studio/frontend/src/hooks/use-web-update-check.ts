@@ -25,7 +25,7 @@ function overriddenDelayMs(): number | null {
   const value = typeof raw === "number" ? raw : Number.NaN;
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
-const DISMISS_PREFIX = "unsloth_web_update_dismissed";
+const DISMISS_PREFIX = "labz_web_update_dismissed";
 const CAN_SHOW_KEY = "can_show_web_notification";
 const UPDATE_AVAILABLE_KEY = "update_available";
 const INSTALL_SOURCE_KEY = "install_source";

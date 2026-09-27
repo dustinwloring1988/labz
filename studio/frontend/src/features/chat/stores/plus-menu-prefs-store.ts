@@ -42,7 +42,7 @@ const DEFAULT_PINS: Record<PlusMenuItemId, boolean> = {
   canvas: false,
 };
 
-export const PLUS_MENU_PINS_STORAGE_KEY = "unsloth_plus_menu_pins";
+export const PLUS_MENU_PINS_STORAGE_KEY = "labz_plus_menu_pins";
 
 export interface PlusMenuPrefsState {
   pins: Record<PlusMenuItemId, boolean>;

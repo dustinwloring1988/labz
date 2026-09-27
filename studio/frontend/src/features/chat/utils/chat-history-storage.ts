@@ -73,7 +73,7 @@ type ThreadListArgs = {
 // the server-side ledger is the source of truth so a studio.db wipe stays recoverable.
 // The hint only short-circuits the listing paths' "also surface Dexie threads?" branches.
 // The server-side ledger is chat_legacy_imports.
-const LEGACY_CHAT_IMPORT_KEY = "unsloth_chat_legacy_imported_to_studio_db";
+const LEGACY_CHAT_IMPORT_KEY = "labz_chat_legacy_imported_to_studio_db";
 
 let legacyChatImportPromise: Promise<void> | null = null;
 

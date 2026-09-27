@@ -21,7 +21,7 @@ import {
  * Exported so "Reset all local preferences" in General can clear it by
  * reference rather than by a second copy of the literal.
  */
-export const KEYBOARD_SHORTCUTS_STORAGE_KEY = "unsloth_keyboard_shortcuts";
+export const KEYBOARD_SHORTCUTS_STORAGE_KEY = "labz_keyboard_shortcuts";
 const STORAGE_KEY = KEYBOARD_SHORTCUTS_STORAGE_KEY;
 
 /** Per-slot delta. An absent slot means "use the shipped default". */

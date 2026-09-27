@@ -54,7 +54,7 @@ for (const supportsPageSwap of [true, false]) {
   test(`account-switch reload must not paint Alice's chat for Bob (${supportsPageSwap ? "pageswap" : "pagehide"})`, async () => {
     const shared = new Map([
       [BROWSER_ACCOUNT_KEY, "account:a1:alice"],
-      ["unsloth_auth_token", "alice-token"],
+      ["labz_auth_token", "alice-token"],
     ]);
     const localStorage = storage(shared);
     const outgoing = createEnvironment({
@@ -74,7 +74,7 @@ for (const supportsPageSwap of [true, false]) {
       },
       location: {
         reload() {
-          assert.equal(shared.get("unsloth_auth_token"), "bob-token");
+          assert.equal(shared.get("labz_auth_token"), "bob-token");
           if (supportsPageSwap)
             outgoing.dispatch("pageswap", {
               activation: { navigationType: "reload" },
@@ -105,7 +105,7 @@ for (const supportsPageSwap of [true, false]) {
     await transitionBrowserAccount(
       { username: "bob", accountId: "b1" },
       "/chat",
-      () => shared.set("unsloth_auth_token", "bob-token"),
+      () => shared.set("labz_auth_token", "bob-token"),
       login,
     );
     listener!({

@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 // Persisted recent Hub search terms, newest first. Uses the localStorage +
 // same-tab CHANGE_EVENT + cross-tab `storage` pattern so consumers stay in sync.
-const STORAGE_KEY = "unsloth.hub.recentSearches";
-const CHANGE_EVENT = "unsloth:hub-recent-searches-change";
+const STORAGE_KEY = "labz.hub.recentSearches";
+const CHANGE_EVENT = "labz:hub-recent-searches-change";
 
 export const MAX_RECENT_SEARCHES = 8;
 // Single characters are usually noise (a half-typed query), so skip them.

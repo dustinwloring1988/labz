@@ -12,7 +12,7 @@ import {
 
 export const DEFAULT_LOCALE: Locale = "en";
 export const AUTO_LOCALE = "auto";
-export const LOCALE_STORAGE_KEY = "unsloth_locale";
+export const LOCALE_STORAGE_KEY = "labz_locale";
 export const LOCALE_INITIALIZATION_TIMEOUT_MS = 2_000;
 /**
  * The bound a locale change gets when its caller names none.

@@ -143,7 +143,7 @@ test("invalid or incomplete stored targets cannot trigger automatic loading", ()
     '{"repoId":"org/model","kind":"gguf"}',
     '{"repoId":"org/model","kind":"unknown"}',
   ]) {
-    storage.setItem("unsloth:images:last-model", value);
+    storage.setItem("labz:images:last-model", value);
     assert.equal(readImageModel(), null);
   }
 });

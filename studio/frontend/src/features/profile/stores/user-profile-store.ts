@@ -34,6 +34,6 @@ export const useUserProfileStore = create<UserProfileState>()(
       setAvatarShape: (avatarShape) => set({ avatarShape }),
       setShowGreetingSloth: (showGreetingSloth) => set({ showGreetingSloth }),
     }),
-    { name: "unsloth_user_profile" },
+    { name: "labz_user_profile" },
   ),
 );

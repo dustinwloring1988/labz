@@ -24,7 +24,7 @@ import {
 } from "./helpers/mock-timer-drain.ts";
 
 const { store: localStorageFake } = installLocalStorageFake();
-localStorageFake.set("unsloth_chat_settings_imported_to_studio_db", "true");
+localStorageFake.set("labz_chat_settings_imported_to_studio_db", "true");
 register("./thread-sampling-resolver.mjs", import.meta.url);
 
 const { settingsHttp } = await import("./helpers/store-stubs/settings-http.ts");

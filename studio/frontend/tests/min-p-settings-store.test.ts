@@ -7,7 +7,7 @@ import test from "node:test";
 import { installLocalStorageFake } from "./helpers/kit.ts";
 
 installLocalStorageFake().store.set(
-  "unsloth_chat_settings_imported_to_studio_db",
+  "labz_chat_settings_imported_to_studio_db",
   "true",
 );
 register("./store-settings-resolver.mjs", import.meta.url);

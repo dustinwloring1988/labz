@@ -4,7 +4,7 @@
 // The "the user stopped the server on purpose" marker. sessionStorage outlives webview reloads but
 // not the app process, so an explicit stop holds across Reload while a fresh launch still
 // auto-starts.
-export const USER_STOPPED_KEY = "unsloth_server_user_stopped";
+export const USER_STOPPED_KEY = "labz_server_user_stopped";
 
 // Every access is wrapped: private browsing, blocked cookies and opaque webview origins
 // all throw on access, and the read below runs before the startup screen has any state to

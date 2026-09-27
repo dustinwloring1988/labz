@@ -37,13 +37,13 @@ test("job starts notify this window and other-tab storage listeners", (t) => {
   signalLlamaJobStarted("2026-08-11T12:00:00Z");
   assert.equal(notifications, 1);
   assert.match(
-    writes.get("unsloth_llama_job_started_at") ?? "",
+    writes.get("labz_llama_job_started_at") ?? "",
     /^2026-08-11T12:00:00Z:\d+$/,
   );
 
   const storageEvent = new Event("storage");
   Object.defineProperty(storageEvent, "key", {
-    value: "unsloth_llama_job_started_at",
+    value: "labz_llama_job_started_at",
   });
   target.dispatchEvent(storageEvent);
   assert.equal(notifications, 2);

@@ -124,7 +124,7 @@ const REGISTRY_MODEL_CAPABILITIES = new Map<
 >();
 
 const REGISTRY_MODEL_CAPABILITIES_KEY =
-  "unsloth_chat_provider_model_capabilities";
+  "labz_chat_provider_model_capabilities";
 let registryCapabilitiesHydrated = false;
 
 function hydrateProviderModelCapabilities(): void {
@@ -460,9 +460,9 @@ export function toExternalBackendProviderType(
     : providerType;
 }
 
-const EXTERNAL_PROVIDERS_KEY = "unsloth_chat_external_providers";
-const EXTERNAL_PROVIDER_KEYS_KEY = "unsloth_chat_external_provider_keys";
-const CONNECTIONS_ENABLED_KEY = "unsloth_chat_connections_enabled";
+const EXTERNAL_PROVIDERS_KEY = "labz_chat_external_providers";
+const EXTERNAL_PROVIDER_KEYS_KEY = "labz_chat_external_provider_keys";
+const CONNECTIONS_ENABLED_KEY = "labz_chat_connections_enabled";
 const EXTERNAL_MODEL_PREFIX = "external::";
 
 function canUseStorage(): boolean {

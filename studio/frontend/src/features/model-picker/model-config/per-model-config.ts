@@ -295,10 +295,10 @@ export {
 } from "@/lib/speculative-modes";
 
 /** Exported so cross-tab listeners can tell this key's storage event from the dozens of others Studio writes. */
-export const PER_MODEL_CONFIG_STORAGE_KEY = "unsloth_model_configs";
+export const PER_MODEL_CONFIG_STORAGE_KEY = "labz_model_configs";
 const STORAGE_KEY = PER_MODEL_CONFIG_STORAGE_KEY;
-const LEGACY_STORAGE_KEY = "unsloth_load_settings";
-const LEGACY_MIGRATION_FLAG = "unsloth_model_configs_migrated";
+const LEGACY_STORAGE_KEY = "labz_load_settings";
+const LEGACY_MIGRATION_FLAG = "labz_model_configs_migrated";
 // would normalize the unknown field straight back out of the record.
 // v2 added nBatch/nUbatch, v3 llamaExtraArgs, v4 disableVision, v5 the llama-server tuning group
 // (loadMode / specDraftCacheDtype / ctxCheckpoints / cacheRam), v6 the reasoning budget pair; a
@@ -557,7 +557,7 @@ function canUseStorage(): boolean {
 
 // Whether Run Settings shows its advanced section is a standing preference, not per-model.
 // Closed until asked for.
-export const ADVANCED_SETTINGS_OPEN_KEY = "unsloth_model_advanced_settings";
+export const ADVANCED_SETTINGS_OPEN_KEY = "labz_model_advanced_settings";
 
 function loadAdvancedSettingsOpen(): boolean | null {
   if (!canUseStorage()) {

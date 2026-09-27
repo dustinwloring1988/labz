@@ -44,11 +44,11 @@ interface LiveCatalogRecord {
   models: Record<string, ModelCatalogEntry>;
 }
 
-const LIVE_CATALOG_KEY = "unsloth_chat_provider_model_catalog";
+const LIVE_CATALOG_KEY = "labz_chat_provider_model_catalog";
 const LIVE_CATALOG = new Map<string, LiveCatalogRecord>();
 let liveCatalogHydrated = false;
 
-const MODELS_DEV_KEY = "unsloth_chat_models_dev_catalog";
+const MODELS_DEV_KEY = "labz_chat_models_dev_catalog";
 let modelsDev: ModelCatalogResponse | null = null;
 let modelsDevHydrated = false;
 

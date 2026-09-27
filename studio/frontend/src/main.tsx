@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright 2026-present the Unsloth AI Inc. team. All rights reserved. See /studio/LICENSE.AGPL-3.0
 
+// Carries every pre-rebrand localStorage key onto its new `labz_*` name, and the auth token with
+// it. This has to be the first import in the file: zustand's persist hydrates synchronously when
+// a store is constructed, and stores are constructed during module evaluation, so a migration
+// that ran after any of the imports below would find them already holding defaults.
+import "./lib/storage-namespace.ts";
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 

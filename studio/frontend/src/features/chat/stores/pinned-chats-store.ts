@@ -43,7 +43,7 @@ export const usePinnedChatsStore = create<PinnedChatsState>()(
         }),
     }),
     {
-      name: "unsloth_pinned_chats",
+      name: "labz_pinned_chats",
       merge: (persisted, current) => {
         const saved = persisted as Partial<PinnedChatsState> | undefined;
         return {

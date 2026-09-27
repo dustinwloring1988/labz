@@ -177,7 +177,7 @@ test("a toggle in another tab repaints mounted panels", () => {
   assert.equal(panel.changes(), 2);
 
   // An unrelated key does not.
-  fromAnotherTab("unsloth_model_configs");
+  fromAnotherTab("labz_model_configs");
   assert.equal(panel.changes(), 2);
 
   panel.unmount();

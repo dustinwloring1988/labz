@@ -362,7 +362,7 @@ export function AudioPage({
     requestStarted: boolean;
   } | null>(null);
 
-  const [lastSttRepo, setLastSttRepo] = usePersistedChoice("unsloth:audio:last-stt-model", "");
+  const [lastSttRepo, setLastSttRepo] = usePersistedChoice("labz:audio:last-stt-model", "");
   const [selectedSttRepo, setSelectedSttRepo] = useState<string | null>(null);
   const [sttLoadedModel, setSttLoadedModel] = useState<string | null>(null);
   const [sttLoadedEngine, setSttLoadedEngine] = useState<
@@ -499,11 +499,11 @@ export function AudioPage({
     className: settingsFadeClass,
   } = useScrollFades();
   const [advancedOpen, setAdvancedOpen] = usePersistedToggle(
-    "unsloth_audio_advanced_open",
+    "labz_audio_advanced_open",
   );
   // Read at load time; the handler below ejects so a change takes effect.
   const [audioDevice, setAudioDeviceState] = usePersistedChoice(
-    "unsloth_audio_device",
+    "labz_audio_device",
     "auto",
   );
 

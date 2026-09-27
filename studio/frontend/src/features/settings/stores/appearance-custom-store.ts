@@ -607,7 +607,7 @@ export const useAppearanceCustomStore = create<AppearanceCustomState>()(
       resetAll: () => set({ customization: DEFAULT_CUSTOMIZATION }),
     }),
     {
-      name: "unsloth_appearance_customization",
+      name: "labz_appearance_customization",
       // v2 is the consolidated baseline: one shipped layout, the history dropped.
       // The next change that moves a row is v3, and it moves this number in the
       // same edit that appends to SHIPPED_SIDEBAR_NAV_DEFAULTS.

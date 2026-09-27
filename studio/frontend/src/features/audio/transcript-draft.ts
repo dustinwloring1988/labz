@@ -10,7 +10,7 @@ export interface TranscriptDraft {
 }
 
 export function transcriptDraftKey(): string {
-  return accountDatabaseName("unsloth:audio:unsaved-transcript");
+  return accountDatabaseName("labz:audio:unsaved-transcript");
 }
 
 export function readTranscriptDraft(key: string): TranscriptDraft | null {

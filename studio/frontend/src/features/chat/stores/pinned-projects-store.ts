@@ -29,7 +29,7 @@ export const usePinnedProjectsStore = create<PinnedProjectsState>()(
         })),
     }),
     {
-      name: "unsloth_pinned_projects",
+      name: "labz_pinned_projects",
       merge: (persisted, current) => {
         const saved = persisted as Partial<PinnedProjectsState> | undefined;
         return {

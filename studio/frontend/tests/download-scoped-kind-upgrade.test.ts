@@ -14,7 +14,7 @@ import {
 registerBundlerResolver();
 const { store } = installLocalStorageFake();
 
-const PERSIST_KEY = "unsloth.studio.downloads";
+const PERSIST_KEY = "labz.studio.downloads";
 
 function persistedJob(
   repoId: string,

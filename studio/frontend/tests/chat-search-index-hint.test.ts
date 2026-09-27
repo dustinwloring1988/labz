@@ -334,7 +334,7 @@ test("an unrelated storage key leaves the cache alone", () => {
   store.clear();
   setAuthSessionEpochForTest(0);
   writeCachedIndex([row]);
-  fireStorage("unsloth_theme");
+  fireStorage("labz_theme");
   assert.equal(chatSearchIndexHasRows(), true);
 });
 

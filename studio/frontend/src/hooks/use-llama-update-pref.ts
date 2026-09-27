@@ -6,8 +6,8 @@ import { useSyncExternalStore } from "react";
 // Whether an update banner may appear, per component. On by default; only an
 // explicit "false" (Settings -> General -> Notifications) disables it. A switch
 // each: the two components ship on their own schedules.
-const LLAMA_STORAGE_KEY = "unsloth_show_llama_update_banner";
-const WHISPER_STORAGE_KEY = "unsloth_show_whisper_update_banner";
+const LLAMA_STORAGE_KEY = "labz_show_llama_update_banner";
+const WHISPER_STORAGE_KEY = "labz_show_whisper_update_banner";
 
 const listeners = new Set<() => void>();
 

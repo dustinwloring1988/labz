@@ -13,7 +13,7 @@ import { installLocalStorageFake } from "./helpers/kit.ts";
 register("./helpers/settings-api-resolver.mjs", import.meta.url);
 const { store } = installLocalStorageFake();
 
-const LEGACY_KEY = "unsloth.last-local-model-load.v1";
+const LEGACY_KEY = "labz.last-local-model-load.v1";
 
 const { readLastLocalModelLoad, recordLastLocalModelLoad } = await import(
   "../src/features/chat/utils/last-local-model-load.ts"

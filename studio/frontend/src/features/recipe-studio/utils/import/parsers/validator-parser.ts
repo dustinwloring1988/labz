@@ -7,7 +7,7 @@ import { normalizeValidatorCodeLang } from "../../validators/code-lang";
 import { normalizeOxcCodeShape } from "../../validators/oxc-code-shape";
 import { normalizeOxcValidationMode } from "../../validators/oxc-mode";
 
-const OXC_VALIDATION_FN_MARKER = "unsloth_oxc_validator";
+const OXC_VALIDATION_FN_MARKER = "labz_oxc_validator";
 
 function parseOxcValidationMarker(
   validationFunctionRaw: string,

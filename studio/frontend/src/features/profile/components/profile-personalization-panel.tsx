@@ -23,7 +23,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useRef, useState } from "react";
 import { MASCOT_AVATARS } from "../mascot-avatars";
-import { loginDisplayName } from "../hooks/use-effective-profile";
+import { loginDisplayName, OWNER_DISPLAY_NAME } from "../hooks/use-effective-profile";
 import { decodeJwtSubject } from "../utils/jwt-subject";
 import { resizeImageFileToDataUrl } from "../utils/resize-image-file";
 import {
@@ -32,7 +32,7 @@ import {
 } from "../stores/user-profile-store";
 import { UserAvatar } from "./user-avatar";
 
-const PROFILE_STORAGE_KEY = "unsloth_user_profile";
+const PROFILE_STORAGE_KEY = "labz_user_profile";
 const SLOTH_NAME = /^large\s+/i;
 const PNG_SUFFIX = /\.png$/i;
 
@@ -91,7 +91,7 @@ export function ProfilePersonalizationPanel() {
   const sessionSub = decodeJwtSubject(getAuthToken()) ?? "";
   // Fallback only: the draft being typed still wins over this.
   const loginName = loginDisplayName(sessionSub);
-  const previewName = draftName.trim() || loginName || "Unsloth";
+  const previewName = draftName.trim() || loginName || OWNER_DISPLAY_NAME;
 
   useEffect(() => {
     const previous = lastDisplayNameRef.current;
@@ -388,7 +388,7 @@ export function ProfilePersonalizationPanel() {
                 }
               }}
               autoComplete="off"
-              placeholder={loginName || "Unsloth"}
+              placeholder={loginName || OWNER_DISPLAY_NAME}
               className="h-9 w-full rounded-full text-sm"
             />
           </div>

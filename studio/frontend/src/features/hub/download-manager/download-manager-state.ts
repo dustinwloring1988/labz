@@ -39,7 +39,7 @@ import {
   teardownRuntime,
 } from "./runtime-registry";
 
-const PERSIST_KEY = "unsloth.studio.downloads";
+const PERSIST_KEY = "labz.studio.downloads";
 // Below version 2 an absent measuredTransfer marker is not evidence of anything, so the migration decides.
 const PERSIST_VERSION = 2;
 const MEASURED_TRANSFER_VERSION = 2;

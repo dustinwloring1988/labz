@@ -9,11 +9,11 @@ import { installLocalStorageFake } from "./helpers/kit.ts";
 
 register("./helpers/download-lifecycle-resolver.mjs", import.meta.url);
 
-const PERSIST_KEY = "unsloth.studio.downloads";
-const SESSION_CLEARED = "unsloth:auth-session-cleared";
-const SESSION_MARK_KEY = "unsloth_auth_session_mark";
-const SESSION_STORED = "unsloth:auth-session-stored";
-const TOKEN_KEY = "unsloth_auth_token";
+const PERSIST_KEY = "labz.studio.downloads";
+const SESSION_CLEARED = "labz:auth-session-cleared";
+const SESSION_MARK_KEY = "labz_auth_session_mark";
+const SESSION_STORED = "labz:auth-session-stored";
+const TOKEN_KEY = "labz_auth_token";
 
 const { fireWindowEvent, store } = installLocalStorageFake();
 Object.assign(globalThis.window, {

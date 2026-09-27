@@ -26,11 +26,11 @@ const REPO_KEY = 'v2:["unsloth/repo-gguf","q4_k_m"]';
 
 // The legacy import runs once on the first read, so it must be staged before the import.
 store.set(
-  "unsloth_model_configs",
+  "labz_model_configs",
   JSON.stringify({ [REPO_KEY]: { version: 1, maxSeqLength: 32768 } }),
 );
 store.set(
-  "unsloth_load_settings",
+  "labz_load_settings",
   JSON.stringify({ "Unsloth/Repo-GGUF::Q4_K_M": { contextLength: 8192 } }),
 );
 
@@ -60,7 +60,7 @@ function config(maxSeqLength: number, kvCacheDtype: string | null = null) {
 
 function storedKeys(): string[] {
   return Object.keys(
-    JSON.parse(storage.getItem("unsloth_model_configs") ?? "{}"),
+    JSON.parse(storage.getItem("labz_model_configs") ?? "{}"),
   );
 }
 

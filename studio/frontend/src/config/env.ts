@@ -122,7 +122,7 @@ export async function fetchDeviceType(options?: {
     const token =
       typeof window === "undefined"
         ? null
-        : localStorage.getItem("unsloth_auth_token");
+        : localStorage.getItem("labz_auth_token");
     // Re-read while the backend is still measuring: chat_only is its pre-detection default
     // until then, and __root.tsx's beforeLoad acts on what this returns, sending a GPU host
     // to /chat with Train hidden. The window is only the torch import, so bound the re-read.

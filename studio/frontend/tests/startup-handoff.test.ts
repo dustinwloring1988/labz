@@ -9,7 +9,7 @@ const source = readSrc("app/provider.tsx");
 
 test("desktop splash waits for scoped route readiness, not global events or backend auth", () => {
   assert.match(source, /<AppReadinessBoundary onReady=\{setAppShellReady\} revealed=\{showApp\}>/);
-  assert.doesNotMatch(source, /addEventListener\("unsloth:app-shell-ready"/);
+  assert.doesNotMatch(source, /addEventListener\("labz:app-shell-ready"/);
   assert.match(source, /const showApp = canMountApp && appShellReady/);
   assert.match(source, /\{canMountApp && \(/);
   assert.match(source, /inert=\{!showApp\}/);

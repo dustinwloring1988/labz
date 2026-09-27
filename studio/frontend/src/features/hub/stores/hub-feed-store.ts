@@ -46,7 +46,7 @@ export const FEED_TTL_MS: Record<ChannelId, number> = {
   "unsloth-safetensors": 30 * 60 * 1000,
 };
 
-const PERSIST_KEY = "unsloth.studio.hubFeed";
+const PERSIST_KEY = "labz.studio.hubFeed";
 const PERSIST_VERSION = 1;
 const PERSIST_THROTTLE_MS = 1_000;
 

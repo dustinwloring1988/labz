@@ -18,7 +18,7 @@ const {
 } = await import("../src/features/model-picker/components/model-selector/model-reasoning-effort.ts");
 const { resolveExternalReasoningEffort } = await import("../src/features/chat/provider-capabilities.ts");
 
-const KEY = "unsloth_model_reasoning_effort";
+const KEY = "labz_model_reasoning_effort";
 const MODEL = "external::review::reasoning-model";
 const THREAD = "review-thread";
 const CAPS: ExternalReasoningCapabilities = {
@@ -33,7 +33,7 @@ const runtimeUrl = new URL("../src/features/chat/stores/chat-runtime-store.ts", 
 
 async function boot(scenario: string, paired: boolean | null = true): Promise<RuntimeModule> {
   storageData.clear();
-  storageData.set("unsloth_chat_settings_imported_to_studio_db", "true");
+  storageData.set("labz_chat_settings_imported_to_studio_db", "true");
   useModelReasoningEffortStore.getState().syncFromStorage();
   settingsHttp.settings = { rememberParamsPerModel: false, reasoningEffort: "medium" };
   settingsHttp.puts.length = 0;

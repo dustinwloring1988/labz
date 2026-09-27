@@ -135,10 +135,10 @@ import type {
   SelectedModelView,
 } from "./types";
 
-const MODELS_TAB_STORAGE_KEY = "unsloth.hub.modelsTab";
-const ALL_MODELS_VIEW_STORAGE_KEY = "unsloth.hub.allModelsView";
-const INVENTORY_SORT_STORAGE_KEY = "unsloth.hub.inventorySort";
-const OWNER_SCOPE_STORAGE_KEY = "unsloth.hub.ownerScope";
+const MODELS_TAB_STORAGE_KEY = "labz.hub.modelsTab";
+const ALL_MODELS_VIEW_STORAGE_KEY = "labz.hub.allModelsView";
+const INVENTORY_SORT_STORAGE_KEY = "labz.hub.inventorySort";
+const OWNER_SCOPE_STORAGE_KEY = "labz.hub.ownerScope";
 const RUN_CONFIG_REFRESH_TIMEOUT_MS = 5_000;
 
 // Iconless models (no provider logo, e.g. Ornith, Inkling) show once they clear this many likes.

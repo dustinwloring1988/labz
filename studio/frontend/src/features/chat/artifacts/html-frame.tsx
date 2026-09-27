@@ -162,7 +162,7 @@ export function ArtifactHtmlFrame({
     // Sandboxed frame has an opaque origin ("null"), so a wildcard target is required; the payload
     // only reaches this iframe's contentWindow.
     iframeRef.current?.contentWindow?.postMessage(
-      { type: "unsloth:artifact-html", html: artifactHtml },
+      { type: "labz:artifact-html", html: artifactHtml },
       "*",
     );
   }, [artifactHtml]);
@@ -171,7 +171,7 @@ export function ArtifactHtmlFrame({
     const handler = (event: MessageEvent) => {
       if (event.source !== iframeRef.current?.contentWindow) return;
       if (event.origin !== "null") return;
-      if (event.data?.type === "unsloth:artifact-blocked") {
+      if (event.data?.type === "labz:artifact-blocked") {
         // event.source survives the swap navigation, so without the frame's stamp a report from the
         // outgoing canvas would be tagged with the incoming code and prompt a needless grant.
         if (event.data.v !== codeVersion) return;

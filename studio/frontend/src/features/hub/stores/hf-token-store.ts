@@ -11,11 +11,11 @@ async function loadHfTokenApi(): Promise<HfTokenApi> {
   return import("../api/hf-token-api");
 }
 
-const HF_TOKEN_KEY = "unsloth_hf_token";
-const LEGACY_TRAINING_KEY = "unsloth_training_config_v1";
-const HF_TOKEN_MIGRATION_KEY = "unsloth_hf_token_migration_v1";
+const HF_TOKEN_KEY = "labz_hf_token";
+const LEGACY_TRAINING_KEY = "labz_training_config_v1";
+const HF_TOKEN_MIGRATION_KEY = "labz_hf_token_migration_v1";
 
-const HF_TOKEN_SYNC_KEY = "unsloth_hf_token_backend_revision";
+const HF_TOKEN_SYNC_KEY = "labz_hf_token_backend_revision";
 
 let backendNotificationRevision = 0;
 

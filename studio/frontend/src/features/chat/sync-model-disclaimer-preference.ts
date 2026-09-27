@@ -8,7 +8,7 @@ import {
 } from "./api/chat-preferences";
 import { useChatPreferencesStore } from "./stores/chat-preferences-store";
 
-const STORAGE_KEY = "unsloth_chat_preferences";
+const STORAGE_KEY = "labz_chat_preferences";
 
 let mutationRevision = 0;
 // Preserve request order across hydration, refreshes, and writes.

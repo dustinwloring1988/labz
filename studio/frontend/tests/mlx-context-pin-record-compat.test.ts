@@ -45,7 +45,7 @@ const { resolveLoadMaxSeqLength } = await import(
   "../src/features/chat/presets/preset-policy.ts"
 );
 
-const STORAGE_KEY = "unsloth_model_configs";
+const STORAGE_KEY = "labz_model_configs";
 const MODEL = "mlx-community/Qwen3-8B-4bit";
 /** The window an MLX model of this size reports; only used as the "native" input. */
 const NATIVE = 262144;
@@ -79,7 +79,7 @@ const MODEL_KEY = storageKeyForModel();
 function stage(raw: Record<string, unknown>) {
   store.clear();
   // The legacy migration runs on the first read and would merge an unrelated blob in.
-  store.set("unsloth_model_configs_migrated", "1");
+  store.set("labz_model_configs_migrated", "1");
   store.set(STORAGE_KEY, JSON.stringify({ [MODEL_KEY]: raw }));
   return resolveInitialConfig(MODEL, null);
 }

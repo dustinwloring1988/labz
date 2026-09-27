@@ -70,7 +70,7 @@ test("the model cache clear does not promise that models are untouched", () => {
     "settings.resources.storage.caches.datasetsCost",
     SAFETY,
   ]);
-  assert.deepEqual(singleClearDescriptionKeys("unsloth_compiled"), [SAFETY]);
+  assert.deepEqual(singleClearDescriptionKeys("labz_compiled"), [SAFETY]);
 });
 
 test("the bulk clear keeps the assurance, because it excludes the model cache", () => {

@@ -7,8 +7,8 @@
  *  nothing on purpose: ESM evaluates dependencies first, so a module with none cannot be
  *  re-entered mid-initialization. One import reopens the hazard. */
 
-export const PROMPT_QUEUE_STOP_EVENT = "unsloth:prompt-queue-stop";
-export const PROMPT_QUEUE_RUN_FAILED_EVENT = "unsloth:prompt-queue-run-failed";
+export const PROMPT_QUEUE_STOP_EVENT = "labz:prompt-queue-stop";
+export const PROMPT_QUEUE_RUN_FAILED_EVENT = "labz:prompt-queue-run-failed";
 
 export type PromptQueueStopEventDetail = {
   threadIds?: string[];

@@ -3,8 +3,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const PREV_MAX_STEPS_KEY = "unsloth_prev_max_steps";
-const PREV_SAVE_STEPS_KEY = "unsloth_prev_save_steps";
+const PREV_MAX_STEPS_KEY = "labz_prev_max_steps";
+const PREV_SAVE_STEPS_KEY = "labz_prev_save_steps";
 const DEFAULT_MAX_STEPS = 60;
 const DEFAULT_EPOCHS = 3;
 

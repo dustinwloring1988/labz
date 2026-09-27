@@ -7,7 +7,7 @@
 export type ProjectAttachmentTarget = "project" | "thread";
 
 export const CHAT_PROJECT_ATTACHMENT_TARGET_KEY =
-  "unsloth_chat_project_attachment_target";
+  "labz_chat_project_attachment_target";
 
 // A project exists to share context, so its chats default to the whole project.
 export const DEFAULT_PROJECT_ATTACHMENT_TARGET: ProjectAttachmentTarget = "project";

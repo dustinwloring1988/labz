@@ -989,7 +989,7 @@ function VideoGenerator({
   );
   // Advanced options live in a right-docked panel, closed by default; the open state is remembered across visits.
   const [advancedOpen, setAdvancedOpen] = usePersistedToggle(
-    "unsloth_video_advanced_open",
+    "labz_video_advanced_open",
   );
   // Advanced (load-time) options; "auto"/"off" map to the backend defaults. "Reapply" reloads with new values.
   const [memoryMode, setMemoryMode] = useState<"auto" | "fast" | "balanced" | "low_vram">("auto");
@@ -997,7 +997,7 @@ function VideoGenerator({
   // host. Persisted, unlike the selects around it: status carries the device a pipeline is on
   // but not which card, so a refresh would reset it to Auto. A stored id is only a hint.
   const [selectedGpu, setSelectedGpu] = usePersistedChoice(
-    "unsloth_video_gpu_choice",
+    "labz_video_gpu_choice",
     "auto",
   );
   const gpuChoices = useDiffusionGpuChoices();

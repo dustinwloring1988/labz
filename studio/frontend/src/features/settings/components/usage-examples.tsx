@@ -368,7 +368,7 @@ function buildSnippets(
 const KEY_PLACEHOLDER = "sk-unsloth-YOUR_KEY";
 // the openai sdks require some api_key, so name one rather than leave it blank
 const KEYLESS_KEY_PLACEHOLDER = "not-needed";
-const USE_TUNNEL_KEY = "unsloth_api_use_tunnel";
+const USE_TUNNEL_KEY = "labz_api_use_tunnel";
 // Slow retry while /v1 has nothing to name: a download or load moves no store state.
 const CATALOG_RETRY_MS = 15000;
 // Slower beat once something is servable: an idle unload frees a model without

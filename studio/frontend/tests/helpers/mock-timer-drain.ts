@@ -71,7 +71,7 @@ const BARRIER_AFTER_TURN = 2;
  * a drain can tell it is looking at a counted setTimeout rather than a raw mocked one.
  * `enable()` installs a fresh mocked setTimeout each test, which drops this and makes the
  * next install re-wrap with fresh counts. */
-const COUNTED = Symbol("unsloth.mockTimerDrain.counted");
+const COUNTED = Symbol("labz.mockTimerDrain.counted");
 
 interface TimerCounter {
   /** Scheduled and not yet fired or cleared. */

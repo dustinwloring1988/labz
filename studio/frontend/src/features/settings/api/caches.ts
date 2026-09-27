@@ -21,7 +21,7 @@ export const CACHE_KEYS = [
   "numba",
   "matplotlib",
   "vllm",
-  "unsloth_compiled",
+  "labz_compiled",
   "hf_xet",
   "hf_assets",
   "hf_datasets",

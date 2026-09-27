@@ -98,7 +98,7 @@ function focusForOpen(
   return { opener, openerFallback: requestedFallback };
 }
 
-const ACTIVE_TAB_KEY = "unsloth_settings_active_tab";
+const ACTIVE_TAB_KEY = "labz_settings_active_tab";
 
 function loadInitialTab(): SettingsTab {
   if (typeof window === "undefined") return "general";

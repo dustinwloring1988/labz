@@ -86,7 +86,7 @@ test("a record only claims v6 when it carries a reasoning setting", () => {
   const storedVersion = () =>
     (
       Object.values(
-        JSON.parse(store.get("unsloth_model_configs") ?? "{}"),
+        JSON.parse(store.get("labz_model_configs") ?? "{}"),
       ) as { version: number }[]
     )[0]?.version;
   store.clear();

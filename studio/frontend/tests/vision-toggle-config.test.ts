@@ -30,7 +30,7 @@ const { loadedConfigSignature } = await import(
   "../src/features/model-picker/model-config/config-signature.ts"
 );
 
-const STORAGE_KEY = "unsloth_model_configs";
+const STORAGE_KEY = "labz_model_configs";
 // Ceiling shipped by the last build BEFORE the toggle. A record stamped at or
 // below it is readable, and therefore erasable, by that build.
 const PRE_VISION_CEILING = 3;

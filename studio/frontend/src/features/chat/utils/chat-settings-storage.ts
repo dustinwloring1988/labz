@@ -28,23 +28,23 @@ import {
   hasNoMirroredSettings,
 } from "./mirrored-chat-settings";
 
-const AUTO_TITLE_KEY = "unsloth_chat_auto_title";
-const AUTO_HEAL_TOOL_CALLS_KEY = "unsloth_auto_heal_tool_calls";
-const NUDGE_TOOL_CALLS_KEY = "unsloth_nudge_tool_calls";
-const MAX_TOOL_CALLS_KEY = "unsloth_max_tool_calls_per_message";
-const TOOL_CALL_TIMEOUT_KEY = "unsloth_tool_call_timeout";
-const INFERENCE_PARAMS_KEY = "unsloth_chat_inference_params";
-const CHAT_ACTIVE_PRESET_KEY = "unsloth_chat_active_preset";
-const CHAT_ACTIVE_PRESET_SOURCE_KEY = "unsloth_chat_active_preset_source";
-const REASONING_EFFORT_KEY = "unsloth_reasoning_effort";
-const PRESERVE_THINKING_KEY = "unsloth_preserve_thinking";
-const COLLAPSE_HTML_ARTIFACTS_KEY = "unsloth_chat_collapse_html_artifacts";
+const AUTO_TITLE_KEY = "labz_chat_auto_title";
+const AUTO_HEAL_TOOL_CALLS_KEY = "labz_auto_heal_tool_calls";
+const NUDGE_TOOL_CALLS_KEY = "labz_nudge_tool_calls";
+const MAX_TOOL_CALLS_KEY = "labz_max_tool_calls_per_message";
+const TOOL_CALL_TIMEOUT_KEY = "labz_tool_call_timeout";
+const INFERENCE_PARAMS_KEY = "labz_chat_inference_params";
+const CHAT_ACTIVE_PRESET_KEY = "labz_chat_active_preset";
+const CHAT_ACTIVE_PRESET_SOURCE_KEY = "labz_chat_active_preset_source";
+const REASONING_EFFORT_KEY = "labz_reasoning_effort";
+const PRESERVE_THINKING_KEY = "labz_preserve_thinking";
+const COLLAPSE_HTML_ARTIFACTS_KEY = "labz_chat_collapse_html_artifacts";
 const ALLOW_ARTIFACT_NETWORK_ACCESS_KEY =
-  "unsloth_chat_allow_artifact_network_access";
-const CHAT_PRESETS_KEY = "unsloth_chat_custom_presets";
-const LEGACY_CHAT_SYSTEM_PROMPTS_KEY = "unsloth_chat_system_prompts";
+  "labz_chat_allow_artifact_network_access";
+const CHAT_PRESETS_KEY = "labz_chat_custom_presets";
+const LEGACY_CHAT_SYSTEM_PROMPTS_KEY = "labz_chat_system_prompts";
 const LEGACY_CHAT_SETTINGS_IMPORT_KEY =
-  "unsloth_chat_settings_imported_to_studio_db";
+  "labz_chat_settings_imported_to_studio_db";
 
 const NUMERIC_INFERENCE_FIELDS = [
   "temperature",

@@ -9,8 +9,8 @@
 // toast said "loading" while the card said nothing. Both now hear the moment it happens. In lib/,
 // not a feature, since the emitters and the listeners are both features.
 
-export const MODEL_EJECTED_EVENT = "unsloth:model-ejected";
-export const MODEL_LIFECYCLE_EVENT = "unsloth:model-lifecycle";
+export const MODEL_EJECTED_EVENT = "labz:model-ejected";
+export const MODEL_LIFECYCLE_EVENT = "labz:model-lifecycle";
 
 /** Which runtime was released. Only these two own a page holding its status. */
 export type EjectedModelRuntime = "image" | "video";

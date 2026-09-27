@@ -117,12 +117,12 @@ test("modality comes from the resolvers the app already has", () => {
 });
 
 test("connected pins are a separate list from the On Device ones", () => {
-  assert.match(connectedPins, /"unsloth_pinned_connected_models"/);
-  assert.match(onDevicePins, /"unsloth_pinned_models"/);
+  assert.match(connectedPins, /"labz_pinned_connected_models"/);
+  assert.match(onDevicePins, /"labz_pinned_models"/);
   // An external id carries "::", which this reads as the repo/quant separator, so a pin filed in
   // the On Device store comes back out as a phantom pinned quant on that tab.
   assert.match(onDevicePins, /const sep = key\.indexOf\("::"\)/);
-  assert.doesNotMatch(connectedPins, /"unsloth_pinned_models"/);
+  assert.doesNotMatch(connectedPins, /"labz_pinned_models"/);
   // So a connected row reaches for its own toggle and never the On Device one.
   assert.doesNotMatch(pickers, /togglePinned\(model\.id\)/);
   assert.doesNotMatch(pickers, /pinKey\(model\.id\)/);

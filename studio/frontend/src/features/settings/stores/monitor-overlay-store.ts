@@ -19,6 +19,6 @@ export const useMonitorOverlayStore = create<MonitorOverlayState>()(
       setIsOpen: (isOpen) => set({ isOpen }),
       toggleMinimized: () => set((state) => ({ isMinimized: !state.isMinimized })),
     }),
-    { name: "unsloth_monitor_overlay" }
+    { name: "labz_monitor_overlay" }
   )
 );

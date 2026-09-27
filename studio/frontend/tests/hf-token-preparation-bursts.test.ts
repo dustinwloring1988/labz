@@ -24,7 +24,7 @@ type ConfirmToken = {
   forgetHfTokenValidation: (token?: string) => void;
 };
 
-const SESSION_CLEARED = "unsloth:auth-session-cleared";
+const SESSION_CLEARED = "labz:auth-session-cleared";
 
 // The store the module subscribes to, so a test can drive a Settings token change.
 function tokenStoreStub(initial: string | null = null) {

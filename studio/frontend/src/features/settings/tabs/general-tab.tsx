@@ -93,17 +93,17 @@ const PREFS_KEYS: string[] = [
   // Appearance
   "theme",
   "palette",
-  "unsloth_appearance_customization",
+  "labz_appearance_customization",
   INTERFACE_SCALE_STORAGE_KEY,
   LOCALE_STORAGE_KEY,
   // UI state
   "sidebar_pinned",
   "sidebar_width",
   "chat_settings_width",
-  "unsloth_sidebar_navigate_open",
+  "labz_sidebar_navigate_open",
   // Grouping, sort and the manual row order.
   SIDEBAR_ORGANIZATION_STORAGE_KEY,
-  "unsloth_settings_active_tab",
+  "labz_settings_active_tab",
   SETTINGS_PANEL_PREFS_STORAGE_KEY,
   // Rebound chords. Without this a reset leaves the user on shortcuts they asked to throw away, and
   // a chord bound to something unusable has no escape hatch from this button.
@@ -113,26 +113,26 @@ const PREFS_KEYS: string[] = [
   TRANSPORT_MODE_STORAGE_KEY,
   // Chat runtime prefs
   CHAT_PROJECT_ATTACHMENT_TARGET_KEY,
-  "unsloth_chat_auto_title",
-  "unsloth_chat_permission_mode",
+  "labz_chat_auto_title",
+  "labz_chat_permission_mode",
   // Legacy confirm key: loadPermissionMode falls back to it, so clear both or a reset restores it.
-  "unsloth_chat_confirm_tool_calls",
-  "unsloth_hf_token",
-  "unsloth_auto_heal_tool_calls",
-  "unsloth_nudge_tool_calls",
-  "unsloth_max_tool_calls_per_message",
-  "unsloth_tool_call_timeout",
-  "unsloth_chat_inference_params",
-  "unsloth_chat_collapsible_state",
-  "unsloth_chat_preferences",
-  "unsloth_model_configs",
-  "unsloth_model_configs_migrated",
-  "unsloth_load_settings",
-  "unsloth_model_advanced_settings",
-  "unsloth_chat_load_on_selection",
+  "labz_chat_confirm_tool_calls",
+  "labz_hf_token",
+  "labz_auto_heal_tool_calls",
+  "labz_nudge_tool_calls",
+  "labz_max_tool_calls_per_message",
+  "labz_tool_call_timeout",
+  "labz_chat_inference_params",
+  "labz_chat_collapsible_state",
+  "labz_chat_preferences",
+  "labz_model_configs",
+  "labz_model_configs_migrated",
+  "labz_load_settings",
+  "labz_model_advanced_settings",
+  "labz_chat_load_on_selection",
   // Model selector settings ("Select model settings" group)
-  "unsloth_chat_expand_quantizations",
-  "unsloth_chat_show_all_quantizations",
+  "labz_chat_expand_quantizations",
+  "labz_chat_show_all_quantizations",
   // The memory bar's opt-in. Reset All advertises restoring defaults and this feature's default is
   // off, so leaving the key out left it switched on across a reset that said it had turned
   // everything back. Spelled out rather than imported as CHAT_SHOW_MEMORY_BAR_KEY, for the same
@@ -140,35 +140,35 @@ const PREFS_KEYS: string[] = [
   // this file, so the constant would still be in its temporal dead zone when this module-scope list
   // is built. A test pins this literal against the store's constant so the two cannot drift apart
   // silently.
-  "unsloth_chat_show_memory_bar",
-  "unsloth_models_fit_on_device_only",
+  "labz_chat_show_memory_bar",
+  "labz_models_fit_on_device_only",
   // Chat presets
-  "unsloth_chat_custom_presets",
-  "unsloth_chat_active_preset",
-  "unsloth_chat_system_prompts",
-  "unsloth_chat_system_prompts_migrated",
+  "labz_chat_custom_presets",
+  "labz_chat_active_preset",
+  "labz_chat_system_prompts",
+  "labz_chat_system_prompts_migrated",
   // Training UI prefs
-  "unsloth_training_config_v1",
-  "unsloth_prev_max_steps",
-  "unsloth_prev_save_steps",
+  "labz_training_config_v1",
+  "labz_prev_max_steps",
+  "labz_prev_save_steps",
   ...TRAINING_UI_PREFERENCE_KEYS,
   // Profile personalization
-  "unsloth_user_profile",
+  "labz_user_profile",
   // Guided tour flags
   "tour:studio:v1",
   // Update notifications
-  "unsloth_show_llama_update_banner",
-  "unsloth_show_whisper_update_banner",
-  "unsloth_monitor_overlay",
+  "labz_show_llama_update_banner",
+  "labz_show_whisper_update_banner",
+  "labz_monitor_overlay",
   LOADED_MODELS_PREFERENCE_KEYS.show,
   LOADED_MODELS_PREFERENCE_KEYS.collapsed,
   LOADED_MODELS_PREFERENCE_KEYS.position,
   LOADED_MODELS_PREFERENCE_KEYS.dismissed,
   // Voice settings
-  "unsloth_voice_settings",
+  "labz_voice_settings",
   // Retired keys. The onboarding wizard is gone, but installs that ran it still
   // carry its flag, so a reset has to clear it or the orphan outlives the app.
-  "unsloth_onboarding_done",
+  "labz_onboarding_done",
 ];
 
 // Set by resetAllPrefs so the unmount-commit effect skips writing back the in-memory draft.

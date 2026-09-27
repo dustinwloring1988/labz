@@ -19,7 +19,7 @@ Object.assign(globalThis.window, {
   setTimeout: globalThis.setTimeout.bind(globalThis),
   clearTimeout: globalThis.clearTimeout.bind(globalThis),
 });
-storage.setItem("unsloth.studio.transportMode", "xet");
+storage.setItem("labz.studio.transportMode", "xet");
 
 const originalFetch = globalThis.fetch;
 after(() => {

@@ -5,8 +5,8 @@ import { useSyncExternalStore } from "react";
 
 type Listener = () => void;
 
-const CHANNEL_NAME = "unsloth.inventory";
-const STORAGE_KEY = "unsloth.inventory.bump";
+const CHANNEL_NAME = "labz.inventory";
+const STORAGE_KEY = "labz.inventory.bump";
 const OUTBOUND_CHANNEL_CLOSE_DELAY_MS = 250;
 
 let _version = 0;

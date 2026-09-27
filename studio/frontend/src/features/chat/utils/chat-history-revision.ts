@@ -3,7 +3,7 @@
 
 // How a history change crosses documents: the event chat-api raises alongside it is
 // same-document. Only that something changed is published, never a chat id or any text.
-export const CHAT_HISTORY_REVISION_KEY = "unsloth_chat_history_revision";
+export const CHAT_HISTORY_REVISION_KEY = "labz_chat_history_revision";
 
 // Long enough to swallow a generation's per-chunk saves, short enough that a tab going quiet
 // publishes before anyone reads a stale row. Exported for the tests.

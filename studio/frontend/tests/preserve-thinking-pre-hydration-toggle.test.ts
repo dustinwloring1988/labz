@@ -16,7 +16,7 @@ import { installLocalStorageFake } from "./helpers/kit.ts";
 
 const { store: localStorageFake } = installLocalStorageFake();
 // Skip the legacy import path: it would look for settings this test never wrote.
-localStorageFake.set("unsloth_chat_settings_imported_to_studio_db", "true");
+localStorageFake.set("labz_chat_settings_imported_to_studio_db", "true");
 register("./store-settings-resolver.mjs", import.meta.url);
 
 const { settingsHttp } = await import("./helpers/store-stubs/settings-http.ts");

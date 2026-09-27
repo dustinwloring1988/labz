@@ -109,7 +109,7 @@ export const useChatPreferencesStore = create<ChatPreferencesState>()(
         set({ pastedTextMinChars }),
     }),
     {
-      name: "unsloth_chat_preferences",
+      name: "labz_chat_preferences",
       merge: (persisted, current) => {
         const saved = persisted as Partial<ChatPreferencesState> | undefined;
         // Records written before the three-state settings carry the two booleans instead.

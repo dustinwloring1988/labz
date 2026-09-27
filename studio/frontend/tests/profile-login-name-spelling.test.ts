@@ -31,8 +31,9 @@ const { OWNER_USERNAME } = loadWithStubs<{ OWNER_USERNAME: string }>(
   },
 );
 
-const { loginDisplayName } = loadWithStubs<{
+const { loginDisplayName, OWNER_DISPLAY_NAME } = loadWithStubs<{
   loginDisplayName: (sub: string | null) => string;
+  OWNER_DISPLAY_NAME: string;
 }>(new URL("../src/features/profile/hooks/use-effective-profile.ts", import.meta.url), {
   "@/features/auth": { getAuthToken: () => null, OWNER_USERNAME },
   "../utils/jwt-subject": { decodeJwtSubject: () => null },
@@ -40,9 +41,15 @@ const { loginDisplayName } = loadWithStubs<{
 });
 
 test("the reserved owner id is the only subject whose spelling is mapped", () => {
-  // Read from the shipped export, not a copy: a test pinned to its own literal
-  // cannot notice the constant it is about drifting.
-  assert.equal(loginDisplayName(OWNER_USERNAME), "Unsloth");
+  // Both constants are read from the shipped exports, not copied here: a test pinned to its own
+  // literal cannot notice the constant it is about drifting. The id is an auth identifier and
+  // never reaches the UI verbatim; the name it displays as is a separate constant.
+  assert.equal(loginDisplayName(OWNER_USERNAME), OWNER_DISPLAY_NAME);
+  assert.notEqual(
+    OWNER_DISPLAY_NAME.toLowerCase(),
+    OWNER_USERNAME.toLowerCase(),
+    "the owner's display name is the raw login id again, which is what this test exists to stop",
+  );
   for (const chosen of ["alice", "bob", "unsloth2", "Unsloth", "UNSLOTH", " unsloth "]) {
     assert.equal(loginDisplayName(chosen), chosen);
   }

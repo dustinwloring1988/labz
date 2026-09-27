@@ -94,7 +94,7 @@ test("the legacy browser value seeds the installation setting once", async () =>
   serverValue = undefined;
   requests.length = 0;
   localStorage.set(
-    "unsloth_chat_preferences",
+    "labz_chat_preferences",
     JSON.stringify({ state: { showModelDisclaimer: true }, version: 0 }),
   );
 
@@ -112,16 +112,16 @@ test("the legacy browser value seeds the installation setting once", async () =>
   });
   assert.equal(requests[1]?.method, "GET");
 
-  localStorage.delete("unsloth_chat_preferences");
+  localStorage.delete("labz_chat_preferences");
   useChatPreferencesStore.getState().setShowModelDisclaimer(false);
-  localStorage.delete("unsloth_chat_preferences");
+  localStorage.delete("labz_chat_preferences");
   await hydrateModelDisclaimerPreference();
   assert.equal(useChatPreferencesStore.getState().showModelDisclaimer, true);
 });
 
 test("a legacy disabled default does not claim the installation setting", () => {
   localStorage.set(
-    "unsloth_chat_preferences",
+    "labz_chat_preferences",
     JSON.stringify({ state: { showModelDisclaimer: false }, version: 0 }),
   );
   assert.equal(readLegacyModelDisclaimer(), undefined);
@@ -130,9 +130,9 @@ test("a legacy disabled default does not claim the installation setting", () => 
 test("a queued refresh cannot revert a newer toggle", async () => {
   serverValue = false;
   requests.length = 0;
-  localStorage.delete("unsloth_chat_preferences");
+  localStorage.delete("labz_chat_preferences");
   useChatPreferencesStore.getState().setShowModelDisclaimer(false);
-  localStorage.delete("unsloth_chat_preferences");
+  localStorage.delete("labz_chat_preferences");
 
   const migrationGate = holdNextResponse("POST");
   const migration = hydrateModelDisclaimerPreference();

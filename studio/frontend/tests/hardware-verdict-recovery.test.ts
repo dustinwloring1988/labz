@@ -25,7 +25,7 @@ registerBundlerResolver();
 const { store } = installLocalStorageFake();
 // /api/health reports device_type to authed callers only, and an unauthenticated read never
 // spends the detection window, so the slow-host case only exists for a signed-in caller.
-store.set("unsloth_auth_token", "token");
+store.set("labz_auth_token", "token");
 // A non-Mac host whatever the runner is: node's own navigator reports process.platform.
 Object.defineProperty(globalThis, "navigator", {
   configurable: true,

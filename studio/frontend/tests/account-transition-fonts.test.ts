@@ -8,7 +8,7 @@ import {
   transitionBrowserAccount,
 } from "../src/lib/account-transition.ts";
 
-const APPEARANCE_KEY = "unsloth_appearance_customization";
+const APPEARANCE_KEY = "labz_appearance_customization";
 const ALICE_FONT_BYTES = "data:font/woff2;base64,QUxJQ0VTRUNSRVQ=";
 
 function appearanceValue(): string {

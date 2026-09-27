@@ -20,7 +20,7 @@ export type LastLocalModelLoad = {
 
 const API_PATH = "/api/settings/last-local-model";
 // Pre-backend installs kept the record here; still read so an upgrade does not forget the model.
-const LEGACY_STORAGE_KEY = "unsloth.last-local-model-load.v1";
+const LEGACY_STORAGE_KEY = "labz.last-local-model-load.v1";
 
 function isLastLocalModelKind(value: unknown): value is LastLocalModelKind {
   return value === "gguf" || value === "model";

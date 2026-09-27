@@ -9,7 +9,7 @@ const { store: storage, fireWindowEvent } = installLocalStorageFake();
 const { usePinnedConnectedModelsStore: pins } = await import(
   "../src/features/model-picker/components/model-selector/pinned-connected-models.ts"
 );
-const KEY = "unsloth_pinned_connected_models";
+const KEY = "labz_pinned_connected_models";
 const [A, B, C, D, E] = ["a", "b", "c", "d", "e"].map(
   (id) => `external::connection::${id}`,
 );

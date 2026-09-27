@@ -7,7 +7,7 @@ import { persist } from "zustand/middleware";
 export type ExampleOs = "unix" | "windows";
 export type FineTuneAction = "train" | "recipes" | "export";
 
-export const SETTINGS_PANEL_PREFS_STORAGE_KEY = "unsloth_settings_panel_prefs";
+export const SETTINGS_PANEL_PREFS_STORAGE_KEY = "labz_settings_panel_prefs";
 
 // settings dialog picks that renderTab() used to drop on every tab switch.
 export interface SettingsPanelPrefsState {

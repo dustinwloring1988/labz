@@ -9,7 +9,7 @@
 export type RefreshMode = "live" | "3s" | "manual";
 
 export const DEFAULT_REFRESH_MODE: RefreshMode = "3s";
-export const REFRESH_MODE_STORAGE_KEY = "unsloth_debug_log_refresh_mode";
+export const REFRESH_MODE_STORAGE_KEY = "labz_debug_log_refresh_mode";
 
 /** The request backstop fired. Distinct from an AbortError because the two
  * arrive as the same rejection: the timer aborts the very controller an unmount

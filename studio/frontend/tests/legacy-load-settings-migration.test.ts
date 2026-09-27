@@ -11,8 +11,8 @@ registerBundlerResolver();
 const { store } = installLocalStorageFake();
 
 /**
- * The one-time import of a pre-feature `unsloth_load_settings` store into the versioned
- * `unsloth_model_configs` map.
+ * The one-time import of a pre-feature `labz_load_settings` store into the versioned
+ * `labz_model_configs` map.
  *
  * Until now this had no test at all. Its only coverage was one step of
  * tests/studio/playwright_model_config.py, which needs a browser, a booted Unsloth and a
@@ -40,7 +40,7 @@ const CTX = 4096;
 
 /**
  * A fresh copy of the module, because the migration is latched twice over: a persistent
- * `unsloth_model_configs_migrated` flag AND a module-level `legacyMigrationChecked`. A
+ * `labz_model_configs_migrated` flag AND a module-level `legacyMigrationChecked`. A
  * second case sharing one instance would exercise the latch, not the migration.
  *
  * The query has to go on an absolute `file:` URL. tests/bundler-resolver.mjs round-trips a
@@ -56,7 +56,7 @@ async function freshModule() {
 }
 
 function seedLegacy(entry: Record<string, unknown>, key = LEGACY_KEY): void {
-  store.set("unsloth_load_settings", JSON.stringify({ [key]: entry }));
+  store.set("labz_load_settings", JSON.stringify({ [key]: entry }));
 }
 
 const FULL_LEGACY_ENTRY = {
@@ -133,7 +133,7 @@ test("settings saved in this build outrank a legacy blob for the same model", as
   // upgrade, and no record of the import having run. Whatever wrote the record knew
   // about the versioned store, so it is strictly newer than a blob no build has written
   // since. Letting the legacy value win here would be the real data loss.
-  store.delete("unsloth_model_configs_migrated");
+  store.delete("labz_model_configs_migrated");
   seedLegacy(FULL_LEGACY_ENTRY);
 
   const fresh = await freshModule();
@@ -163,7 +163,7 @@ test("no legacy store at all leaves the model unremembered rather than throwing"
 
 test("an unreadable legacy store is survived, not propagated", async () => {
   store.clear();
-  store.set("unsloth_load_settings", "{not json");
+  store.set("labz_load_settings", "{not json");
   const { resolveInitialConfig } = await freshModule();
 
   assert.equal(resolveInitialConfig(MODEL_ID, VARIANT).remembered, false);

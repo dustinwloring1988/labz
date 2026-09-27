@@ -7,7 +7,7 @@
 
 import { create } from "zustand";
 
-const KEY = "unsloth_pinned_models";
+const KEY = "labz_pinned_models";
 
 // Entries are stored as strings: "repoId" pins a whole (non-GGUF) repo, "repoId::quant" pins
 // one GGUF quant. Neither part contains "::".

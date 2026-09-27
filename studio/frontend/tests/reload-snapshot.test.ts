@@ -40,7 +40,7 @@ const authFormSource = readSrc("features/auth/components/auth-form.tsx");
 
 test("scoped readiness still emits the reload snapshot event", () => {
   const readinessSource = readSrc("components/app-readiness.ts");
-  assert.match(readinessSource, /function signalReloadSnapshotReady\(\): void \{\s*window\.dispatchEvent\(new Event\("unsloth:app-shell-ready"\)\)/);
+  assert.match(readinessSource, /function signalReloadSnapshotReady\(\): void \{\s*window\.dispatchEvent\(new Event\("labz:app-shell-ready"\)\)/);
   assert.match(readinessSource, /signalReady: \(\) => \{\s*if \(!active\) return;\s*onReady\(\);\s*signalReloadSnapshotReady\(\)/);
   assert.match(readinessSource, /value: scope\.signalReady/);
   assert.match(readinessSource, /return useContext\(AppShellReadyContext\)/);
@@ -601,7 +601,7 @@ function createEnvironment(options: {
 }
 
 function storedSnapshot(storage: Map<string, string>) {
-  const raw = storage.get("unsloth.reload-snapshot.v1");
+  const raw = storage.get("labz.reload-snapshot.v1");
   assert.ok(raw, "expected a stored snapshot");
   return JSON.parse(raw) as {
     html: string;
@@ -638,7 +638,7 @@ test("carries the rendered shell through a reload until the new shell is ready",
   );
   assert.equal(incoming.storage.size, 0);
 
-  incoming.dispatch("unsloth:app-shell-ready");
+  incoming.dispatch("labz:app-shell-ready");
   assert.equal(incoming.appended[0].removed, false);
   incoming.runAnimationFrame();
   assert.equal(incoming.appended[0].removed, false);
@@ -1059,7 +1059,7 @@ test("adapts root-scoped palette state to the snapshot shell", () => {
 test("loads selected imported fonts before revealing the shell", async () => {
   const persistedAppearance = new Map([
     [
-      "unsloth_appearance_customization",
+      "labz_appearance_customization",
       JSON.stringify({
         state: {
           customization: {

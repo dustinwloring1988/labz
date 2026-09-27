@@ -35,7 +35,7 @@ test("a full set of mirrored settings survives the round trip", () => {
     ragAutoInjectMinScore: 0.42,
     ragSource: { type: "kb", kbId: "notes" },
     researchWebsitePolicy: {
-      allowedDomains: ["unsloth.ai"],
+      allowedDomains: ["labz.ai"],
       blockedDomains: [],
     },
     researchModelTimeoutSeconds: 0,
@@ -54,7 +54,7 @@ test("a full set of mirrored settings survives the round trip", () => {
     ragAutoInjectMinScore: 0.42,
     ragSource: { type: "kb", kbId: "notes" },
     researchWebsitePolicy: {
-      allowedDomains: ["unsloth.ai"],
+      allowedDomains: ["labz.ai"],
       blockedDomains: [],
     },
     researchModelTimeoutSeconds: 0,

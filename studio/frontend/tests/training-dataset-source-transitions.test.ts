@@ -13,7 +13,7 @@ const storage = {
   removeItem: (key: string) => values.delete(key),
 };
 values.set(
-  "unsloth_training_config_v1",
+  "labz_training_config_v1",
   JSON.stringify({
     state: {
       browseDatasetSelection: {

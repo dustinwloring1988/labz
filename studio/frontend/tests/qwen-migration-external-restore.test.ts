@@ -16,8 +16,8 @@ const EXTERNAL_QWEN = `external::openrouter::${encodeURIComponent(
 )}`;
 
 const { store: localStorageFake } = installLocalStorageFake();
-localStorageFake.set("unsloth_chat_settings_imported_to_studio_db", "true");
-localStorageFake.set("unsloth_chat_last_external_checkpoint", EXTERNAL_QWEN);
+localStorageFake.set("labz_chat_settings_imported_to_studio_db", "true");
+localStorageFake.set("labz_chat_last_external_checkpoint", EXTERNAL_QWEN);
 register("./store-settings-resolver.mjs", import.meta.url);
 
 const { settingsHttp } = await import("./helpers/store-stubs/settings-http.ts");

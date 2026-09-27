@@ -45,4 +45,4 @@ export function configureChatSearchHistoryStub(options: {
 
 export const CHAT_HISTORY_UPDATED_EVENT = "unsloth-chat-history-updated";
 // Must match the real chat-api constant: the cross-tab listener keys off it.
-export const CHAT_HISTORY_REVISION_KEY = "unsloth_chat_history_revision";
+export const CHAT_HISTORY_REVISION_KEY = "labz_chat_history_revision";

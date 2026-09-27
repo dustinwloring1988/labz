@@ -352,7 +352,7 @@ export const useVoiceSettingsStore = create<VoiceSettingsState>()(
       setTtsVolume: (ttsVolume) => set({ ttsVolume }),
     }),
     {
-      name: "unsloth_voice_settings",
+      name: "labz_voice_settings",
       storage: createJSONStorage(() => quotaSafeLocalStorage),
       version: 1,
       migrate: migrateVoiceSettings,

@@ -6,8 +6,8 @@
  * the box's example hint was dismissed. Storage failures read as nothing saved.
  */
 // "unsloth" keys, so another account signing in clears them (transitionBrowserAccount).
-const PREFIX = "unsloth_last_prompt:";
-const DISMISSED_PREFIX = "unsloth_example_prompt_dismissed:";
+const PREFIX = "labz_last_prompt:";
+const DISMISSED_PREFIX = "labz_example_prompt_dismissed:";
 
 export function readLastPrompt(key: string): string {
   try {

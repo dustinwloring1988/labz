@@ -22,7 +22,7 @@ export type TokenResponse = {
   account_id?: string | null;
 };
 
-export const LOGIN_MODE_HINT_KEY = "unsloth.auth-login-mode.v1";
+export const LOGIN_MODE_HINT_KEY = "labz.auth-login-mode.v1";
 function authHint(): string | null {
   try {
     return typeof window !== "undefined"

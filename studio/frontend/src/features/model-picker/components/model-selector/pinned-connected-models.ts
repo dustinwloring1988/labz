@@ -7,7 +7,7 @@
 
 import { create } from "zustand";
 
-const KEY = "unsloth_pinned_connected_models";
+const KEY = "labz_pinned_connected_models";
 
 function readPinned(): string[] {
   try {

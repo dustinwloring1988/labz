@@ -10,7 +10,7 @@ interface Tombstone {
   deletedAt: number;
 }
 
-const TOMBSTONES_KEY = "unsloth_chat_deleted_thread_ids";
+const TOMBSTONES_KEY = "labz_chat_deleted_thread_ids";
 const TOMBSTONE_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 const TOMBSTONE_MAX_COUNT = 5000;
 

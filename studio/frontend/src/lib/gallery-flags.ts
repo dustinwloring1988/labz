@@ -10,7 +10,7 @@
  * instead of waiting on a refetch.
  */
 
-export const GALLERY_CHANGED_EVENT = "unsloth:gallery-changed";
+export const GALLERY_CHANGED_EVENT = "labz:gallery-changed";
 
 /** Which gallery a change landed in. */
 export type GalleryKind = "images" | "videos" | "audio";

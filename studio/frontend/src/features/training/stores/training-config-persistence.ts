@@ -25,7 +25,7 @@ import {
   datasetSourceInvariantPatch,
 } from "./training-config-policy";
 
-export const TRAINING_CONFIG_PERSISTENCE_NAME = "unsloth_training_config_v1";
+export const TRAINING_CONFIG_PERSISTENCE_NAME = "labz_training_config_v1";
 export const TRAINING_CONFIG_PERSISTENCE_VERSION = 22;
 
 const NON_PERSISTED_STATE_KEYS: ReadonlySet<keyof TrainingConfigState> =

@@ -283,7 +283,7 @@ function ModelSelectorTrigger({
 type HubSection = "downloaded" | "recommended" | "connected";
 
 // The user's most recently clicked Hub section, restored on every open.
-const HUB_SECTION_KEY = "unsloth_model_selector_section";
+const HUB_SECTION_KEY = "labz_model_selector_section";
 // Last tab the user actually clicked, or null. Only On Device / Recommended persist.
 function loadLastHubSection(): HubSection | null {
   try {

@@ -19,7 +19,7 @@ test("late completion cannot reveal either an unavailable app or its new generat
   try {
     let reveals = 0;
     let reloadSignals = 0;
-    target.addEventListener("unsloth:app-shell-ready", () => reloadSignals++);
+    target.addEventListener("labz:app-shell-ready", () => reloadSignals++);
     const oldMount = createAppReadinessScope(() => reveals++);
     // Capture the callback before awaiting, just like the history adapter.
     const oldCompleteLoad = oldMount.signalReady;

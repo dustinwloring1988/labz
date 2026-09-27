@@ -49,8 +49,8 @@ const { backfillModelOverrides } = await import(
 );
 const { setAuthFetchHandler } = await import("./helpers/store-stubs/auth.ts");
 
-const STORAGE_KEY = "unsloth_model_configs";
-const BACKFILL_FLAG = "unsloth_model_overrides_backfilled_v2";
+const STORAGE_KEY = "labz_model_configs";
+const BACKFILL_FLAG = "labz_model_overrides_backfilled_v2";
 const MODEL = "unsloth/Repo-GGUF";
 const VARIANT = "Q4_K_M";
 
@@ -325,7 +325,7 @@ test("the backfill offers an Ollama tag's settings even after the v1 pass ran", 
   // The v1 filter dropped these, so the marker had to move with it, or an install past that pass
   // would never mirror what it saved for an Ollama model.
   store.clear();
-  store.set("unsloth_model_overrides_backfilled_v1", "1");
+  store.set("labz_model_overrides_backfilled_v1", "1");
   const ref = "ollama-manifest:%2Fh%2F.ollama%2Fmanifests%2Fllama3%2Flatest";
   assert.ok(savePerModelConfig(ref, null, config({ cacheRam: -1 })));
 

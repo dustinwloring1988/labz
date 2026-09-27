@@ -24,7 +24,7 @@ import {
 registerBundlerResolver();
 const { store } = installLocalStorageFake();
 
-const PREFERENCES_KEY = "unsloth_chat_preferences";
+const PREFERENCES_KEY = "labz_chat_preferences";
 
 // Preferences exactly as a Studio from before this setting existed wrote them:
 // every key the store had at the time, and no collapseToolActivityByDefault.

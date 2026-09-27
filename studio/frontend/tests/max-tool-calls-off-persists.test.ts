@@ -29,8 +29,8 @@ test("Off survives the outgoing patch", () => {
 });
 
 test("Off survives hydration from localStorage", () => {
-  store.set("unsloth_max_tool_calls_per_message", "0");
-  store.set("unsloth_tool_call_timeout", "0");
+  store.set("labz_max_tool_calls_per_message", "0");
+  store.set("labz_tool_call_timeout", "0");
   assert.deepEqual(loadLegacyChatSettings(), { maxToolCallsPerMessage: 0 });
   store.clear();
 });

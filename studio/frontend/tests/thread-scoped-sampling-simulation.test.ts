@@ -31,7 +31,7 @@ import {
 
 const { store: localStorageFake, fireWindowEvent } = installLocalStorageFake();
 // Skip the legacy import path: it would look for settings this test never wrote.
-localStorageFake.set("unsloth_chat_settings_imported_to_studio_db", "true");
+localStorageFake.set("labz_chat_settings_imported_to_studio_db", "true");
 register("./thread-sampling-resolver.mjs", import.meta.url);
 
 const { settingsHttp } = await import("./helpers/store-stubs/settings-http.ts");
@@ -651,7 +651,7 @@ test("B7: a tab closing with a held edit beacons it to the chat it was made in",
   // The beacon is a PATCH, so it is not in `puts`; what it queued for replay is the
   // durable record of what the closing tab tried to save, and for which chat.
   const beaconed = JSON.parse(
-    localStorageFake.get("unsloth_chat_thread_settings_replay") ?? "{}",
+    localStorageFake.get("labz_chat_thread_settings_replay") ?? "{}",
   ) as Record<string, { settingsPatch?: Record<string, unknown> }>;
   assert.deepEqual(beaconed.A?.settingsPatch, {
     temperature: 1.37,

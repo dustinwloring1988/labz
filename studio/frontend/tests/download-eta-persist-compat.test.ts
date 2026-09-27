@@ -17,7 +17,7 @@ import {
 registerBundlerResolver();
 const { store } = installLocalStorageFake();
 
-const PERSIST_KEY = "unsloth.studio.downloads";
+const PERSIST_KEY = "labz.studio.downloads";
 let flushPersistedState: (() => void) | undefined;
 Object.assign(globalThis.window, {
   addEventListener: (type: string, listener: () => void) => {

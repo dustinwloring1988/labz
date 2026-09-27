@@ -7,8 +7,8 @@
 
 import { authFetch } from "@/features/auth/api";
 
-const LEGACY_COUNT_KEY = "unsloth.studio.xetNoticeCount";
-const LEGACY_MIGRATED_KEY = "unsloth.studio.xetNoticeMigrated";
+const LEGACY_COUNT_KEY = "labz.studio.xetNoticeCount";
+const LEGACY_MIGRATED_KEY = "labz.studio.xetNoticeMigrated";
 
 export interface XetNoticeReservation {
   granted: boolean;

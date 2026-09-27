@@ -16,7 +16,7 @@ import {
 
 export { getAppliedInterfaceZoom };
 
-export const INTERFACE_SCALE_STORAGE_KEY = "unsloth_interface_scale";
+export const INTERFACE_SCALE_STORAGE_KEY = "labz_interface_scale";
 // The floor is 50, not the 25 Chrome and VS Code allow, because both of those ship
 // Cmd/Ctrl+0 and this does not yet. At 25% the Settings row you would use to undo it
 // renders around 3.5px, and the value is device-local in localStorage, so recovery means

@@ -34,9 +34,9 @@ function storage(): Storage {
 test("peer-tab account switch clears Alice's training handoff before Bob reloads", async () => {
   const localStorage = storage();
   localStorage.setItem(BROWSER_ACCOUNT_KEY, "account:a1:alice");
-  localStorage.setItem("unsloth_auth_token", "alice-token");
+  localStorage.setItem("labz_auth_token", "alice-token");
   const peerSession = storage();
-  peerSession.setItem("unsloth_server_user_stopped", "1");
+  peerSession.setItem("labz_server_user_stopped", "1");
   let listener: (event: Partial<StorageEvent>) => void;
   let handoffAtReload: unknown;
   let reloads = 0;
@@ -49,7 +49,7 @@ test("peer-tab account switch clears Alice's training handoff before Bob reloads
     location: {
       reload() {
         reloads++;
-        assert.equal(localStorage.getItem("unsloth_auth_token"), "bob-token");
+        assert.equal(localStorage.getItem("labz_auth_token"), "bob-token");
         // A real reload preserves sessionStorage. Read with the actual Chat consumer.
         handoffAtReload = getTrainingCompareHandoff();
       },
@@ -78,7 +78,7 @@ test("peer-tab account switch clears Alice's training handoff before Bob reloads
     await transitionBrowserAccount(
       { username: "bob", accountId: "b1" },
       "/chat",
-      () => localStorage.setItem("unsloth_auth_token", "bob-token"),
+      () => localStorage.setItem("labz_auth_token", "bob-token"),
       loginTab,
     );
     listener!({
@@ -88,7 +88,7 @@ test("peer-tab account switch clears Alice's training handoff before Bob reloads
       storageArea: localStorage,
     });
     assert.equal(reloads, 1);
-    assert.equal(peerSession.getItem("unsloth_server_user_stopped"), "1");
+    assert.equal(peerSession.getItem("labz_server_user_stopped"), "1");
     assert.equal(
       handoffAtReload,
       null,

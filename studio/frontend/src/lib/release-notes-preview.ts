@@ -754,7 +754,7 @@ function contentLines(markdown: string): ContentLine[] {
 }
 
 /** Split a bullet at its first sentence boundary. Conservative: the next sentence must start like one, so
- * "unsloth.ai in the docs" is not a break. */
+ * "labz.ai in the docs" is not a break. */
 function splitLeadSentence(text: string): ReleaseNotesPreviewItem {
   SENTENCE_BREAK.lastIndex = 0;
   let match = SENTENCE_BREAK.exec(text);

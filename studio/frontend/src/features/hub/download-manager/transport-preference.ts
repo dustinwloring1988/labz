@@ -21,9 +21,9 @@ export type { TransportMode } from "./constants";
 
 /** This browser's own override. Exported because it outranks the install-wide setting, so
  * "Reset all local preferences" has to clear it. */
-export const TRANSPORT_MODE_STORAGE_KEY = "unsloth.studio.transportMode";
+export const TRANSPORT_MODE_STORAGE_KEY = "labz.studio.transportMode";
 const STORAGE_KEY = TRANSPORT_MODE_STORAGE_KEY;
-const CHANGE_EVENT = "unsloth:transport-preference-change";
+const CHANGE_EVENT = "labz:transport-preference-change";
 
 type TransportCapabilitiesState = {
   capabilities: DownloadTransportCapabilities | null;

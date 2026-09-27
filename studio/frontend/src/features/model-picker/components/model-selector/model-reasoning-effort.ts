@@ -3,7 +3,7 @@
 
 import { create } from "zustand";
 
-const KEY = "unsloth_model_reasoning_effort";
+const KEY = "labz_model_reasoning_effort";
 const MODEL_KEY_PREFIX = `${KEY}::`;
 type EffortStorage = Pick<Storage, "getItem" | "setItem" | "key" | "length">;
 

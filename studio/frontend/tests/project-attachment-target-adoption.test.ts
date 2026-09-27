@@ -258,6 +258,6 @@ test("the attach-target preference is cleared by the preferences reset", () => {
   // By the constant the store writes under, so the two cannot drift apart.
   assert.equal(
     CHAT_PROJECT_ATTACHMENT_TARGET_KEY,
-    "unsloth_chat_project_attachment_target",
+    "labz_chat_project_attachment_target",
   );
 });

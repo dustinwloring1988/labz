@@ -105,7 +105,7 @@ function browserWith(
 for (const marker of [undefined, "unsloth"]) {
   test(`single-user login never purges, marker ${marker ?? "absent"}`, async () => {
     const b = browserWith({
-      unsloth_chat_permission_mode: "full",
+      labz_chat_permission_mode: "full",
       "chat-draft:1": "keep",
       ...(marker ? { [BROWSER_ACCOUNT_KEY]: marker } : {}),
     });
@@ -125,7 +125,7 @@ for (const marker of [undefined, "unsloth"]) {
     assert.deepEqual(b.removed, []);
     assert.deepEqual(b.deleted, []);
     assert.deepEqual(b.replaced, []);
-    assert.equal(b.data.get("unsloth_chat_permission_mode"), "full");
+    assert.equal(b.data.get("labz_chat_permission_mode"), "full");
   });
 }
 
@@ -134,10 +134,10 @@ test("switch removes every content prefix and preserves only listed chrome and u
     [...ACCOUNT_CHROME_KEYS].map((key) => [key, "chrome"]),
   );
   const content = [
-    "unsloth_auth_token",
-    "unsloth_hf_token",
-    "unsloth_new_feature",
-    "unsloth_chat_permission_mode",
+    "labz_auth_token",
+    "labz_hf_token",
+    "labz_new_feature",
+    "labz_chat_permission_mode",
     "unsloth-profile",
     "chat-draft:1",
     "chat-draft-pastes:2",
@@ -146,7 +146,7 @@ test("switch removes every content prefix and preserves only listed chrome and u
     ...chrome,
     ...Object.fromEntries(content.map((key) => [key, "private"])),
     unrelated: "keep",
-    "unsloth_web_update_dismissed:pip:1": "keep",
+    "labz_web_update_dismissed:pip:1": "keep",
     [BROWSER_ACCOUNT_KEY]: "unsloth",
   });
   const changed = await transitionBrowserAccount(
@@ -155,7 +155,7 @@ test("switch removes every content prefix and preserves only listed chrome and u
     () => {
       assert.deepEqual(b.deleted, [...ACCOUNT_DATABASES]);
       assert.equal(b.data.get(BROWSER_ACCOUNT_KEY), "unsloth");
-      b.data.set("unsloth_auth_token", "alice-token");
+      b.data.set("labz_auth_token", "alice-token");
     },
     b.browser,
   );
@@ -165,8 +165,8 @@ test("switch removes every content prefix and preserves only listed chrome and u
   for (const key of ACCOUNT_CHROME_KEYS)
     assert.equal(b.data.get(key), "chrome");
   assert.equal(b.data.get("unrelated"), "keep");
-  assert.equal(b.data.get("unsloth_web_update_dismissed:pip:1"), "keep");
-  assert.equal(b.data.get("unsloth_auth_token"), "alice-token");
+  assert.equal(b.data.get("labz_web_update_dismissed:pip:1"), "keep");
+  assert.equal(b.data.get("labz_auth_token"), "alice-token");
   assert.equal(b.data.get(BROWSER_ACCOUNT_KEY), "alice");
   assert.deepEqual(b.replaced, ["/change-password"]);
 });
@@ -200,7 +200,7 @@ test("a username created again as a different account inherits nothing", async (
     b.browser,
   );
   b.data.set("chat-draft:1", "first alice");
-  b.data.set("unsloth_hf_token", "first alice");
+  b.data.set("labz_hf_token", "first alice");
   const deletedOnFirstLogin = b.deleted.length;
   const changed = await transitionBrowserAccount(
     { username: "alice", accountId: "a2" },
@@ -210,7 +210,7 @@ test("a username created again as a different account inherits nothing", async (
   );
   assert.equal(changed, true);
   assert.equal(b.data.has("chat-draft:1"), false);
-  assert.equal(b.data.has("unsloth_hf_token"), false);
+  assert.equal(b.data.has("labz_hf_token"), false);
   assert.deepEqual(b.deleted.slice(deletedOnFirstLogin), [
     ...ACCOUNT_DATABASES,
   ]);
@@ -374,14 +374,14 @@ test("cross-tab switches reload once, ignoring initial owner markers, removals a
 });
 
 test("a switch fences peers before the new tokens and lifts the fence after the marker", async () => {
-  const b = browserWith({ [BROWSER_ACCOUNT_KEY]: "unsloth", unsloth_auth_token: "alice-token" });
+  const b = browserWith({ [BROWSER_ACCOUNT_KEY]: "unsloth", labz_auth_token: "alice-token" });
   let fenceAtCommit: string | null = null;
   await transitionBrowserAccount(
     { username: "bob", accountId: "b1" },
     "/chat",
     () => {
       fenceAtCommit = b.data.get(BROWSER_ACCOUNT_FENCE_KEY) ?? null;
-      b.data.set("unsloth_auth_token", "bob-token");
+      b.data.set("labz_auth_token", "bob-token");
     },
     b.browser,
   );
@@ -439,13 +439,13 @@ test("a marker carries the account id and the normalized name", () => {
 });
 
 test("multi-user policy resets full while preserving other permission modes", () => {
-  const b = browserWith({ unsloth_chat_permission_mode: "full" });
+  const b = browserWith({ labz_chat_permission_mode: "full" });
   resetFullAccessForMultiUser(b.browser.localStorage);
-  assert.equal(b.data.get("unsloth_chat_permission_mode"), "auto");
+  assert.equal(b.data.get("labz_chat_permission_mode"), "auto");
   for (const mode of ["ask", "auto", "off"]) {
-    b.data.set("unsloth_chat_permission_mode", mode);
+    b.data.set("labz_chat_permission_mode", mode);
     resetFullAccessForMultiUser(b.browser.localStorage);
-    assert.equal(b.data.get("unsloth_chat_permission_mode"), mode);
+    assert.equal(b.data.get("labz_chat_permission_mode"), mode);
   }
 });
 
@@ -499,19 +499,19 @@ test("switching accounts clears session content and keeps neutral session flags"
       baseModel: "alice-private/base",
       requestedAt: Date.now(),
     }),
-    "unsloth.reload-snapshot.v1": "<div>alice</div>",
+    "labz.reload-snapshot.v1": "<div>alice</div>",
     "data-recipes:open-learning-recipes": "1",
     // USER_STOPPED_KEY: neutral, and clearing it would restart a server the user stopped.
-    unsloth_server_user_stopped: "1",
+    labz_server_user_stopped: "1",
   });
   assert.equal(
     await transitionBrowserAccount("bob", "/chat", () => {}, b.browser),
     true,
   );
   assert.equal(b.sessionData.has("chat:training-compare-handoff:v1"), false);
-  assert.equal(b.sessionData.has("unsloth.reload-snapshot.v1"), false);
+  assert.equal(b.sessionData.has("labz.reload-snapshot.v1"), false);
   assert.equal(b.sessionData.has("data-recipes:open-learning-recipes"), false);
-  assert.equal(b.sessionData.get("unsloth_server_user_stopped"), "1");
+  assert.equal(b.sessionData.get("labz_server_user_stopped"), "1");
 });
 
 test("the same account keeps a pending compare handoff", async () => {
@@ -587,7 +587,7 @@ test("transcript recovery survives reauthentication but is cleared on account ch
     const key = transcriptDraftKey();
     const draft = { text: "keep this transcript", title: "speech.wav", model: "tiny" };
     assert.equal(writeTranscriptDraft(key, draft), true);
-    b.data.delete("unsloth_auth_token");
+    b.data.delete("labz_auth_token");
     await transitionBrowserAccount(
       { username: "alice", accountId: "alice-id" }, "/chat", () => {}, b.browser,
     );

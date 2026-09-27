@@ -22,7 +22,7 @@ import {
   NANOCHAT_CONFIG_PERSISTENCE_VERSION,
 } from "./nanochat-config-persistence.ts";
 
-export const NANOCHAT_CONFIG_PERSISTENCE_NAME = "unsloth_nanochat_config_v1";
+export const NANOCHAT_CONFIG_PERSISTENCE_NAME = "labz_nanochat_config_v1";
 
 export type NanochatConfigStore = NanochatConfigState & {
   apply: (patch: Partial<NanochatConfigState>) => void;

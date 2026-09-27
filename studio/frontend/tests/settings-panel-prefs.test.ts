@@ -13,7 +13,7 @@ import {
 registerBundlerResolver();
 const { store } = installLocalStorageFake();
 
-const KEY = "unsloth_settings_panel_prefs";
+const KEY = "labz_settings_panel_prefs";
 
 // A record written before the sanitiser existed, holding every field.
 store.set(

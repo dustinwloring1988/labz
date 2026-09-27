@@ -4,7 +4,7 @@
 // Whether the last build found any chats, remembered across page loads. The index is built only
 // while the dialog is open, so without this the first open of a page load cannot tell "no
 // chats" from "not looked yet". A bare flag: never a count, never any chat text.
-const CHAT_SEARCH_HAS_ROWS_KEY = "unsloth_chat_search_has_rows";
+const CHAT_SEARCH_HAS_ROWS_KEY = "labz_chat_search_has_rows";
 
 // Only the empty answer is aged out, and it carries the time it was written. Chats created on
 // another device or through the API never reach this tab, so emptiness cannot stay

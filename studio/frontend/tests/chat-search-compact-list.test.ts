@@ -75,9 +75,9 @@ test("an empty answer stops being trusted once it is old", () => {
   // Chats made on another device or through the API never reach this tab, so this answer
   // cannot stand indefinitely: past its window it goes back to unknown rather than sizing a
   // populated dialog compact and growing it mid-open.
-  const raw = store.get("unsloth_chat_search_has_rows") ?? "";
+  const raw = store.get("labz_chat_search_has_rows") ?? "";
   const stale = Date.now() - (12 * 60 * 60 * 1000 + 1000);
-  store.set("unsloth_chat_search_has_rows", `0.${stale}`);
+  store.set("labz_chat_search_has_rows", `0.${stale}`);
   assert.notEqual(raw, "");
   assert.equal(chatSearchHadRows(), null);
   assert.equal(isCompactChatSearchList(true, chatSearchHadRows()), false);
@@ -91,12 +91,12 @@ test("an empty answer stops being trusted once it is old", () => {
 test("an empty answer written before the stamp existed reads as unknown", () => {
   store.clear();
   // What an upgrade finds in storage.
-  store.set("unsloth_chat_search_has_rows", "0");
+  store.set("labz_chat_search_has_rows", "0");
   assert.equal(chatSearchHadRows(), null);
-  store.set("unsloth_chat_search_has_rows", "0.not-a-time");
+  store.set("labz_chat_search_has_rows", "0.not-a-time");
   assert.equal(chatSearchHadRows(), null);
   // A clock moved backwards leaves an answer that cannot be aged, so it says as little.
-  store.set("unsloth_chat_search_has_rows", `0.${Date.now() + 60_000}`);
+  store.set("labz_chat_search_has_rows", `0.${Date.now() + 60_000}`);
   assert.equal(chatSearchHadRows(), null);
 });
 

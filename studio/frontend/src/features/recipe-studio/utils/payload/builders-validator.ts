@@ -4,7 +4,7 @@
 import type { NodeConfig, ValidatorConfig } from "../../types";
 import { isValidatorCodeLang } from "../validators/code-lang";
 
-const OXC_VALIDATION_FN_MARKER = "unsloth_oxc_validator";
+const OXC_VALIDATION_FN_MARKER = "labz_oxc_validator";
 
 function parseBatchSize(value: string): number {
   const parsed = Number.parseInt(value, 10);

@@ -28,7 +28,7 @@ const { savePerModelConfig, deletePerModelConfig, resolveInitialConfig } = await
 
 const MODEL = "unsloth/Repo-GGUF";
 const VARIANT = "Q4_K_M";
-const KEY = "unsloth_model_configs";
+const KEY = "labz_model_configs";
 
 function config(overrides: Record<string, unknown> = {}) {
   return {

@@ -26,7 +26,7 @@ import { usePromptQueueUI } from "../stores/prompt-queue-ui-store";
 import { isThreadIncognito } from "../utils/chat-history-storage";
 
 /** Skip the confirmation once the user said so. Per browser. */
-export const SKIP_SAVE_TEMPORARY_CONFIRM_KEY = "unsloth_chat_skip_save_temporary_confirm";
+export const SKIP_SAVE_TEMPORARY_CONFIRM_KEY = "labz_chat_skip_save_temporary_confirm";
 
 function skipConfirm(): boolean {
   try {

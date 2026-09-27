@@ -425,10 +425,10 @@ export const AUTO_CONTINUE_LEASE_RENEW_MS = 30_000;
 export const AUTO_CONTINUE_CONTINUED_TTL_MS = 86_400_000;
 
 /** The `localStorage` key holding the leases, one record per claimed message id. */
-export const AUTO_CONTINUE_LEASE_KEY = "unsloth_chat_auto_continue_leases";
+export const AUTO_CONTINUE_LEASE_KEY = "labz_chat_auto_continue_leases";
 
 /** The Web Locks name every read-modify-write of that key is taken under. */
-export const AUTO_CONTINUE_LOCK_NAME = "unsloth_chat_auto_continue_claim";
+export const AUTO_CONTINUE_LOCK_NAME = "labz_chat_auto_continue_claim";
 
 /** What a claim attempt did. Three answers, not a boolean, because the two ways of not starting a
  *  run want opposite things on screen: `held-elsewhere` must drop the spinner and restore the
