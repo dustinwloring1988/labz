@@ -51,4 +51,4 @@ fi
 cd "$APPDIR/usr"
 
 
-exec "$APPDIR/usr/bin/unsloth-studio" "$@"
+exec "$APPDIR/usr/bin/labz-desktop" "$@"

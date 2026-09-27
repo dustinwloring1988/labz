@@ -396,9 +396,11 @@ function Get-StudioCurrentUserSid {{ return "S-1-5-21-current" }}
 function Get-CimInstance {{
     [CmdletBinding()]
     param([string]$ClassName, [string]$Filter)
+    # 303 is the pre-rename binary, which an in-place upgrade leaves running and which the
+    # installer's process query still has to match.
     @(
-        [pscustomobject]@{{ Name = "unsloth-studio.exe"; ProcessId = 101 }}
-        [pscustomobject]@{{ Name = "unsloth-studio.exe"; ProcessId = 202 }}
+        [pscustomobject]@{{ Name = "labz-desktop.exe"; ProcessId = 101 }}
+        [pscustomobject]@{{ Name = "labz-desktop.exe"; ProcessId = 202 }}
         [pscustomobject]@{{ Name = "unsloth-studio.exe"; ProcessId = 303 }}
     )
 }}

@@ -5793,8 +5793,11 @@ exit 0
         $currentSid = Get-StudioCurrentUserSid
         try {
             $candidates = @(
+                # Both names: the current labz-desktop.exe and the unsloth-studio.exe an
+                # in-place upgrade leaves behind, which still has to be seen as running before
+                # this build writes over the same location.
                 Get-CimInstance -ClassName Win32_Process `
-                    -Filter "Name = 'unsloth-studio.exe'" -ErrorAction Stop
+                    -Filter "Name = 'labz-desktop.exe' OR Name = 'unsloth-studio.exe'" -ErrorAction Stop
             )
         } catch {
             return

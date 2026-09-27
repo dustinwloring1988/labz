@@ -8,7 +8,7 @@ use std::path::Path;
 use std::process::{Command, Output, Stdio};
 
 const INSTALL_ARGUMENT: &str = "--install-debian-update";
-const INSTALLED_BINARY: &str = "/usr/bin/unsloth-studio";
+const INSTALLED_BINARY: &str = "/usr/bin/labz-desktop";
 const PACKAGE_NAME: &str = "unsloth";
 const MAX_PACKAGE_BYTES: u64 = 512 * 1024 * 1024;
 

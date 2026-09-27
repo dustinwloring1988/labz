@@ -1,14 +1,20 @@
 [package]
-name = "unsloth-studio"
+name = "labz-desktop"
 # Placeholder, not the released app version. release-desktop.yml rewrites this
-# field (and the unsloth-studio entry in Cargo.lock) to the dispatched
+# field (and the labz-desktop entry in Cargo.lock) to the dispatched
 # studio_version before every release build, so editing it here changes nothing
 # that ships. tauri.conf.json declares no version of its own, which is why the
 # app version comes from this field rather than from there. The stale CalVer
 # below is also the wrong shape: release builds always write SemVer, e.g. 0.1.52-beta.
+#
+# This name is also the installed binary: tauri.conf.json declares no mainBinaryName, so the
+# packaged app is labz-desktop(.exe) on every platform. Renaming it is what the Windows
+# installer already handles -- it reads the previous install's MainBinaryName out of the
+# registry, deletes that executable and repoints the shortcuts -- so an upgrade from the
+# unsloth-studio.exe build lands on the new name instead of leaving two binaries behind.
 version = "2026.4.8"
-description = "Unsloth Desktop App"
-authors = ["Unsloth AI"]
+description = "LABZ Desktop App"
+authors = ["LABZ"]
 edition = "2021"
 # std::fs::File::lock, used for the desktop ownership id.
 rust-version = "1.89"

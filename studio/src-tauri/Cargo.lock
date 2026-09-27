@@ -2395,6 +2395,61 @@ dependencies = [
 ]
 
 [[package]]
+name = "labz-desktop"
+version = "2026.4.8"
+dependencies = [
+ "arboard",
+ "base64 0.23.1",
+ "dirs 6.0.0",
+ "elevated-command",
+ "fix-path-env",
+ "gdk",
+ "gdk-pixbuf",
+ "glib",
+ "gtk",
+ "hmac",
+ "libc",
+ "log",
+ "minisign-verify",
+ "objc2",
+ "objc2-app-kit",
+ "objc2-foundation",
+ "open",
+ "process-wrap",
+ "rand 0.10.2",
+ "regex",
+ "reqwest",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2 0.11.0",
+ "signal-hook",
+ "simplelog",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-dialog",
+ "tauri-plugin-notification",
+ "tauri-plugin-opener",
+ "tauri-plugin-process",
+ "tauri-plugin-single-instance",
+ "tauri-plugin-updater",
+ "tauri-plugin-window-state",
+ "tempfile",
+ "time",
+ "tokio",
+ "webkit2gtk",
+ "webkit2gtk-sys",
+ "webview2-com",
+ "windows 0.62.2",
+ "windows-core 0.61.2",
+ "windows-sys 0.61.2",
+ "winreg 0.55.0",
+]
+
+[[package]]
 name = "leb128fmt"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5716,61 +5771,6 @@ name = "unicode-xid"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
-
-[[package]]
-name = "unsloth-studio"
-version = "2026.4.8"
-dependencies = [
- "arboard",
- "base64 0.23.1",
- "dirs 6.0.0",
- "elevated-command",
- "fix-path-env",
- "gdk",
- "gdk-pixbuf",
- "glib",
- "gtk",
- "hmac",
- "libc",
- "log",
- "minisign-verify",
- "objc2",
- "objc2-app-kit",
- "objc2-foundation",
- "open",
- "process-wrap",
- "rand 0.10.2",
- "regex",
- "reqwest",
- "semver",
- "serde",
- "serde_json",
- "sha2 0.11.0",
- "signal-hook",
- "simplelog",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-deep-link",
- "tauri-plugin-dialog",
- "tauri-plugin-notification",
- "tauri-plugin-opener",
- "tauri-plugin-process",
- "tauri-plugin-single-instance",
- "tauri-plugin-updater",
- "tauri-plugin-window-state",
- "tempfile",
- "time",
- "tokio",
- "webkit2gtk",
- "webkit2gtk-sys",
- "webview2-com",
- "windows 0.62.2",
- "windows-core 0.61.2",
- "windows-sys 0.61.2",
- "winreg 0.55.0",
-]
 
 [[package]]
 name = "untrusted"

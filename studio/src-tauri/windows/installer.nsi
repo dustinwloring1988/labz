@@ -58,8 +58,14 @@ ${StrLoc}
 !define MANUFACTURER "{{manufacturer}}"
 !define PRODUCTNAME "{{product_name}}"
 
-; Stable across display-name changes.
-!define INSTALLIDENTITY "Unsloth Studio (Desktop)"
+; The identity this build installs as. This is the Add/Remove Programs entry, the registry
+; key and $INSTDIR, so it is what a fresh install gets and what gets written.
+!define INSTALLIDENTITY "Labz"
+; The identity builds before the rebrand installed as. It is never written: it is read only so
+; that installing over an older build still finds that install -- its uninstall key, the
+; location it recorded, and its shortcuts -- and takes them over. Without it the reinstall page
+; finds nothing, treats the machine as fresh, and leaves the old install beside the new one.
+!define LEGACYINSTALLIDENTITY "Unsloth Studio (Desktop)"
 !define VERSION "{{version}}"
 !define VERSIONWITHBUILD "{{version_with_build}}"
 !define HOMEPAGE "{{homepage}}"
@@ -85,6 +91,8 @@ ${StrLoc}
 !define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${INSTALLIDENTITY}"
 !define MANUKEY "Software\${MANUFACTURER}"
 !define MANUPRODUCTKEY "${MANUKEY}\${INSTALLIDENTITY}"
+!define LEGACYUNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${LEGACYINSTALLIDENTITY}"
+!define LEGACYLMANUPRODUCTKEY "${MANUKEY}\${LEGACYINSTALLIDENTITY}"
 !define UNINSTALLERSIGNCOMMAND "{{uninstaller_sign_cmd}}"
 !define ESTIMATEDSIZE "{{estimated_size}}"
 !define STARTMENUFOLDER "{{start_menu_folder}}"
@@ -94,6 +102,12 @@ Var UpdateMode
 Var NoShortcutMode
 Var WixMode
 Var OldMainBinaryName
+; The uninstall and product keys of whichever identity is actually on the machine, resolved in
+; .onInit: the current one, or the legacy one when this is an upgrade from before the rebrand.
+; Every *read* of the previous install goes through these; the current-identity keys stay in use
+; for every write.
+Var FoundUninstKey
+Var FoundManuKey
 
 Name "${PRODUCTNAME}"
 BrandingText "${COPYRIGHT}"
@@ -225,9 +239,10 @@ Function PageReinstall
     Goto compare_version
   wix_loop_done:
 
-  ; Check if there is an existing installation, if not, abort the reinstall page
-  ReadRegStr $R0 SHCTX "${UNINSTKEY}" ""
-  ReadRegStr $R1 SHCTX "${UNINSTKEY}" "UninstallString"
+  ; Check if there is an existing installation, if not, abort the reinstall page. Read through
+  ; the resolved keys so an install left under the legacy identity is still recognised.
+  ReadRegStr $R0 SHCTX "$FoundUninstKey" ""
+  ReadRegStr $R1 SHCTX "$FoundUninstKey" "UninstallString"
   ${IfThen} "$R0$R1" == "" ${|} Abort ${|}
 
   ; Compare this installar version with the existing installation
@@ -394,8 +409,8 @@ Function PageLeaveReinstall
       ReadRegStr $R1 HKLM "$R6" "UninstallString"
       ExecWait '$R1' $0
     ${Else}
-      ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""
-      ReadRegStr $R1 SHCTX "${UNINSTKEY}" "UninstallString"
+      ReadRegStr $4 SHCTX "$FoundManuKey" ""
+      ReadRegStr $R1 SHCTX "$FoundUninstKey" "UninstallString"
       ${IfThen} $UpdateMode = 1 ${|} StrCpy $R1 "$R1 /UPDATE" ${|} ; append /UPDATE
       ${IfThen} $PassiveMode = 1 ${|} StrCpy $R1 "$R1 /P" ${|} ; append /P
       StrCpy $R1 "$R1 _?=$4" ; append uninstall directory
@@ -517,6 +532,22 @@ FunctionEnd
 {{/each}}
 
 Function .onInit
+  ; Decide which identity the machine already has installed before anything reads it. The
+  ; current identity wins when both are somehow present, so a half-finished rebrand upgrade
+  ; resolves to the one this build is replacing.
+  StrCpy $FoundUninstKey "${UNINSTKEY}"
+  StrCpy $FoundManuKey "${MANUPRODUCTKEY}"
+  ReadRegStr $0 SHCTX "${UNINSTKEY}" ""
+  ${If} $0 != ""
+    Goto identity_resolved
+  ${EndIf}
+  ReadRegStr $0 SHCTX "${LEGACYUNINSTKEY}" ""
+  ${If} $0 != ""
+    StrCpy $FoundUninstKey "${LEGACYUNINSTKEY}"
+    StrCpy $FoundManuKey "${LEGACYLMANUPRODUCTKEY}"
+  ${EndIf}
+  identity_resolved:
+
   ${GetOptions} $CMDLINE "/P" $PassiveMode
   ${IfNot} ${Errors}
     StrCpy $PassiveMode 1
@@ -730,7 +761,7 @@ Section Install
   !endif
 
   ; Remove old main binary if it doesn't match new main binary name
-  ReadRegStr $OldMainBinaryName SHCTX "${UNINSTKEY}" "MainBinaryName"
+  ReadRegStr $OldMainBinaryName SHCTX "$FoundUninstKey" "MainBinaryName"
   ${If} $OldMainBinaryName != ""
   ${AndIf} $OldMainBinaryName != "${MAINBINARYNAME}.exe"
     Delete "$INSTDIR\$OldMainBinaryName"
@@ -775,6 +806,17 @@ Section Install
   !ifmacrodef NSIS_HOOK_POSTINSTALL
     !insertmacro NSIS_HOOK_POSTINSTALL
   !endif
+
+  ; Explorer's icon cache is keyed on the target path, and $INSTDIR is reused across a rebrand
+  ; only when the previous install recorded the same location. Either way an upgrading machine
+  ; can keep painting the previous build's icon on the shortcuts just written, so tell the shell
+  ; the associations changed and drop the per-extension cache. The pip installer has always done
+  ; this (see install.ps1's UnslothShellIconRefresh); without it here a rebranded icon reads as a
+  ; bug until Explorer is restarted. Best effort: a shell that refuses the notification must not
+  ; fail an otherwise-good install.
+  System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)'
+  nsExec::ExecToLog '"$SYSDIR\ie4uinit.exe" -ClearIconCache'
+  System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)'
 
   ; Auto close this page for passive mode
   ${If} $PassiveMode = 1
@@ -888,6 +930,18 @@ Section Uninstall
       !insertmacro UnpinShortcut "$DESKTOP\${PRODUCTNAME}.lnk"
       Delete "$DESKTOP\${PRODUCTNAME}.lnk"
     ${EndIf}
+
+    ; Shortcuts named after the install identities rather than the product name. The install
+    ; side renames these to ${PRODUCTNAME}.lnk when it can prove they pointed at the previous
+    ; binary, but it cannot when the old executable is already gone -- a half-finished or
+    ; hand-repaired upgrade leaves one behind, and uninstalling used to walk straight past it
+    ; and leave a dead shortcut on the desktop. Deleted unconditionally, target or not, because
+    ; by this point every executable in $INSTDIR is being removed anyway.
+    Delete "$SMPROGRAMS\$AppStartMenuFolder\${INSTALLIDENTITY}.lnk"
+    Delete "$SMPROGRAMS\${INSTALLIDENTITY}.lnk"
+    Delete "$SMPROGRAMS\${LEGACYINSTALLIDENTITY}.lnk"
+    Delete "$DESKTOP\${INSTALLIDENTITY}.lnk"
+    Delete "$DESKTOP\${LEGACYINSTALLIDENTITY}.lnk"
   ${EndIf}
 
   ; Remove registry information for add/remove programs
@@ -897,6 +951,17 @@ Section Uninstall
     DeleteRegKey HKLM "${UNINSTKEY}"
   !else
     DeleteRegKey HKCU "${UNINSTKEY}"
+  !endif
+
+  ; And the pre-rebrand identity's, for the same reason the legacy shortcuts are swept above: an
+  ; upgrade that could not run the old uninstaller leaves the entry behind, and an Add/Remove
+  ; Programs row pointing at a deleted uninstaller is worse than no row at all.
+  !if "${INSTALLMODE}" == "both"
+    DeleteRegKey SHCTX "${LEGACYUNINSTKEY}"
+  !else if "${INSTALLMODE}" == "perMachine"
+    DeleteRegKey HKLM "${LEGACYUNINSTKEY}"
+  !else
+    DeleteRegKey HKCU "${LEGACYUNINSTKEY}"
   !endif
 
   ; Removes the Autostart entry for ${PRODUCTNAME} from the HKCU Run key if it exists.
@@ -911,13 +976,17 @@ Section Uninstall
   ; and if not updating
   ${If} $DeleteAppDataCheckboxState = 1
   ${AndIf} $UpdateMode <> 1
-    ; Clear the install location $INSTDIR from registry
+    ; Clear the install location $INSTDIR from registry, under both identities: the current one
+    ; and the pre-rebrand one an incomplete upgrade may have left behind.
     DeleteRegKey SHCTX "${MANUPRODUCTKEY}"
+    DeleteRegKey SHCTX "${LEGACYLMANUPRODUCTKEY}"
     DeleteRegKey /ifempty SHCTX "${MANUKEY}"
 
     ; Clear the install language from registry
     DeleteRegValue HKCU "${MANUPRODUCTKEY}" "Installer Language"
+    DeleteRegValue HKCU "${LEGACYLMANUPRODUCTKEY}" "Installer Language"
     DeleteRegKey /ifempty HKCU "${MANUPRODUCTKEY}"
+    DeleteRegKey /ifempty HKCU "${LEGACYLMANUPRODUCTKEY}"
     DeleteRegKey /ifempty HKCU "${MANUKEY}"
 
     SetShellVarContext current
@@ -937,6 +1006,11 @@ Section Uninstall
 SectionEnd
 
 Function RestorePreviousInstallLocation
+  ; Only the current identity's recorded location is worth restoring. A previous install found
+  ; under the legacy identity is somewhere this build is deliberately *not* going to install to --
+  ; restoring it would put the rebranded build back in the pre-rebrand directory, which is the
+  ; thing the rename exists to fix. The legacy install is removed by PageLeaveReinstall, which
+  ; does read through $FoundManuKey to find its uninstaller.
   ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""
   StrCmp $4 "" +2 0
     StrCpy $INSTDIR $4
@@ -964,6 +1038,18 @@ Function CreateOrUpdateStartMenuShortcut
     ${If} $0 = 1
       Delete "$SMPROGRAMS\${PRODUCTNAME}.lnk"
       Rename "$SMPROGRAMS\${INSTALLIDENTITY}.lnk" "$SMPROGRAMS\${PRODUCTNAME}.lnk"
+      !insertmacro SetShortcutTarget "$SMPROGRAMS\${PRODUCTNAME}.lnk" "$INSTDIR\${MAINBINARYNAME}.exe"
+      !insertmacro SetLnkAppUserModelId "$SMPROGRAMS\${PRODUCTNAME}.lnk"
+      StrCpy $R0 1
+    ${EndIf}
+    ; An install from before the rebrand left its shortcut under the legacy identity, which
+    ; ${INSTALLIDENTITY} no longer names. Hand it over the same way, or it is orphaned next to
+    ; the new one.
+    !insertmacro IsShortcutTarget "$SMPROGRAMS\${LEGACYINSTALLIDENTITY}.lnk" "$INSTDIR\$OldMainBinaryName"
+    Pop $0
+    ${If} $0 = 1
+      Delete "$SMPROGRAMS\${PRODUCTNAME}.lnk"
+      Rename "$SMPROGRAMS\${LEGACYINSTALLIDENTITY}.lnk" "$SMPROGRAMS\${PRODUCTNAME}.lnk"
       !insertmacro SetShortcutTarget "$SMPROGRAMS\${PRODUCTNAME}.lnk" "$INSTDIR\${MAINBINARYNAME}.exe"
       !insertmacro SetLnkAppUserModelId "$SMPROGRAMS\${PRODUCTNAME}.lnk"
       StrCpy $R0 1
@@ -1017,6 +1103,16 @@ Function CreateOrUpdateDesktopShortcut
     ${If} $0 = 1
       Delete "$DESKTOP\${PRODUCTNAME}.lnk"
       Rename "$DESKTOP\${INSTALLIDENTITY}.lnk" "$DESKTOP\${PRODUCTNAME}.lnk"
+      !insertmacro SetShortcutTarget "$DESKTOP\${PRODUCTNAME}.lnk" "$INSTDIR\${MAINBINARYNAME}.exe"
+      !insertmacro SetLnkAppUserModelId "$DESKTOP\${PRODUCTNAME}.lnk"
+      Return
+    ${EndIf}
+    ; Same hand-over for a desktop shortcut left under the pre-rebrand identity.
+    !insertmacro IsShortcutTarget "$DESKTOP\${LEGACYINSTALLIDENTITY}.lnk" "$INSTDIR\$OldMainBinaryName"
+    Pop $0
+    ${If} $0 = 1
+      Delete "$DESKTOP\${PRODUCTNAME}.lnk"
+      Rename "$DESKTOP\${LEGACYINSTALLIDENTITY}.lnk" "$DESKTOP\${PRODUCTNAME}.lnk"
       !insertmacro SetShortcutTarget "$DESKTOP\${PRODUCTNAME}.lnk" "$INSTDIR\${MAINBINARYNAME}.exe"
       !insertmacro SetLnkAppUserModelId "$DESKTOP\${PRODUCTNAME}.lnk"
       Return

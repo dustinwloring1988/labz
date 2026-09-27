@@ -657,13 +657,21 @@ UNINSTALL_PS1="$SCRIPT_DIR/../../scripts/uninstall.ps1"
 if [ ! -f "$UNINSTALL_PS1" ]; then
     echo "  FAIL: uninstall.ps1 not found"; FAIL=$((FAIL+1))
 else
-    _ps_filter=$(grep -n "Name = 'unsloth-studio.exe'" "$UNINSTALL_PS1" | head -n1 | cut -d: -f2-)
-    case "$_ps_filter" in
-        *"Unsloth.exe"*)
-            echo "  PASS: windows: process query covers the legacy binary name"; PASS=$((PASS+1)) ;;
-        *)
-            echo "  FAIL: windows: process query misses the legacy Unsloth.exe"; FAIL=$((FAIL+1)) ;;
-    esac
+    # Every MAINBINARYNAME this project has shipped has to appear: the uninstaller is fetched
+    # fresh from main, so it has to be able to find a process left by any of them.
+    _ps_filter=$(grep -o "Name = '[A-Za-z-]*\.exe'" "$UNINSTALL_PS1" | sort -u | tr '\n' ' ')
+    _missing=""
+    for _want in "Name = 'labz-desktop.exe'" "Name = 'unsloth-studio.exe'" "Name = 'Unsloth.exe'"; do
+        case "$_ps_filter" in
+            *"$_want"*) ;;
+            *) _missing="$_missing [$_want]" ;;
+        esac
+    done
+    if [ -z "$_missing" ]; then
+        echo "  PASS: windows: process query covers every shipped binary name"; PASS=$((PASS+1)) ;;
+    else
+        echo "  FAIL: windows: process query misses$_missing"; FAIL=$((FAIL+1))
+    fi
 fi
 
 # ── 4. Nothing to remove is a clean no-op (fresh HOME, exit 0) ──

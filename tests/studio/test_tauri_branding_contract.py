@@ -75,10 +75,14 @@ def test_desktop_display_name_and_compatibility_ids() -> None:
     assert config["plugins"]["updater"]["endpoints"] == [
         "https://github.com/dustinwloring1988/labz/releases/latest/download/latest.json"
     ]
-    # Deliberately not part of the rebrand. This is the binary name the installer writes as
-    # MAINBINARYNAME, and renaming it leaves every existing install pointing at a .exe that is
-    # no longer there, so it has to stay stable the way INSTALLIDENTITY does below.
-    assert 'name = "unsloth-studio"' in read(TAURI / "Cargo.toml")
+    # The binary name did move, unlike the install identity. installer.nsi reads the previous
+    # install's MainBinaryName out of the registry, deletes that executable and repoints the
+    # shortcuts, so an upgrade lands on the new name rather than leaving two binaries behind --
+    # but the installed paths for the other platforms are compiled in and have to agree.
+    assert 'name = "labz-desktop"' in read(TAURI / "Cargo.toml")
+    assert 'const INSTALLED_BINARY: &str = "/usr/bin/labz-desktop";' in read(
+        TAURI / "src/debian_update.rs"
+    )
 
 
 def test_desktop_package_transitions_preserve_legacy_installs() -> None:
@@ -93,10 +97,47 @@ def test_desktop_package_transitions_preserve_legacy_installs() -> None:
         assert deb[field] == ["labz-studio-desktop", "unsloth-studio-desktop"]
 
     installer = read(TAURI / "windows/installer.nsi")
-    # installer.nsi:61 says why this one stays put -- "Stable across display-name changes."
-    # It is the Add/Remove Programs entry, the registry key and $INSTDIR all at once, so moving
-    # it orphans every install rather than upgrading it.
-    assert '!define INSTALLIDENTITY "Unsloth Studio (Desktop)"' in installer
+    # The rebrand moved the install identity, so $INSTDIR, the Add/Remove Programs entry and the
+    # registry key all change name. What must not change is that an install left under the previous
+    # identity is still found and taken over: the keys below are read-only, and without them the
+    # reinstall page sees a clean machine and strands the old install beside the new one.
+    assert '!define INSTALLIDENTITY "Labz"' in installer
+    assert '!define LEGACYINSTALLIDENTITY "Unsloth Studio (Desktop)"' in installer
+    assert '!define LEGACYUNINSTKEY "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${LEGACYINSTALLIDENTITY}"' in installer
+    assert 'StrCpy $FoundUninstKey "${LEGACYUNINSTKEY}"' in installer
+    assert 'StrCpy $FoundManuKey "${LEGACYLMANUPRODUCTKEY}"' in installer
+    # Every read of the previous install goes through the resolved keys; the current-identity
+    # defines are for writing only.
+    assert 'ReadRegStr $R0 SHCTX "$FoundUninstKey" ""' in installer
+    assert 'ReadRegStr $R1 SHCTX "$FoundUninstKey" "UninstallString"' in installer
+    assert 'ReadRegStr $OldMainBinaryName SHCTX "$FoundUninstKey" "MainBinaryName"' in installer
+    # The location restore is current-identity only, on purpose: restoring the legacy install's
+    # directory would put the rebranded build back where it was trying to leave.
+    assert 'ReadRegStr $4 SHCTX "$FoundManuKey" ""' in installer
+    assert (
+        'Function RestorePreviousInstallLocation\n  ; Only the current identity'
+        in installer
+    )
+    assert 'ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""' in installer
+    # Shortcuts written under the old identity get handed over too, or they are orphaned.
+    assert 'IsShortcutTarget "$SMPROGRAMS\\${LEGACYINSTALLIDENTITY}.lnk"' in installer
+    assert 'IsShortcutTarget "$DESKTOP\\${LEGACYINSTALLIDENTITY}.lnk"' in installer
+    # And uninstall sweeps both identity-named shortcuts and both registry rows. The install side
+    # only renames a legacy shortcut when it can prove the old binary was there, so a repaired or
+    # half-finished upgrade leaves one behind, and uninstall used to walk past it.
+    uninstall = installer[installer.index("Section Uninstall") :]
+    for path in (
+        '"$SMPROGRAMS\\${INSTALLIDENTITY}.lnk"',
+        '"$SMPROGRAMS\\${LEGACYINSTALLIDENTITY}.lnk"',
+        '"$DESKTOP\\${INSTALLIDENTITY}.lnk"',
+        '"$DESKTOP\\${LEGACYINSTALLIDENTITY}.lnk"',
+    ):
+        assert f"Delete {path}" in uninstall, f"uninstall leaves {path} behind"
+    assert 'DeleteRegKey HKCU "${LEGACYUNINSTKEY}"' in uninstall
+    assert 'DeleteRegKey SHCTX "${LEGACYLMANUPRODUCTKEY}"' in uninstall
+    # A rebranded icon that Explorer keeps serving from cache reads as a broken install.
+    assert "SHChangeNotify" in installer
+    assert "ie4uinit.exe" in installer
     assert "Uninstall\\${INSTALLIDENTITY}" in installer
     assert "${MANUKEY}\\${INSTALLIDENTITY}" in installer
     assert "$LOCALAPPDATA\\${INSTALLIDENTITY}" in installer

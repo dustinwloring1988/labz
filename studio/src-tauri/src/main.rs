@@ -3039,10 +3039,10 @@ media-src 'self' https:"
 
     #[test]
     fn autostart_hardening_appends_the_exec_binary_without_args() {
-        let entry = "[Desktop Entry]\nType=Application\nExec=/usr/bin/unsloth-studio --hidden\nTerminal=false";
+        let entry = "[Desktop Entry]\nType=Application\nExec=/usr/bin/labz-desktop --hidden\nTerminal=false";
         let hardened = hardened_autostart_entry(entry).expect("guard must be added");
         assert!(hardened.starts_with(entry));
-        assert!(hardened.ends_with("\nTryExec=/usr/bin/unsloth-studio"));
+        assert!(hardened.ends_with("\nTryExec=/usr/bin/labz-desktop"));
     }
 
     #[test]
@@ -3115,10 +3115,10 @@ media-src 'self' https:"
     fn macos_plist_escapes_xml_metacharacters() {
         let plist = macos_launch_agent_plist(
             "Unsloth",
-            "/Applications/AI & ML/Unsloth.app/Contents/MacOS/unsloth-studio",
+            "/Applications/AI & ML/LABZ.app/Contents/MacOS/labz-desktop",
         );
         assert!(plist.contains(
-            "<string>/Applications/AI &amp; ML/Unsloth.app/Contents/MacOS/unsloth-studio</string>"
+            "<string>/Applications/AI &amp; ML/LABZ.app/Contents/MacOS/labz-desktop</string>"
         ));
         assert!(plist.contains("<string>--hidden</string>"));
         assert!(plist.contains("<key>RunAtLoad</key>"));

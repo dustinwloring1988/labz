@@ -298,7 +298,7 @@ def _compile_fixture_elf(path: Path, *, origin_runpath: bool) -> None:
 
 def _fake_complete_appdir(tmp_path: Path) -> Path:
     appdir = tmp_path / "AppDir"
-    binary = appdir / "usr/bin/unsloth-studio"
+    binary = appdir / "usr/bin/labz-desktop"
     binary.parent.mkdir(parents = True)
     _compile_fixture_elf(binary, origin_runpath = True)
 
@@ -478,7 +478,7 @@ def _apprun_mount(tmp_path: Path, name: str = "AppDir") -> Path:
     """An AppDir holding just what AppRun itself touches."""
 
     appdir = tmp_path / name
-    binary = appdir / "usr/bin/unsloth-studio"
+    binary = appdir / "usr/bin/labz-desktop"
     binary.parent.mkdir(parents = True)
     binary.write_text("#!/bin/sh\nexec /usr/bin/env\n", encoding = "utf-8")
     binary.chmod(0o755)
@@ -718,7 +718,7 @@ def test_the_deb_ships_the_polkit_action_in_app_debian_updates_authenticate_with
     # The annotations are what makes this narrower than a plain pkexec call: polkit pins the
     # program and its first argument, so the action cannot run anything else.
     assert (
-        '<annotate key="org.freedesktop.policykit.exec.path">/usr/bin/unsloth-studio</annotate>'
+        '<annotate key="org.freedesktop.policykit.exec.path">/usr/bin/labz-desktop</annotate>'
         in source
     )
     assert (
@@ -728,12 +728,12 @@ def test_the_deb_ships_the_polkit_action_in_app_debian_updates_authenticate_with
     # Those two pins must match what tauri derives from the crate name and what main.rs
     # dispatches on, or polkit refuses every update.
     cargo = (REPO_ROOT / "studio/src-tauri/Cargo.toml").read_text(encoding = "utf-8")
-    assert 'name = "unsloth-studio"' in cargo
+    assert 'name = "labz-desktop"' in cargo
     debian_update = (REPO_ROOT / "studio/src-tauri/src/debian_update.rs").read_text(
         encoding = "utf-8"
     )
     assert 'const INSTALL_ARGUMENT: &str = "--install-debian-update";' in debian_update
-    assert 'const INSTALLED_BINARY: &str = "/usr/bin/unsloth-studio";' in debian_update
+    assert 'const INSTALLED_BINARY: &str = "/usr/bin/labz-desktop";' in debian_update
 
 
 def test_release_notes_recommend_native_deb_without_claiming_universality():

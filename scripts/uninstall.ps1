@@ -1015,10 +1015,12 @@ Environment:
     $studioPids = @()
     if ($meSid) {
         try {
-            # Unsloth.exe too: older releases used the product name as MAINBINARYNAME, and this
-            # script is always fetched fresh from main, so it meets those installs. A missed
-            # process re-creates the profile. The owner-SID filter keeps the broader name safe.
-            $filter = "Name = 'unsloth-studio.exe' OR Name = 'Unsloth.exe'"
+            # labz-desktop.exe, unsloth-studio.exe and Unsloth.exe: the current binary plus the
+            # two earlier MAINBINARYNAMEs. Both older names are still matched because this
+            # script is always fetched fresh from main, so it meets installs made before either
+            # rename. A missed process re-creates the profile. The owner-SID filter keeps the
+            # broader names safe.
+            $filter = "Name = 'labz-desktop.exe' OR Name = 'unsloth-studio.exe' OR Name = 'Unsloth.exe'"
             foreach ($sp in (Get-CimInstance Win32_Process -Filter $filter -ErrorAction SilentlyContinue)) {
                 $spSid = try { (Invoke-CimMethod -InputObject $sp -MethodName GetOwnerSid -ErrorAction SilentlyContinue).Sid } catch { $null }
                 if ($spSid -eq $meSid) { $studioPids += [int]$sp.ProcessId }
